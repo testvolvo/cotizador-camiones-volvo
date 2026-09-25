@@ -1,0 +1,3234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cotizador</title>
+<style>
+  :root{
+    --ink:#13212b;
+    --ink-2:#1c2f3d;
+    --accent:#1769a6;
+    --accent-2:#0f568b;
+    --accent-soft:#eaf4fb;
+    --bg:#f3f6f8;
+    --card:#ffffff;
+    --line:#dce3e8;
+    --text:#19252e;
+    --muted:#6c7a86;
+    --green:#177245;
+    --green-soft:#eaf7f0;
+    --red:#b42318;
+    --red-soft:#fff0ee;
+    --yellow:#fff7cf;
+    --shadow:0 10px 30px rgba(16,32,44,.07);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:Inter,"Segoe UI",Arial,sans-serif;
+    background:
+      radial-gradient(circle at top left, rgba(23,105,166,.08), transparent 28%),
+      linear-gradient(180deg,#f2f6f9 0%,#eef3f6 100%);
+    color:var(--text)
+  }
+  button,input,select,textarea{font:inherit}
+  button{cursor:pointer}
+  .topbar{
+    background:linear-gradient(135deg,var(--ink),var(--ink-2));
+    color:#fff;padding:20px 26px;display:flex;align-items:center;justify-content:space-between;
+    gap:18px;flex-wrap:wrap;box-shadow:0 4px 18px rgba(9,22,31,.18)
+  }
+  .brand{display:flex;align-items:center;gap:20px}
+  .brand-logo{
+    width:112px;height:38px;display:flex;align-items:center;justify-content:flex-start;
+    flex:0 0 auto;overflow:hidden
+  }
+  .brand-logo .volvo-logo-svg{display:block;width:100%;height:100%;object-fit:contain}
+  .brand h1{font-size:23px;line-height:1;margin:0;font-weight:760;letter-spacing:-.02em}
+  .fx-card{
+    min-width:355px;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+    background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);
+    border-radius:15px;padding:10px 11px 10px 12px
+  }
+  .fx-icon{width:39px;height:39px;border-radius:11px;background:rgba(255,255,255,.11);display:grid;place-items:center}
+  .fx-icon svg{width:21px;height:21px}
+  .fx-copy{min-width:0}
+  .fx-copy .eyebrow{font-size:11px;opacity:.65;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+  .fx-copy strong{display:block;font-size:18px;margin:1px 0 2px;white-space:nowrap}
+  .fx-copy small{font-size:11px;opacity:.72;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fx-refresh{
+    min-height:40px;border:1px solid rgba(255,255,255,.2);background:#fff;color:var(--ink);
+    border-radius:10px;padding:0 13px;display:flex;align-items:center;gap:7px;font-weight:750;font-size:12px
+  }
+  .fx-refresh:hover{background:#f4f8fb}
+  .fx-refresh svg{width:15px;height:15px}
+  .fx-refresh.loading svg{animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .container{max-width:1280px;margin:22px auto;padding:0 18px 50px}
+  .actionbar{
+    display:flex;flex-direction:column;align-items:stretch;gap:9px;margin-bottom:17px
+  }
+  .action-primary-row,.action-secondary-row{
+    width:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap
+  }
+  .action-primary-row{justify-content:flex-end}
+  .action-secondary-row{justify-content:flex-start}
+  .action-cluster{
+    display:flex;align-items:center;gap:6px;padding:5px;border:1px solid #d7e0e6;
+    border-radius:12px;background:rgba(255,255,255,.68)
+  }
+  .action-cluster-label{
+    padding:0 5px 0 4px;color:var(--muted);font-size:9px;font-weight:850;
+    letter-spacing:.055em;text-transform:uppercase;white-space:nowrap
+  }
+  .action-separator{width:1px;height:30px;background:#d6dfe5;margin:0 2px}
+  .btn{
+    min-height:42px;border-radius:10px;border:1px solid #cbd5dc;background:#fff;color:var(--text);
+    padding:0 14px;font-size:13px;font-weight:740;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    box-shadow:0 2px 6px rgba(20,40,54,.04);transition:.16s ease
+  }
+  .btn svg{width:17px;height:17px}
+  .btn:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(20,40,54,.09)}
+  .btn:active{transform:translateY(0)}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  .btn.primary:hover{background:var(--accent-2)}
+  .btn.excel{background:#f2f8f5;border-color:#bcd6c8;color:#216244}
+  .btn.excel:hover{background:#eaf5ef}
+  .btn.cloud{background:#eef6fb;border-color:#bfd7e7;color:#165c8c}
+  .btn.cloud:hover{background:#e5f1f9}
+  .btn.update-list{background:#fff8e9;border-color:#e7d3a1;color:#765a14}
+  .btn.update-list:hover{background:#fff3d7}
+  .btn.danger{color:var(--red);border-color:#e5c4c1;background:#fff}
+  .btn.ghost{background:#fff}
+  .db-pill{
+    min-height:42px;border:1px solid var(--line);border-radius:10px;background:#fff;padding:0 12px;
+    display:flex;align-items:center;gap:8px;color:var(--muted);font-size:12px;font-weight:700
+  }
+  .db-dot{width:8px;height:8px;border-radius:50%;background:#a8b2ba;box-shadow:0 0 0 4px #f0f3f5}
+  .db-pill.ready .db-dot{background:#27a063;box-shadow:0 0 0 4px #e7f6ee}
+  .db-pill svg{width:15px;height:15px}
+
+  .grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(430px,.9fr);gap:18px}
+  .card{
+    background:rgba(255,255,255,.92);border:1px solid #d8e1e7;border-radius:16px;
+    overflow:hidden;box-shadow:0 12px 34px rgba(16,32,44,.08);backdrop-filter:blur(2px)
+  }
+  .card h2{
+    font-size:14px;margin:0;padding:13px 16px;background:linear-gradient(#fcfdfe,#f3f7fa);
+    border-bottom:1px solid var(--line);letter-spacing:.01em;position:relative
+  }
+  .card h2::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--accent),#5aa6d9)
+  }
+  .body{padding:16px}
+  .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .full{grid-column:1/-1}
+  .model-picker{position:relative}
+  .model-native-select{
+    position:absolute!important;width:1px!important;height:1px!important;
+    opacity:0!important;pointer-events:none!important
+  }
+  .model-picker-button{
+    width:100%;min-height:43px;padding:0 42px 0 13px;
+    border:1px solid #cbd5dc;border-radius:10px;background:#fff;color:var(--text);
+    text-align:left;font-weight:500;position:relative
+  }
+  .model-picker-button:hover{border-color:#aebdc7;background:#fbfdfe}
+  .model-picker-button:focus{
+    outline:none;border-color:#7fb2d3;box-shadow:0 0 0 3px rgba(23,105,166,.10)
+  }
+  .model-picker-chevron{
+    position:absolute;right:15px;top:50%;width:8px;height:8px;
+    border-right:2px solid #4f6471;border-bottom:2px solid #4f6471;
+    transform:translateY(-65%) rotate(45deg);transition:transform .16s ease
+  }
+  .model-picker-button[aria-expanded="true"] .model-picker-chevron{
+    transform:translateY(-25%) rotate(225deg)
+  }
+  .model-dropdown{
+    position:absolute;z-index:12000;display:none;
+    background:#fff;border:1px solid #cbd8e0;border-radius:11px;
+    box-shadow:0 14px 34px rgba(17,39,54,.18);
+    padding:5px;max-height:340px;overflow-y:auto;overscroll-behavior:contain
+  }
+  .model-dropdown.open{display:block}
+  .model-option{
+    width:100%;min-height:38px;border:0;background:#fff;border-radius:7px;
+    padding:8px 10px;text-align:left;color:var(--text);font-size:13px;font-weight:600
+  }
+  .model-option:hover,.model-option.active{
+    background:#edf6fb;color:#125f8e
+  }
+  .quote-top-row{
+    display:grid;grid-template-columns:minmax(260px,1.6fr) minmax(150px,.8fr) minmax(150px,.72fr);
+    gap:12px;align-items:end
+  }
+  .client-autocomplete{position:relative;min-width:0}
+  .client-suggestions{
+    position:absolute;left:0;right:0;top:calc(100% + 5px);z-index:80;
+    display:none;max-height:220px;overflow:auto;background:#fff;border:1px solid #cbd5dc;
+    border-radius:10px;box-shadow:0 12px 28px rgba(16,32,44,.14);padding:5px
+  }
+  .client-suggestions.open{display:block}
+  .client-option{
+    width:100%;border:0;background:transparent;color:var(--text);text-align:left;
+    padding:9px 10px;border-radius:7px;font-size:13px;font-weight:650;cursor:pointer
+  }
+  .client-option:hover,.client-option.active{background:var(--accent-soft);color:var(--accent-2)}
+  .client-option mark{background:transparent;color:inherit;font-weight:850}
+  .client-option-main{display:block}
+  .client-option-alias{
+    display:block;margin-top:2px;color:var(--muted);font-size:10px;font-weight:700
+  }
+  .client-suggestions-empty{padding:10px;color:var(--muted);font-size:12px}
+  label{display:block;font-size:11px;color:var(--muted);font-weight:760;margin-bottom:6px;letter-spacing:.02em}
+  input,select,textarea{
+    width:100%;border:1px solid #c6d2da;border-radius:10px;padding:10px 11px;background:#fbfdff;color:var(--text);
+    font-size:14px;transition:border-color .15s,box-shadow .15s,background .15s
+  }
+  input:hover,select:hover,textarea:hover{background:#fff}
+  input[readonly]{background:#f4f7f9;color:#50606d}
+  input:focus,select:focus,textarea:focus{
+    outline:none;border-color:#63a4d1;box-shadow:0 0 0 3px rgba(23,105,166,.11)
+  }
+  .money-field{position:relative;min-width:0}
+  .money-field .money-prefix{
+    position:absolute;left:11px;top:50%;transform:translateY(-50%);
+    z-index:1;pointer-events:none;color:#8a98a3;font-size:11px;font-weight:800;
+    letter-spacing:.035em;opacity:.72
+  }
+  .money-field input{padding-left:48px}
+  .money-field.clp input{padding-left:45px}
+  .money-field:focus-within .money-prefix{color:var(--accent);opacity:.9}
+  td .money-field input{padding-left:45px}
+  td .money-field.clp input{padding-left:42px}
+  .currency-tag{
+    display:inline-block;color:#8a98a3;opacity:.72;font-size:.68em;font-weight:850;
+    letter-spacing:.04em;margin-right:6px;vertical-align:.08em
+  }
+  .currency-value{color:inherit}
+  .summary-row strong .currency-tag{font-size:9px;margin-right:5px}
+  .summary-hero strong .currency-tag{color:#fff;opacity:.62;font-size:10px;margin-right:7px}
+  .kit-modal-total .currency-tag{font-size:10px}
+  .row-clp .currency-tag{font-size:10px}
+  .subtotal .currency-tag{font-size:9px}
+  .metric-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .metric{
+    border:1px solid #d5dfe6;border-radius:12px;padding:12px 13px;min-width:0;
+    background:linear-gradient(180deg,#ffffff 0%,#fbfdfe 100%)
+  }
+  .metric span{display:block;font-size:10px;color:var(--muted);font-weight:780;margin-bottom:5px;text-transform:uppercase;letter-spacing:.035em}
+  .metric strong{font-size:18px;display:block;overflow-wrap:anywhere}
+  .metric strong .currency-tag{
+    display:inline;font-size:.68em;color:#8a98a3;opacity:.72;font-weight:850;
+    letter-spacing:.04em;margin:0 6px 0 0;text-transform:none;vertical-align:.08em
+  }
+  .metric strong .currency-value{
+    display:inline;font-size:1em;color:inherit;opacity:1;font-weight:inherit;
+    letter-spacing:normal;margin:0;text-transform:none
+  }
+  .metric.highlight{background:var(--yellow);border-color:#ead46c}
+  .sale-price-highlight{
+    background:var(--yellow)!important;border-color:#ead46c!important;
+    box-shadow:inset 0 0 0 1px rgba(234,212,108,.16);
+    border-radius:12px;overflow:hidden
+  }
+  .sale-price-highlight input{
+    background:transparent!important;border-radius:12px
+  }
+  .sale-plus-total{background:#f5f8fa;border-color:#d6e0e6}
+  .compact-sale-clp{
+    min-height:43px;height:43px;display:flex;align-items:center;padding:7px 10px
+  }
+  .compact-sale-clp strong{
+    font-size:18px;line-height:1;display:flex;align-items:baseline;gap:0;white-space:nowrap
+  }
+  .metric.good strong{color:var(--green)}
+  .metric.bad strong{color:var(--red)}
+  .kit-control-row{
+    display:grid;grid-template-columns:minmax(110px,.72fr) minmax(150px,1.15fr);
+    gap:6px 8px;align-items:start
+  }
+  .kit-control-field{min-width:0}
+  .kit-control-field select{min-height:43px}
+  .kit-total-box{
+    border:1px solid #cbd5dc;border-radius:9px;background:#f3f6f8;padding:7px 10px;
+    min-width:0;height:43px;display:flex;flex-direction:column;justify-content:center
+  }
+  .kit-total-box strong{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kit-edit-btn{
+    grid-column:1/-1;justify-self:start;min-height:0;border:0;background:transparent;
+    color:var(--accent);padding:2px 1px;font-size:11px;font-weight:800;
+    text-decoration:underline;text-underline-offset:2px;box-shadow:none
+  }
+  .kit-edit-btn:hover{color:var(--accent-2);background:transparent;transform:none;box-shadow:none}
+  .kit-edit-btn[hidden]{display:none}
+  .kit-editor-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    margin-bottom:10px
+  }
+  .kit-editor-head p{margin:0;color:var(--muted);font-size:12px}
+  .kit-table-wrap{border:1px solid var(--line);border-radius:11px;overflow:hidden}
+  .kit-table-wrap table{margin:0}
+  .kit-modal-total{
+    display:flex;justify-content:flex-end;align-items:center;gap:12px;flex-wrap:wrap;
+    padding:12px 2px 2px;font-size:13px
+  }
+  .kit-modal-total strong{font-size:17px}
+  .kit-total-separator{
+    color:#aeb9c1;font-size:18px;font-weight:400;line-height:1;opacity:.95
+  }
+  .section{margin-top:16px}
+  .section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 8px}
+  .section-head h3{font-size:13px;margin:0}
+  .mini{font-size:11px;color:var(--muted)}
+
+  .additional-section{
+    border:1px solid #d8e1e7;border-radius:13px;overflow:hidden;background:rgba(255,255,255,.9)
+  }
+  .additional-toggle{
+    width:100%;min-height:50px;border:0;background:linear-gradient(180deg,#fbfdff,#f3f7fa);color:var(--text);
+    padding:10px 12px;display:flex;align-items:center;justify-content:space-between;
+    gap:12px;text-align:left;font-weight:800
+  }
+  .additional-toggle:hover{background:#f2f6f8}
+  .additional-toggle-left{display:flex;align-items:center;gap:8px;min-width:0}
+  .additional-chevron{
+    position:relative;display:inline-flex;width:24px;height:24px;flex:0 0 24px;
+    align-items:center;justify-content:center;border:1px solid #d4dde4;border-radius:7px;
+    background:#fff;transition:background .18s ease,border-color .18s ease
+  }
+  .additional-chevron::before{
+    content:"";width:7px;height:7px;border-right:2px solid #687986;
+    border-bottom:2px solid #687986;transform:translateY(-2px) rotate(45deg);
+    transition:transform .18s ease
+  }
+  .additional-toggle:hover .additional-chevron{background:#f7fafc;border-color:#bdccd7}
+  .additional-toggle[aria-expanded="true"] .additional-chevron::before{
+    transform:translateY(2px) rotate(225deg)
+  }
+  .additional-toggle-total{
+    display:flex;align-items:center;justify-content:flex-end;gap:11px;
+    flex-wrap:nowrap;font-size:15px;font-weight:820
+  }
+  .additional-toggle-total .currency-value{
+    font-size:16px;font-weight:860;color:var(--text)
+  }
+  .additional-toggle-total .currency-tag{
+    font-size:9px;margin-right:5px
+  }
+  .additional-total-separator{
+    color:#aeb9c1;font-size:18px;font-weight:400;line-height:1;opacity:.95
+  }
+  .additional-panel{
+    padding:10px 10px 6px;border-top:1px solid var(--line);background:#fff
+  }
+  .additional-panel-head{
+    display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:8px
+  }
+  .additional-panel-head .mini:empty{display:none}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:7px 6px;border-bottom:1px solid #e6ebef;vertical-align:middle}
+  th{text-align:left;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.035em}
+  th.elements-head-col{text-align:center}
+  td input,td select{padding:8px 9px;font-size:13px}
+  td.num,th.num{text-align:right}
+  .remove{width:33px;height:33px;border-radius:8px;border:1px solid #efcfcc;background:#fff7f6;color:var(--red);font-size:18px}
+  .addbtn{border:1px solid #bed5e5;background:#f5fbff;color:var(--accent);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750}
+  .subtotal{display:flex;justify-content:flex-end;gap:20px;padding-top:10px;font-size:13px;font-weight:750;flex-wrap:wrap}
+  .summary-column{position:sticky;top:18px;align-self:start;min-width:0}
+  .summary-card{
+    box-shadow:0 18px 42px rgba(16,32,44,.14);
+    border-color:#d4dde4
+  }
+  .summary-card h2{
+    background:#fff;padding:15px 18px 13px;font-size:15px
+  }
+  .summary-card .summary-body{padding:18px 18px 20px}
+  .summary-hero{
+    background:linear-gradient(135deg,#0f2533 0%,#12364b 52%,#15506f 100%);
+    color:#fff;border-radius:13px;padding:17px 18px;margin:13px 0 0;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.07),0 8px 20px rgba(15,37,51,.10)
+  }
+  .summary-hero span{
+    display:block;font-size:10px;font-weight:800;letter-spacing:.055em;
+    text-transform:uppercase;opacity:.65;margin-bottom:5px
+  }
+  .summary-hero strong{display:block;line-height:1.05;letter-spacing:-.02em}
+  .summary-list{border-top:1px solid var(--line)}
+  .summary-row{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+    padding:9px 1px;border-bottom:1px solid #edf1f3
+  }
+  .summary-row span{font-size:11px;color:var(--muted);font-weight:700}
+  .summary-row strong{
+    font-size:12px;font-weight:780;text-align:right;max-width:68%;
+    overflow-wrap:anywhere
+  }
+  .summary-row.emphasis strong{font-size:13px;color:var(--accent)}
+  .summary-money{
+    display:inline-flex;align-items:baseline;justify-content:flex-end;gap:4px;
+    flex-wrap:wrap;line-height:1.25
+  }
+  .summary-money-number{font-weight:800;color:var(--text)}
+  .summary-money-code{
+    font-size:9px;font-weight:850;letter-spacing:.045em;opacity:.72
+  }
+  .summary-money-sep{color:#aab4bc;font-weight:600;margin:0 2px}
+  .summary-row.emphasis .summary-money-number{color:var(--accent)}
+  .summary-row.multi-only{
+    margin:0 -5px;padding-left:6px;padding-right:6px;background:#f7fafc;
+    border-bottom-color:#e2e9ee
+  }
+  .summary-row.multi-only > span:first-child{
+    color:#526570;font-weight:800
+  }
+  .summary-row.multi-only strong{font-size:12px}
+  .summary-hero .summary-total-stack{
+    display:flex;flex-direction:column;align-items:flex-start;gap:8px;
+    margin:0;opacity:1;text-transform:none;letter-spacing:normal;font-size:inherit
+  }
+  .summary-hero .summary-total-line{
+    display:flex;align-items:baseline;justify-content:flex-start;gap:15px;
+    line-height:1;flex-wrap:nowrap;margin:0;opacity:1;
+    text-transform:none;letter-spacing:normal;font-size:inherit
+  }
+  .summary-hero .summary-total-line .summary-money-number{
+    display:inline-block;margin:0;font-size:32px;font-weight:880;
+    letter-spacing:-.035em;white-space:nowrap;opacity:1;line-height:1
+  }
+  .summary-hero .summary-total-line.usd .summary-money-number{color:#dff2ff}
+  .summary-hero .summary-total-line.clp .summary-money-number{color:#ffffff}
+  .summary-hero .summary-total-line .summary-money-code{
+    display:inline-block;margin:0;font-size:11px;font-weight:900;
+    letter-spacing:.065em;white-space:nowrap;vertical-align:baseline;
+    opacity:1;text-transform:uppercase;line-height:1
+  }
+  .summary-hero .summary-total-line .summary-money-code.usd{color:#78c7f4}
+  .summary-hero .summary-total-line .summary-money-code.clp{color:#c3d7e3}
+  .summary-hero .summary-total-divider{
+    display:block;width:100%;max-width:none;height:0;margin:2px 0;
+    border-top:1px dashed rgba(255,255,255,.38);opacity:1
+  }
+  .summary-totals{
+    margin-top:13px;background:#f6f8fa;border:1px solid var(--line);
+    border-radius:12px;padding:6px 12px
+  }
+  .summary-totals .summary-row:last-child{border-bottom:0}
+  .payment-row{display:grid;grid-template-columns:1.2fr .55fr 1fr;gap:8px;margin-bottom:8px;align-items:end}
+  .warn{color:var(--red);font-size:12px;margin-top:7px;min-height:16px}
+  .ok{color:var(--green)}
+  .kit{display:none}.kit.active{display:block}
+  .status.loading{color:#ffd36a}.status.ok{color:#9ee7c3}.status.err{color:#ffaea8}
+  .print-title{display:none}
+  .save-state{font-size:12px;color:var(--muted);margin-top:9px;min-height:17px}
+  .save-state.ok{color:var(--green)} .save-state.err{color:var(--red)}
+
+  .modal-backdrop{
+    position:fixed;inset:0;background:rgba(10,23,32,.52);display:none;align-items:center;justify-content:center;
+    padding:18px;z-index:999
+  }
+  .modal-backdrop.open{display:flex}
+  .modal{
+    width:min(680px,100%);max-height:86vh;overflow:auto;background:#fff;border-radius:16px;
+    border:1px solid rgba(255,255,255,.4);box-shadow:0 28px 70px rgba(0,0,0,.25)
+  }
+  .modal-head{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 17px;border-bottom:1px solid var(--line)
+  }
+  .modal-head h3{margin:0;font-size:16px}
+  .modal-close{width:35px;height:35px;border-radius:9px;border:1px solid var(--line);background:#fff;font-size:19px}
+  .modal-body{padding:16px 17px}
+  .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .help{font-size:12px;color:var(--muted);line-height:1.55}
+  .price-upload-box{
+    display:flex;align-items:center;justify-content:space-between;gap:14px;
+    padding:13px;border:1px solid var(--line);border-radius:12px;background:#f8fafb
+  }
+  .price-upload-box strong{font-size:13px}
+  .price-upload-box p{margin:4px 0 0}
+
+  .saved-list{display:grid;gap:8px;margin-top:12px}
+  .saved-row{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:stretch
+  }
+  .saved-item{
+    width:100%;text-align:left;border:1px solid var(--line);border-radius:11px;background:#fff;padding:11px 12px;
+    display:grid;grid-template-columns:1fr auto;gap:8px
+  }
+  .saved-item:hover{border-color:#9fc7e2;background:#f8fcff}
+  .saved-item strong{font-size:13px}
+  .saved-item small{color:var(--muted);display:block;margin-top:3px}
+  .saved-item .saved-total{font-weight:780;white-space:nowrap}
+  .saved-delete{
+    width:40px;min-width:40px;border:1px solid #efcfcc;border-radius:11px;background:#fff7f6;
+    color:var(--red);font-size:20px;line-height:1;font-weight:500
+  }
+  .saved-delete:hover{background:#fff1ef;border-color:#e9bcb7}
+  .empty-state{padding:20px 8px;text-align:center;color:var(--muted);font-size:13px}
+  .toast{
+    position:fixed;right:18px;bottom:18px;z-index:1200;background:var(--ink);color:#fff;border-radius:11px;
+    padding:11px 14px;box-shadow:0 12px 35px rgba(0,0,0,.2);font-size:13px;opacity:0;transform:translateY(8px);
+    pointer-events:none;transition:.2s ease;max-width:min(390px,calc(100vw - 36px))
+  }
+  .toast.show{opacity:1;transform:translateY(0)}
+  .toast.success{background:#176b45}.toast.error{background:#9f2f27}
+
+
+  [hidden]{display:none!important}
+  .workspace-btn{background:#f4f8fb;border-color:#c8d8e3;color:#294958}
+  .workspace-btn:hover{background:#edf5f9;border-color:#aac4d4}
+  .access-lead{margin:0 0 14px;color:#455965;font-size:13px;line-height:1.55}
+  .secure-note{
+    display:flex;gap:9px;align-items:flex-start;padding:10px 11px;margin:10px 0 14px;
+    border:1px solid #d8e5ed;border-radius:10px;background:#f6fafc;color:#4c626f;font-size:12px;line-height:1.5
+  }
+  .secure-dot{width:8px;height:8px;border-radius:50%;background:#2c8a61;flex:0 0 auto;margin-top:5px}
+  .access-panel{display:grid;gap:11px}
+  .access-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .access-secondary{
+    margin-top:15px;padding-top:14px;border-top:1px solid var(--line);display:flex;gap:8px;flex-wrap:wrap
+  }
+  .access-secondary .btn{flex:1 1 180px}
+  .access-back{margin-bottom:12px}
+  .access-state{min-height:18px;font-size:12px;color:var(--muted)}
+  .access-state.err{color:var(--red)}.access-state.ok{color:var(--green)}
+  .link-code-box{
+    display:flex;align-items:center;justify-content:center;min-height:66px;margin:10px 0;
+    background:#f5f8fa;border:1px solid #d5e0e7;border-radius:12px
+  }
+  .link-code{font-size:27px;font-weight:900;letter-spacing:.12em;color:#173a50;font-variant-numeric:tabular-nums}
+  .link-share-grid{display:grid;grid-template-columns:210px minmax(0,1fr);gap:18px;align-items:center}
+  .qr-box{
+    width:210px;min-height:210px;display:flex;align-items:center;justify-content:center;padding:10px;
+    border:1px solid #d9e2e8;border-radius:13px;background:#fff
+  }
+  .qr-box img,.qr-box canvas{max-width:190px!important;max-height:190px!important}
+  .qr-fallback{text-align:center;font-size:12px;color:var(--muted);padding:15px}
+  .scanner-wrap{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#111}
+  .scanner-video{display:block;width:100%;max-height:330px;object-fit:cover;background:#111}
+  .scanner-help{padding:9px 11px;background:#f6f8fa;color:var(--muted);font-size:12px}
+  .workspace-card{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 13px;
+    border:1px solid var(--line);border-radius:12px;background:#f8fafb
+  }
+  .workspace-card strong{display:block;font-size:13px}.workspace-card small{display:block;color:var(--muted);margin-top:3px}
+  .settings-section{padding-top:15px;margin-top:15px;border-top:1px solid var(--line)}
+  .settings-section:first-of-type{margin-top:0}
+  .settings-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+  .settings-head h4{margin:0;font-size:13px}
+  .device-list{display:grid;gap:7px;margin-top:8px}
+  .device-item{
+    display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
+    padding:10px 11px;border:1px solid var(--line);border-radius:10px;background:#fff
+  }
+  .device-item strong{font-size:12px}.device-item small{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+  .device-badge{display:inline-flex;margin-left:6px;padding:2px 6px;border-radius:999px;background:#e7f5ee;color:#226b4d;font-size:9px;font-weight:850;text-transform:uppercase;letter-spacing:.04em}
+  .device-remove{border:1px solid #edcfcb;background:#fff7f6;color:#9f2f27;border-radius:8px;padding:6px 8px;font-size:11px;font-weight:750}
+  .danger-link{color:#9f2f27;border-color:#e5c6c2;background:#fff8f7}
+  .recovery-change{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:end;margin-top:10px}
+  .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
+
+
+  /* V2.41 */
+  .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
+  .btn.pdf:hover{background:#ffe9e7}
+  .additional-kit-box{
+    padding:2px 0 11px;margin-bottom:10px;border-bottom:1px solid #e4eaee
+  }
+  .additional-kit-box .kit-control-row{
+    max-width:430px;grid-template-columns:minmax(120px,.8fr) minmax(170px,1.2fr)
+  }
+  .inline-currency-sep{
+    display:inline!important;margin:0 10px!important;color:#9caab4!important;
+    font-size:15px!important;font-weight:500!important;vertical-align:baseline!important
+  }
+  .compact-sale-clp strong{
+    overflow:visible;text-overflow:clip
+  }
+  .discount-main strong{color:var(--accent);font-size:20px}
+  .summary-row{padding:10px 1px}
+  .summary-row > span:first-child{
+    font-size:12px;flex:1 1 auto;min-width:0;max-width:34%
+  }
+  .summary-row strong{
+    font-size:14px;max-width:66%;flex:0 0 auto
+  }
+  .summary-row.emphasis strong{font-size:15px}
+  .summary-money{
+    gap:5px;flex-wrap:nowrap!important;white-space:nowrap;line-height:1.2
+  }
+  .summary-money-number{font-size:14px}
+  .summary-money-number.usd-number{color:#1c638f}
+  .summary-money-number.clp-number{color:#536f7e}
+  .summary-row.emphasis .summary-money-number.usd-number{color:#126fa7}
+  .summary-row.emphasis .summary-money-number.clp-number{color:#4f7485}
+  .summary-money-code{font-size:10px}
+  .summary-money-code.usd{color:#4b87ab;opacity:.82}
+  .summary-money-code.clp{color:#738c98;opacity:.82}
+  .summary-money-sep{color:#aeb9c0!important}
+  .discount-summary{
+    margin:3px -7px;padding:10px 8px;border:1px solid #cfe1ee!important;
+    border-radius:9px;background:#eef7fc
+  }
+  .discount-summary > span:first-child{color:#315f7c;font-weight:850}
+  .discount-summary strong{
+    color:#0d6da8;font-size:16px;font-weight:900
+  }
+  .summary-hero .summary-total-line .summary-money-number{font-size:36px}
+  .summary-hero .summary-total-line .summary-money-code{font-size:12px}
+
+  /* V2.41 · refinamiento del resumen */
+  .summary-list{border-top:1px solid #dfe6eb}
+  .summary-row{
+    padding:10px 2px;gap:14px
+  }
+  .summary-row > span:first-child{
+    max-width:35%;line-height:1.35
+  }
+  .summary-row strong{
+    max-width:65%;min-width:0
+  }
+  .summary-meta-row strong{
+    font-size:12px!important;
+    font-weight:500!important;
+    color:var(--text);
+  }
+  .summary-row.pricing-start{
+    margin-top:5px;padding-top:13px;border-top:1px solid #d8e2e8
+  }
+  .discount-summary{
+    margin:4px 0;padding:10px 10px
+  }
+  .summary-row.emphasis{
+    margin:0;padding:10px 2px;border:0;background:transparent;border-radius:0
+  }
+  .summary-row.emphasis:last-child{border-bottom:1px solid #edf1f3}
+  .summary-totals .summary-row{
+    padding:10px 1px
+  }
+  .summary-totals .summary-row > span:first-child{
+    font-weight:800;color:#526570
+  }
+  .summary-hero .summary-total-line .summary-money-number{
+    font-size:38px
+  }
+
+
+  /* V2.41 · bloqueo de operaciones críticas */
+  .busy-overlay{
+    position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
+    padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
+    cursor:wait
+  }
+  .busy-overlay[hidden]{display:none!important}
+  .busy-card{
+    width:min(420px,calc(100vw - 38px));padding:22px 22px 20px;border-radius:16px;
+    background:#fff;border:1px solid rgba(35,65,84,.14);
+    box-shadow:0 24px 70px rgba(10,28,39,.26);text-align:center
+  }
+  .busy-spinner{
+    width:34px;height:34px;margin:0 auto 13px;border:3px solid #dce8ef;
+    border-top-color:#1769a6;border-radius:50%;animation:busySpin .8s linear infinite
+  }
+  @keyframes busySpin{to{transform:rotate(360deg)}}
+  .busy-card strong{display:block;color:#183241;font-size:16px;margin-bottom:6px}
+  .busy-card span{display:block;color:#687985;font-size:12px;line-height:1.45}
+
+  @media(max-width:980px){.grid{grid-template-columns:1fr}.fx-card{min-width:0;width:100%}.summary-column{position:static}}
+  @media(max-width:620px){
+    .topbar{padding:16px}.container{padding-left:10px;padding-right:10px}
+    .brand-logo{width:92px;height:32px}
+    .form-grid,.metric-grid{grid-template-columns:1fr}
+    .quote-top-row{grid-template-columns:1fr}
+    .payment-row{grid-template-columns:1fr .7fr}.payment-row .amount{grid-column:1/-1}
+    .hide-sm{display:none!important}
+    #extrasBody .hide-sm{display:table-cell!important}
+    #extrasBody td{padding-left:3px;padding-right:3px}
+    #extrasBody .money-field input{font-size:12px;padding-left:39px}
+    #extrasBody .money-prefix{left:8px;font-size:9px}
+    .additional-toggle{align-items:flex-start}
+    .additional-toggle-total{gap:8px;font-size:12px}
+    .additional-panel-head{align-items:center}
+    .summary-row{align-items:flex-start}
+    .summary-row strong{max-width:72%}
+    .summary-hero .summary-total-line .summary-money-number{font-size:26px}
+    .additional-panel-head{align-items:flex-start;flex-direction:column}
+    .kit-control-row{grid-template-columns:minmax(95px,.8fr) minmax(125px,1.2fr)}
+    .actionbar{align-items:stretch}
+    .action-primary-row,.action-secondary-row{width:100%;justify-content:flex-start}
+    .action-cluster{flex:1 1 100%}
+    .action-cluster .btn{flex:1 1 auto}
+    .action-cluster-label{display:none}
+    .action-separator{display:none}
+    .db-pill{width:100%;justify-content:center}
+    .fx-card{grid-template-columns:auto 1fr}.fx-refresh{grid-column:1/-1;width:100%}
+    .access-grid,.recovery-change{grid-template-columns:1fr}
+    .link-share-grid{grid-template-columns:1fr}
+    .qr-box{margin:auto}
+    .link-code{font-size:23px}
+    .workspace-card{align-items:flex-start;flex-direction:column}
+  }
+  @media print{
+    body{background:#fff}.topbar,.actionbar,.remove,.addbtn,.modal-backdrop,.toast,.busy-overlay{display:none!important}
+    .container{max-width:none;margin:0;padding:0}.grid{grid-template-columns:1.35fr .65fr;gap:10px}
+    .card{break-inside:avoid;border-color:#999;box-shadow:none}
+    input,select,textarea{border:0;padding:2px 0;box-shadow:none;appearance:none}
+    .print-title{display:block;margin:0 0 12px;font-size:20px}
+  }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-logo" aria-label="Volvo">
+      <svg class="volvo-logo-svg" id="Layer_1" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 524.06 45.51">
+  <!-- Generator: Adobe Illustrator 29.4.0, SVG Export Plug-In . SVG Version: 2.1.0 Build 152)  -->
+  <polygon points="52.98 7.69 61.52 7.69 47.24 34.1 32.77 7.7 43.15 7.69 43.14 1.12 .25 1.12 .24 7.7 10.06 7.7 30.01 43.94 53.11 43.96 72.72 7.69 82.55 7.7 82.55 1.12 52.98 1.12 52.98 7.69"/>
+  <path d="M275.09,37.27h-9.13V7.68h9.85V1.13h-39.56v6.55h9.96v29.6h-9.96v6.63h59.38v-19.82h-6.53c0,7.59-5.55,13.18-14.01,13.18h0Z"/>
+  <path d="M154.33.22c-19.86,0-30.41,9.91-30.41,22.34s10.16,22.66,30.53,22.66,30.41-10.05,30.41-22.66S174.2.22,154.33.22ZM164.93,22.67c-.14,7.78-3.35,15.88-10.82,15.74-7.25-.13-10.44-8.15-10.3-16.11.14-8.25,4.09-15.44,10.89-15.33,6.8.12,10.38,7.45,10.24,15.7,0,0,0,0,0,0Z"/>
+  <polygon points="392.03 7.69 400.57 7.69 386.29 34.1 371.82 7.7 382.2 7.69 382.2 1.12 339.3 1.12 339.29 7.7 349.11 7.7 369.06 43.94 392.16 43.96 411.77 7.69 421.6 7.7 421.6 1.12 392.03 1.12 392.03 7.69"/>
+  <path d="M493.39.22c-19.86,0-30.41,9.91-30.41,22.34s10.16,22.66,30.53,22.66,30.41-10.05,30.41-22.66S513.26.22,493.39.22ZM503.99,22.67c-.14,7.78-3.35,15.88-10.82,15.74-7.25-.13-10.44-8.15-10.3-16.11.14-8.25,4.09-15.44,10.89-15.33,6.8.12,10.38,7.45,10.24,15.7,0,0-.01,0-.01,0Z"/>
+</svg>
+    </div>
+    <h1>Cotizador idea Cris</h1>
+  </div>
+
+  <div class="fx-card">
+    <div class="fx-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.7"/><path d="M14.7 8.9c-.7-.6-1.6-.9-2.7-.9-1.7 0-2.8.8-2.8 2 0 1.3 1.1 1.7 2.9 2.1 1.7.4 2.7.8 2.7 2 0 1.4-1.2 2.2-3 2.2-1.2 0-2.3-.4-3.1-1.1M12 6.5v11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+    <div class="fx-copy">
+      <div class="eyebrow">Dólar observado</div>
+      <strong id="tcDisplay">Cargando…</strong>
+      <small id="tcStatus" class="status loading">Consultando Banco Central</small>
+    </div>
+    <button id="tcRefresh" class="fx-refresh" type="button">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M20 7v5h-5M4 17v-5h5M18.3 12a6.5 6.5 0 0 0-11-4.6L4 10M5.7 12a6.5 6.5 0 0 0 11 4.6L20 14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Actualizar hoy
+    </button>
+  </div>
+</header>
+
+<main class="container" id="app">
+  <h1 class="print-title">Cotizador</h1>
+
+  <div class="actionbar">
+    <div class="action-primary-row">
+      <button class="btn update-list" id="updatePricesBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.7"/><path d="M14 3v5h5M12 17v-6M9.8 13.2 12 11l2.2 2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Actualizar lista de precios
+      </button>
+      <div class="action-separator" aria-hidden="true"></div>
+      <button class="btn danger" id="resetQuote" type="button">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M9 6V4h6v2M7 6l1 14h8l1-14M10 10v6M14 10v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Nueva cotización
+      </button>
+    </div>
+
+    <div class="action-secondary-row">
+      <div class="action-cluster" aria-label="Cotizaciones en la nube">
+        <span class="action-cluster-label">Nube</span>
+        <button class="btn primary" id="saveDb" type="button">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 19h12a4 4 0 0 0 .7-7.9A6.5 6.5 0 0 0 6.3 9.2 4.9 4.9 0 0 0 6 19Z" stroke="currentColor" stroke-width="1.7"/><path d="m9 14 3-3 3 3M12 11v6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Guardar
+        </button>
+        <button class="btn cloud" id="loadSaved" type="button">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 19h12a4 4 0 0 0 .7-7.9A6.5 6.5 0 0 0 6.3 9.2 4.9 4.9 0 0 0 6 19Z" stroke="currentColor" stroke-width="1.7"/><path d="M12 10v6M9.8 13.8 12 16l2.2-2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Cargar de la nube
+        </button>
+        <button class="btn workspace-btn" id="workspaceBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM5 20c.7-3.6 3.1-5.5 7-5.5s6.3 1.9 7 5.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M18.5 10.5v4M16.5 12.5h4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          Mi espacio
+        </button>
+      </div>
+
+      <div class="action-cluster" aria-label="Cotizaciones Excel">
+        <span class="action-cluster-label">Excel</span>
+        <button class="btn excel" id="exportExcel" type="button">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.7"/><path d="M14 3v5h5M9 12l4 5M13 12l-4 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          Guardar Excel
+        </button>
+        <button class="btn ghost" id="loadExcelBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.7"/><path d="M14 3v5h5M12 11v6M9.8 14.8 12 17l2.2-2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Cargar Excel
+        </button>
+        <input id="loadExcelInput" type="file" accept=".xlsx,.xlsm,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+      </div>
+
+      <button class="btn pdf" id="exportPdf" type="button">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.7"/><path d="M14 3v5h5M8.5 16.5h7M8.5 13h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+        Guardar PDF
+      </button>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div>
+      <section class="card">
+        <h2>Datos de la cotización</h2>
+        <div class="body">
+          <div class="form-grid">
+            <div class="quote-top-row full">
+              <div class="client-autocomplete">
+                <label for="client">Cliente</label>
+                <input id="client" type="text" autocomplete="off" placeholder="Nombre del cliente" aria-autocomplete="list" aria-expanded="false" aria-controls="clientSuggestions">
+                <div id="clientSuggestions" class="client-suggestions" role="listbox"></div>
+              </div>
+              <div>
+                <label for="clientAlias">Apodo cliente</label>
+                <input id="clientAlias" type="text" autocomplete="off" placeholder="Opcional">
+              </div>
+              <div>
+                <label for="quoteDate">Fecha cotización</label>
+                <input id="quoteDate" type="date">
+              </div>
+            </div>
+            <div>
+              <label for="chassis">Chasis</label>
+              <input id="chassis" type="text" placeholder="Ingreso manual">
+            </div>
+            <div>
+              <label for="qty">Cantidad</label>
+              <input id="qty" type="number" min="1" step="1" value="1">
+            </div>
+            <div class="full">
+              <label for="modelPickerButton">Modelo</label>
+              <div class="model-picker">
+                <select id="model" class="model-native-select" tabindex="-1" aria-hidden="true">
+                  <option value="">Modelo…</option>
+                </select>
+                <button id="modelPickerButton" class="model-picker-button" type="button"
+                        aria-haspopup="listbox" aria-expanded="false">
+                  <span id="modelPickerText">Modelo…</span>
+                  <span class="model-picker-chevron" aria-hidden="true"></span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label for="listPrice">Precio de lista</label>
+              <input id="listPrice" type="text" readonly value="—">
+            </div>
+            <div>
+              <label for="salePrice">Precio de Venta</label>
+              <div class="money-field sale-price-highlight">
+                <span class="money-prefix">USD</span>
+                <input id="salePrice" class="money-input" data-currency="USD" type="text" inputmode="decimal" autocomplete="off" placeholder="0">
+              </div>
+            </div>
+            <div>
+              <label>Descuento</label>
+              <div class="metric compact-sale-clp discount-main">
+                <strong id="mainDiscount">—</strong>
+              </div>
+            </div>
+
+            <div>
+              <label>Precio venta + agregados</label>
+              <div class="metric compact-sale-clp sale-plus-total">
+                <strong id="salePlusExtras"><span class="currency-tag">USD</span><span class="currency-value">0</span></strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="section additional-section">
+            <button class="additional-toggle" id="toggleExtras" type="button" aria-expanded="false" aria-controls="extrasPanel">
+              <span class="additional-toggle-left">
+                <span class="additional-chevron" aria-hidden="true"></span>
+                <span>Adicionales</span>
+              </span>
+              <span class="additional-toggle-total">
+                <span id="extrasUsd"><span class="currency-tag">USD</span><span class="currency-value">0</span></span>
+                <span class="additional-total-separator" aria-hidden="true">|</span>
+                <span id="extrasClp"><span class="currency-tag">CLP</span><span class="currency-value">0</span></span>
+              </span>
+            </button>
+
+            <div class="additional-panel" id="extrasPanel" hidden>
+              <div class="additional-kit-box">
+                <div class="kit-control-row">
+                  <div class="kit-control-field">
+                    <label for="kitRequired">Kit minero</label>
+                    <select id="kitRequired"><option value="no">No</option><option value="si">Sí</option></select>
+                  </div>
+                  <div class="kit-control-field">
+                    <label>Total kit</label>
+                    <div class="kit-total-box">
+                      <strong id="kitTotalMain"><span class="currency-tag">USD</span><span class="currency-value">0</span></strong>
+                    </div>
+                  </div>
+                  <button class="kit-edit-btn" id="editKit" type="button" hidden>Editar kit</button>
+                </div>
+              </div>
+
+              <div class="additional-panel-head additional-panel-head-actions">
+                <span></span>
+                <button class="addbtn" id="addExtra" type="button">+ Agregar elemento</button>
+              </div>
+              <table>
+                <thead><tr><th class="elements-head-col">Elementos</th><th class="num"></th><th class="num hide-sm"></th><th></th></tr></thead>
+                <tbody id="extrasBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="card section">
+        <h2>Formas de pago</h2>
+        <div class="body">
+          <div id="payments"></div>
+          <div class="warn" id="paymentsWarn"></div>
+          <div class="section">
+            <div class="section-head"><h3>Detalle del pie / pagos diferidos</h3><span class="mini">Montos manuales en CLP</span></div>
+            <table>
+              <thead><tr><th>Forma de pago</th><th class="num">Monto</th><th></th></tr></thead>
+              <tbody id="scheduleBody"></tbody>
+            </table>
+            <div class="subtotal"><span>Total con interés / detalle</span><span id="scheduleTotal"><span class="currency-tag">CLP</span><span class="currency-value">0</span></span></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <aside class="summary-column">
+      <section class="card summary-card">
+        <h2>Resumen</h2>
+        <div class="body summary-body">
+          <div class="summary-list">
+            <div class="summary-row summary-meta-row"><span>Cliente</span><strong id="sumClient">—</strong></div>
+            <div class="summary-row summary-meta-row"><span>Fecha</span><strong id="sumDate">—</strong></div>
+            <div class="summary-row summary-meta-row"><span>Modelo</span><strong id="sumModel">—</strong></div>
+            <div class="summary-row summary-meta-row"><span>Chasis</span><strong id="sumChassis">—</strong></div>
+            <div class="summary-row summary-meta-row"><span>Cantidad</span><strong id="sumQty">1</strong></div>
+            <div class="summary-row"><span>Tipo de cambio</span><strong id="sumTc">—</strong></div>
+
+            <div class="summary-row pricing-start"><span>Precio de lista</span><strong id="sumList">—</strong></div>
+            <div class="summary-row"><span>Precio de Venta</span><strong id="sumSaleUnit"><span class="summary-money"><span class="summary-money-number">0</span><span class="summary-money-code usd">USD</span><span class="summary-money-sep">/</span><span class="summary-money-number">0</span><span class="summary-money-code clp">CLP</span></span></strong></div>
+            <div class="summary-row discount-summary"><span>Descuento</span><strong id="sumDiscount">—</strong></div>
+
+            <div class="summary-row"><span>Total adicionales</span><strong id="sumExtras"><span class="summary-money"><span class="summary-money-number">0</span><span class="summary-money-code usd">USD</span><span class="summary-money-sep">/</span><span class="summary-money-number">0</span><span class="summary-money-code clp">CLP</span></span></strong></div>
+            <div class="summary-row emphasis"><span>Precio venta + agregados</span><strong id="sumFinalUnit"><span class="summary-money"><span class="summary-money-number">0</span><span class="summary-money-code usd">USD</span><span class="summary-money-sep">/</span><span class="summary-money-number">0</span><span class="summary-money-code clp">CLP</span></span></strong></div>
+          </div>
+
+          <div class="summary-totals">
+            <div class="summary-row"><span>Neto</span><strong id="netClp"><span class="summary-money"><span class="summary-money-number">0</span><span class="summary-money-code usd">USD</span><span class="summary-money-sep">/</span><span class="summary-money-number">0</span><span class="summary-money-code clp">CLP</span></span></strong></div>
+            <div class="summary-row"><span>IVA 19%</span><strong id="vatClp"><span class="summary-money"><span class="summary-money-number">0</span><span class="summary-money-code usd">USD</span><span class="summary-money-sep">/</span><span class="summary-money-number">0</span><span class="summary-money-code clp">CLP</span></span></strong></div>
+          </div>
+
+          <div class="summary-hero">
+            <span>Total cotización</span>
+            <strong id="totalClp"><span class="summary-total-line usd"><span class="summary-money-number">0</span><span class="summary-money-code usd">USD</span></span></strong>
+          </div>
+
+          <div id="saveState" class="save-state"></div>
+        </div>
+      </section>
+    </aside>
+  </div>
+</main>
+
+
+
+<div class="modal-backdrop" id="priceModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
+    <div class="modal-head">
+      <h3 id="priceModalTitle">Actualizar lista de precios</h3>
+      <button class="modal-close" type="button" data-close="priceModal">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="price-upload-box">
+        <div>
+          <strong>Archivo de precios</strong>
+          <p class="help">Excel recomendado. También se puede intentar leer un PDF si conserva la tabla como texto.</p>
+        </div>
+        <label class="btn update-list" style="cursor:pointer">
+          Seleccionar archivo
+          <input id="priceFileInput" type="file" accept=".xlsx,.xlsm,.pdf,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+        </label>
+      </div>
+      <div id="priceFileName" class="save-state"></div>
+      <div id="priceImportState" class="save-state"></div>
+      <div class="modal-actions">
+        <button class="btn primary" id="applyPriceFile" type="button" disabled>Actualizar valores</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="kitModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="kitModalTitle">
+    <div class="modal-head">
+      <h3 id="kitModalTitle">Kit minero</h3>
+      <button class="modal-close" id="closeKitModal" type="button" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="kit-editor-head">
+        <p>Agrega los campos que correspondan y su precio por unidad.</p>
+        <button class="addbtn" id="addKit" type="button">+ Agregar campo</button>
+      </div>
+      <div class="kit-table-wrap">
+        <table>
+          <thead>
+            <tr><th>Campo</th><th class="num">Precio USD</th><th class="num hide-sm">Precio CLP</th><th></th></tr>
+          </thead>
+          <tbody id="kitBody"></tbody>
+        </table>
+      </div>
+      <div class="kit-modal-total">
+        <span>Total kit minero</span>
+        <strong id="kitModalUsd"><span class="currency-tag">USD</span><span class="currency-value">0</span></strong>
+        <span class="kit-total-separator" aria-hidden="true">|</span>
+        <strong id="kitModalClp"><span class="currency-tag">CLP</span><span class="currency-value">0</span></strong>
+      </div>
+      <div class="modal-actions">
+        <button class="btn primary" id="finishKit" type="button">Listo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="loadModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="loadTitle">
+    <div class="modal-head"><h3 id="loadTitle">Cotizaciones guardadas</h3><button class="modal-close" type="button" data-close="loadModal">×</button></div>
+    <div class="modal-body">
+      <input id="savedSearch" type="search" placeholder="Buscar por cliente, modelo o chasis…">
+      <div id="savedList" class="saved-list"></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-backdrop" id="accessModal" data-locked="true">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="accessTitle">
+    <div class="modal-head"><h3 id="accessTitle">Configura tu espacio privado</h3></div>
+    <div class="modal-body">
+      <div id="accessCreateView">
+        <p class="access-lead">Crea una clave de recuperación. Este navegador quedará vinculado automáticamente y no volverá a pedirte la clave durante el uso normal.</p>
+        <div class="secure-note"><span class="secure-dot"></span><span>La clave sirve únicamente para recuperar tus cotizaciones si formateas, cambias de equipo o pierdes todos los dispositivos vinculados. Puede tener la longitud y caracteres que quieras.</span></div>
+        <div class="access-grid">
+          <div><label for="createRecoveryKey">Clave de recuperación</label><input id="createRecoveryKey" type="password" autocomplete="new-password" placeholder="La clave que quieras"></div>
+          <div><label for="createRecoveryKey2">Confirmar clave</label><input id="createRecoveryKey2" type="password" autocomplete="new-password" placeholder="Repite la clave"></div>
+        </div>
+        <div class="modal-actions"><button class="btn primary" id="createWorkspaceBtn" type="button">Crear mi espacio</button></div>
+        <div id="createWorkspaceState" class="access-state"></div>
+        <div class="access-secondary">
+          <button class="btn ghost" id="goRecoverAccess" type="button">Ya tengo un espacio · Recuperar</button>
+          <button class="btn cloud" id="goLinkAccess" type="button">Vincular este dispositivo</button>
+        </div>
+      </div>
+
+      <div id="accessRecoverView" hidden>
+        <button class="btn ghost access-back" id="backFromRecover" type="button">← Volver</button>
+        <p class="access-lead">Escribe la clave que creaste anteriormente. Este dispositivo quedará vinculado al mismo espacio y recuperará tus cotizaciones.</p>
+        <label for="recoverKey">Clave de recuperación</label>
+        <input id="recoverKey" type="password" autocomplete="current-password" placeholder="Tu clave de recuperación">
+        <div class="modal-actions"><button class="btn primary" id="recoverWorkspaceBtn" type="button">Recuperar mis datos</button></div>
+        <div id="recoverWorkspaceState" class="access-state"></div>
+      </div>
+
+      <div id="accessLinkView" hidden>
+        <button class="btn ghost access-back" id="backFromLink" type="button">← Volver</button>
+        <p class="access-lead" id="linkAccessLead">Vincula este dispositivo con uno que ya tenga acceso.</p>
+        <div id="mobileQrActions" hidden>
+          <button class="btn primary" id="scanQrBtn" type="button">Escanear QR</button>
+          <div id="scannerWrap" class="scanner-wrap" hidden>
+            <video id="scannerVideo" class="scanner-video" playsinline muted></video>
+            <canvas id="scannerCanvas" hidden></canvas>
+            <div id="scannerState" class="scanner-help">Apunta la cámara al QR mostrado en el otro dispositivo.</div>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <label for="linkCodeInput">Código de vinculación</label>
+          <input id="linkCodeInput" type="text" autocomplete="one-time-code" inputmode="text" maxlength="12" placeholder="Ej: 7KQ-4M2" style="text-transform:uppercase">
+        </div>
+        <div class="modal-actions"><button class="btn cloud" id="claimLinkCodeBtn" type="button">Vincular con código</button></div>
+        <div id="linkWorkspaceState" class="access-state"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="workspaceModal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="workspaceTitle">
+    <div class="modal-head"><h3 id="workspaceTitle">Mi espacio</h3><button class="modal-close" type="button" data-close="workspaceModal">×</button></div>
+    <div class="modal-body">
+      <div class="workspace-card">
+        <div><strong id="currentDeviceName">Este dispositivo</strong><small id="currentDeviceDetail">Vinculado a tu espacio privado</small></div>
+        <button class="btn cloud" id="createLinkBtn" type="button">Vincular otro dispositivo</button>
+      </div>
+
+      <div id="linkSharePanel" class="settings-section" hidden>
+        <div class="settings-head"><h4>Vinculación temporal</h4><span class="mini" id="linkExpiresText">Vence en 5:00</span></div>
+        <div id="desktopLinkShare" class="link-share-grid" hidden>
+          <div id="linkQr" class="qr-box"><div class="qr-fallback">Generando QR…</div></div>
+          <div>
+            <p class="help">En la tablet o teléfono abre el cotizador, elige <strong>Vincular este dispositivo</strong> y escanea este QR.</p>
+            <div class="link-code-box"><span id="linkCodeDesktop" class="link-code">—</span></div>
+            <p class="compact-help">El código sirve como alternativa al QR y es de un solo uso.</p>
+          </div>
+        </div>
+        <div id="mobileLinkShare" hidden>
+          <p class="help">Escribe este código en el PC/notebook o en el otro dispositivo.</p>
+          <div class="link-code-box"><span id="linkCodeMobile" class="link-code">—</span></div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-head"><h4>Dispositivos vinculados</h4><button class="btn ghost" id="refreshDevicesBtn" type="button">Actualizar</button></div>
+        <div id="devicesList" class="device-list"><div class="empty-state">Cargando…</div></div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-head"><h4>Clave de recuperación</h4></div>
+        <p class="help">No se usa para entrar normalmente. Si aún tienes un dispositivo vinculado, puedes cambiarla aquí sin conocer la anterior.</p>
+        <button class="btn ghost" id="showChangeRecovery" type="button">Cambiar clave de recuperación</button>
+        <div id="changeRecoveryPanel" class="recovery-change" hidden>
+          <div><label for="newRecoveryKey">Nueva clave</label><input id="newRecoveryKey" type="password" autocomplete="new-password" placeholder="La clave que quieras"></div>
+          <div><label for="newRecoveryKey2">Confirmar</label><input id="newRecoveryKey2" type="password" autocomplete="new-password" placeholder="Repite la clave"></div>
+          <button class="btn primary" id="changeRecoveryBtn" type="button">Guardar</button>
+        </div>
+        <div id="changeRecoveryState" class="access-state"></div>
+      </div>
+
+      <div class="settings-section">
+        <button class="btn danger-link" id="unlinkCurrentDevice" type="button">Quitar acceso de este dispositivo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<div class="busy-overlay" id="busyOverlay" hidden aria-live="assertive" aria-busy="true">
+  <div class="busy-card">
+    <div class="busy-spinner" aria-hidden="true"></div>
+    <strong id="busyTitle">Procesando…</strong>
+    <span id="busyText">No cierres esta pestaña hasta que termine.</span>
+  </div>
+</div>
+
+<script>
+(() => {
+  "use strict";
+
+  const MODELS = [{"id":"precio-row-2","sourceRow":2,"sourceModel":"FH42T AIR","family":"FH","type":"TRACTO","traction":"4X2","power":"500 CV","labelBase":"FH 4X2T 500","priceUsd":171465.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":3500,"safe":"FULL","label":"FH 4X2T 500"},{"id":"precio-row-3","sourceRow":3,"sourceModel":"FH62T AIR","family":"FH","type":"TRACTO","traction":"6X2","power":"500 CV","labelBase":"FH 6X2T 500","priceUsd":179655.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":3200,"safe":"FULL","label":"FH 6X2T 500"},{"id":"precio-row-4","sourceRow":4,"sourceModel":"FH62R AIR","family":"FH","type":"RÍGIDO","traction":"6X2","power":"540 CV","labelBase":"FH 6X2R 540","priceUsd":183330.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":4900,"safe":"FULL","label":"FH 6X2R 540"},{"id":"precio-row-5","sourceRow":5,"sourceModel":"FH64T AIR","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500","priceUsd":200655.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FH 6X4T 500"},{"id":"precio-row-6","sourceRow":6,"sourceModel":"FH64T PAR","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 PAR","priceUsd":200655.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FH 6X4T 500 PAR"},{"id":"precio-row-7","sourceRow":7,"sourceModel":"FH64T AIR CUBOS","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 CUBOS","priceUsd":206955.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":"3.76/3.61","dee":"3200/3600","safe":"FULL","label":"FH 6X4T 500 CUBOS"},{"id":"precio-row-8","sourceRow":8,"sourceModel":"FH64T INDIVISIBLE MUL","family":"FH","type":"TRACTO","traction":"6X4","power":"540 CV","labelBase":"FH 6X4T 540","priceUsd":214830.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":5.41,"dee":3600,"safe":"FULL","label":"FH 6X4T 540"},{"id":"precio-row-9","sourceRow":9,"sourceModel":"FH84T INDIVISIBLE MUL","family":"FH","type":"TRACTO","traction":"8X4","power":"540 CV","labelBase":"FH 8X4T 540","priceUsd":261240.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH2610B","rat":5.41,"dee":3900,"safe":"FULL","label":"FH 8X4T 540"},{"id":"precio-row-10","sourceRow":10,"sourceModel":"FH42T AIR GNL","family":"FH","type":"TRACTO","traction":"4X2","power":"500 CV","labelBase":"FH 4X2T 500 GNL","priceUsd":237510.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":"2.47/2.64","dee":3800,"safe":"FULL","label":"FH 4X2T 500 GNL"},{"id":"precio-row-11","sourceRow":11,"sourceModel":"FH62T AIR GNL","family":"FH","type":"TRACTO","traction":"6X2","power":"500 CV","labelBase":"FH 6X2T 500 GNL","priceUsd":244860.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":"2.47/2.64","dee":3900,"safe":"FULL","label":"FH 6X2T 500 GNL"},{"id":"precio-row-12","sourceRow":12,"sourceModel":"FH64T AIR GNL","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 GNL","priceUsd":257460.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RTS2310A","rat":"2.64/2.85","dee":3900,"safe":"FULL","label":"FH 6X4T 500 GNL"},{"id":"precio-row-13","sourceRow":13,"sourceModel":"FM42T AIR","family":"FM","type":"TRACTO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2T 460","priceUsd":150150.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":3500,"safe":"FULL","label":"FM 4X2T 460"},{"id":"precio-row-14","sourceRow":14,"sourceModel":"FM42R AIR","family":"FM","type":"RÍGIDO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2R 460","priceUsd":150150.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":"VARIAS","safe":"FULL","label":"FM 4X2R 460"},{"id":"precio-row-15","sourceRow":15,"sourceModel":"FM62T AIR","family":"FM","type":"TRACTO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2T 460","priceUsd":161910.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":3200,"safe":"FULL","label":"FM 6X2T 460"},{"id":"precio-row-16","sourceRow":16,"sourceModel":"FM62R AIR","family":"FM","type":"RÍGIDO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2R 460","priceUsd":161910.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":4900,"safe":"FULL","label":"FM 6X2R 460"},{"id":"precio-row-17","sourceRow":17,"sourceModel":"FM64T AIR","family":"FM","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4T 460","priceUsd":177660.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":3200,"safe":"FULL","label":"FM 6X4T 460"},{"id":"precio-row-18","sourceRow":18,"sourceModel":"FM64R AIR","family":"FM","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4R 460","priceUsd":172935.0,"classification":"MTO","application":"COMBUSTIBLE","cabin":"CAB-SLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":4600,"safe":"FULL","label":"FM 6X4R 460"},{"id":"precio-row-19","sourceRow":19,"sourceModel":"FM84R AIR","family":"FM","type":"RÍGIDO","traction":"8X4","power":"460 CV","labelBase":"FM 8X4R 460","priceUsd":183330.0,"classification":"MTO","application":"COMBUSTIBLE","cabin":"CAB-SLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":5100,"safe":"SEMI FULL","label":"FM 8X4R 460"},{"id":"precio-row-20","sourceRow":20,"sourceModel":"FM42T AIR GNL","family":"FM","type":"TRACTO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2T 460 GNL","priceUsd":213360.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":2.64,"dee":3800,"safe":"FULL","label":"FM 4X2T 460 GNL"},{"id":"precio-row-21","sourceRow":21,"sourceModel":"FM62T AIR GNL","family":"FM","type":"TRACTO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2T 460 GNL","priceUsd":223860.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":2.64,"dee":3900,"safe":"FULL","label":"FM 6X2T 460 GNL"},{"id":"precio-row-22","sourceRow":22,"sourceModel":"FM64T AIR GNL","family":"FM","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4T 460 GNL","priceUsd":239610.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTS2310A","rat":"2.64/2.85","dee":3900,"safe":"FULL","label":"FM 6X4T 460 GNL"},{"id":"precio-row-23","sourceRow":23,"sourceModel":"FMX64R TOLVA","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 TOLVA","priceUsd":190032.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":4.12,"dee":3400,"safe":"FULL","label":"FMX 6X4R 460 TOLVA"},{"id":"precio-row-24","sourceRow":24,"sourceModel":"FMX44R","family":"FMX","type":"RÍGIDO","traction":"4X4","power":"420 CV","labelBase":"FMX 4X4R 420","priceUsd":184682.0,"classification":"ESPECIAL","application":"FAENA","cabin":"CAB-DAY","transmission":"ATO2612+ASO-ULC","rearAxle":"RSH1370F","rat":3.76,"dee":4300,"safe":"FULL","label":"FMX 4X4R 420"},{"id":"precio-row-25","sourceRow":25,"sourceModel":"FMX64R LARGO CUBOS","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"420 CV","labelBase":"FMX 6X4R 420","priceUsd":179332.0,"classification":"MTS","application":"FORESTAL / FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3210F","rat":3.76,"dee":4600,"safe":"FULL","label":"FMX 6X4R 420"},{"id":"precio-row-26","sourceRow":26,"sourceModel":"FMX64R FORESTAL AIR","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 FORESTAL","priceUsd":177727.0,"classification":"MTO","application":"FORESTAL / FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2370A","rat":3.78,"dee":4600,"safe":"FULL","label":"FMX 6X4R 460 FORESTAL"},{"id":"precio-row-27","sourceRow":27,"sourceModel":"FMX64T AIR","family":"FMX","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4T 460","priceUsd":177727.0,"classification":"MTO","application":"FORESTAL / BATEA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FMX 6X4T 460"},{"id":"precio-row-28","sourceRow":28,"sourceModel":"FMX64T INDIVISIBLE","family":"FMX","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FMX 6X4T 500","priceUsd":192172.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3210F","rat":4.55,"dee":"3200/3600","safe":"FULL","label":"FMX 6X4T 500"},{"id":"precio-row-29","sourceRow":29,"sourceModel":"FMX66T INDIVISIBLE","family":"FMX","type":"TRACTO","traction":"6X6","power":"500 CV","labelBase":"FMX 6X6T 500","priceUsd":218494.0,"classification":"ESPECIAL","application":"CARGA INDIVISIBLE","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3312","rat":3.76,"dee":3700,"safe":"SEMI FULL","label":"FMX 6X6T 500"},{"id":"precio-row-30","sourceRow":30,"sourceModel":"FMX66R LARGO","family":"FMX","type":"RÍGIDO","traction":"6X6","power":"500 CV","labelBase":"FMX 6X6R 500","priceUsd":218494.0,"classification":"ESPECIAL","application":"FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3312","rat":3.76,"dee":4600,"safe":"SEMI FULL","label":"FMX 6X6R 500"},{"id":"precio-row-31","sourceRow":31,"sourceModel":"FMX64R FORESTAL AIR GNL","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 FORESTAL GNL","priceUsd":243639.0,"classification":"ESPECIAL","application":"FORESTAL","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2310A","rat":3.7,"dee":4600,"safe":"FULL","label":"FMX 6X4R 460 FORESTAL GNL"},{"id":"precio-row-32","sourceRow":32,"sourceModel":"FMX84R TOLVA","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"500 CV","labelBase":"FMX 8X4R 500","priceUsd":208864.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":4.12,"dee":4350,"safe":"SEMI FULL","label":"FMX 8X4R 500"},{"id":"precio-row-33","sourceRow":33,"sourceModel":"FMX84R MAX","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"540 CV","labelBase":"FMX 8X4R 540","priceUsd":218494.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3815","rat":5.43,"dee":4600,"safe":"SEMI FULL","label":"FMX 8X4R 540"},{"id":"precio-row-34","sourceRow":34,"sourceModel":"FMX84R GRÚA","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"420 CV","labelBase":"FMX 8X4R 420","priceUsd":196024.0,"classification":"MTO","application":"GRUA","cabin":"CAB-SLP","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.09,"dee":5600,"safe":"SEMI FULL","label":"FMX 8X4R 420"},{"id":"precio-row-35","sourceRow":35,"sourceModel":"VM42R CITY","family":"VM","type":"RÍGIDO","traction":"4X2","power":"290 CV","labelBase":"VM 4X2R 290 CITY","priceUsd":94237.5,"classification":"MTO","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5150,"safe":"NO","label":"VM 4X2R 290 CITY"},{"id":"precio-row-36","sourceRow":36,"sourceModel":"VM42R RECOLECTOR","family":"VM","type":"RÍGIDO","traction":"4X2","power":"290 CV","labelBase":"VM 4X2R 290 RECOLECTOR","priceUsd":93712.5,"classification":"MTS","application":"RECOLECTOR","cabin":"L1H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":4800,"safe":"NO","label":"VM 4X2R 290 RECOLECTOR"},{"id":"precio-row-37","sourceRow":37,"sourceModel":"VM42T","family":"VM","type":"TRACTO","traction":"4X2","power":"360 CV","labelBase":"VM 4X2T 360","priceUsd":97387.5,"classification":"MTO","application":"REGIONAL","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":3650,"safe":"NO","label":"VM 4X2T 360"},{"id":"precio-row-38","sourceRow":38,"sourceModel":"VM62R","family":"VM","type":"RÍGIDO","traction":"6X2","power":"360 CV","labelBase":"VM 6X2R 360","priceUsd":106312.5,"classification":"MTS","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5150,"safe":"NO","label":"VM 6X2R 360"},{"id":"precio-row-39","sourceRow":39,"sourceModel":"VMX64R","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360","priceUsd":119437.5,"classification":"MTO","application":"FAENA","cabin":"L2H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.1,"dee":5150,"safe":"NO","label":"VMX 6X4R 360"},{"id":"precio-row-40","sourceRow":40,"sourceModel":"VMX MAX","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360 MAX","priceUsd":122587.5,"classification":"MTS","application":"FAENA","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTH3210F","rat":4.55,"dee":3650,"safe":"NO","label":"VMX 6X4R 360 MAX"},{"id":"precio-row-41","sourceRow":41,"sourceModel":"VMX MAX LARGO","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360 MAX LARGO","priceUsd":122587.5,"classification":"MTS","application":"FAENA","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTH3210F","rat":4.55,"dee":4800,"safe":"NO","label":"VMX 6X4R 360 MAX LARGO"},{"id":"precio-row-42","sourceRow":42,"sourceModel":"VM82R","family":"VM","type":"RÍGIDO","traction":"8X2","power":"360 CV","labelBase":"VM 8X2R 360","priceUsd":115237.5,"classification":"MTO","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5600,"safe":"NO","label":"VM 8X2R 360"},{"id":"precio-row-43","sourceRow":43,"sourceModel":"VMX84R","family":"VMX","type":"RÍGIDO","traction":"8X4","power":"360 CV","labelBase":"VMX 8X4R 360","priceUsd":127837.5,"classification":"MTS","application":"FAENA","cabin":"L2H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.1,"dee":5150,"safe":"NO","label":"VMX 8X4R 360"},{"id":"precio-row-44","sourceRow":44,"sourceModel":"VMX84R LIGTH MIXER","family":"VMX","type":"RÍGIDO","traction":"8X4","power":"360 CV","labelBase":"VMX 8X4R 360 MIXER","priceUsd":128362.5,"classification":"MTO","application":"MIXER","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.73,"dee":4550,"safe":"NO","label":"VMX 8X4R 360 MIXER"}];
+  const BCCH_URL = "https://script.google.com/macros/s/AKfycbxV_Jw3j7dhZhrsHduVwuAwDq2SPTs8li64NasE5JDgjsd1L-3NFYsKAV1FBqFWpjM/exec";
+  const BCCH_KEY = "volvo2026";
+  const IVA = 0.19;
+  const DB_STORAGE_KEY = "cotizador_db_webapp_url_v1";
+  const DEFAULT_DB_URL = "https://script.google.com/macros/s/AKfycbw0F2H3NCzDBox3jxS3meZALf7tF6L4zZMkMZitpLbMmX92cKTvg0NX0Vrkvp2dsn_zQg/exec";
+  const TC_STORAGE_KEY = "volvo_cotizador_tc";
+  const TC_DATE_CACHE_KEY = "volvo_cotizador_tc_by_date_v1";
+  const IDENTITY_STORAGE_KEY = "volvo_cotizador_workspace_v1";
+
+  const $ = id => document.getElementById(id);
+  const state = {
+    tc:0, tcDate:"", tcRequestedDate:"", tcSessionLoaded:false, quoteDate:"", selected:null, quoteId:null, loadedSaved:false,
+    tcRequestVersion:0, savedQuotes:[], clients:[], clientSuggestionIndex:-1,
+    autoAliasClient:"",autoAliasValue:"",dbUrl:DEFAULT_DB_URL,
+    identity:null,workspaceReady:false,deviceInfo:null,scannerStream:null,scannerTimer:null,linkTimer:null,
+    busyCount:0
+  };
+
+  const usd = new Intl.NumberFormat("es-CL",{style:"currency",currency:"USD",minimumFractionDigits:0,maximumFractionDigits:12});
+  const clp = new Intl.NumberFormat("es-CL",{style:"currency",currency:"CLP",minimumFractionDigits:0,maximumFractionDigits:2});
+  const tcFmt = new Intl.NumberFormat("es-CL",{minimumFractionDigits:0,maximumFractionDigits:12});
+  const moneyFmt = new Intl.NumberFormat("es-CL",{minimumFractionDigits:0,maximumFractionDigits:2});
+  const listFmt = new Intl.NumberFormat("es-CL",{minimumFractionDigits:0,maximumFractionDigits:12});
+  function formatTc(v){ return n(v)>0 ? "$ "+tcFmt.format(n(v)) : "—"; }
+
+  function n(v){ const x=Number(v); return Number.isFinite(x)?x:0; }
+  function precise(v){
+    const x=Number(v);
+    if(!Number.isFinite(x)) return 0;
+    return Number(x.toFixed(12));
+  }
+  function round2(v){
+    const x=Number(v);
+    if(!Number.isFinite(x)) return 0;
+    return Math.round((x+Number.EPSILON)*100)/100;
+  }
+
+  function moneyN(v){
+    if(typeof v==="number") return Number.isFinite(v)?v:0;
+    let s=String(v??"").trim();
+    if(!s) return 0;
+    s=s.replace(/[^\d.,]/g,"");
+    const comma=s.lastIndexOf(",");
+    if(comma>=0){
+      const intPart=s.slice(0,comma).replace(/[.,]/g,"");
+      const decPart=s.slice(comma+1).replace(/[.,]/g,"");
+      const x=Number((intPart||"0")+"."+(decPart||"0"));
+      return Number.isFinite(x)?x:0;
+    }
+    const x=Number(s.replace(/\./g,""));
+    return Number.isFinite(x)?x:0;
+  }
+
+  function formatMoneyText(raw){
+    let s=String(raw??"").replace(/[^\d.,]/g,"");
+    if(!s) return "";
+
+    const commaIndex=s.indexOf(",");
+    let integerPart, decimalPart=null;
+
+    if(commaIndex>=0){
+      integerPart=s.slice(0,commaIndex).replace(/[.,]/g,"");
+      decimalPart=s.slice(commaIndex+1).replace(/[.,]/g,"");
+    }else{
+      integerPart=s.replace(/\./g,"");
+    }
+
+    integerPart=(integerPart||"0").replace(/^0+(?=\d)/,"");
+    const grouped=integerPart.replace(/\B(?=(\d{3})+(?!\d))/g,".");
+    return decimalPart===null ? grouped : grouped+","+decimalPart;
+  }
+
+  function formatMoneyValue(v){
+    const x=round2(v);
+    if(!Number.isFinite(x)) return "";
+    const fixed=x.toFixed(2).replace(/\.?0+$/,"");
+    const parts=fixed.split(".");
+    const integer=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,".");
+    return parts.length>1 ? integer+","+parts[1] : integer;
+  }
+
+  function currencyNumber(v,currency){
+    return moneyFmt.format(round2(v));
+  }
+
+  function listNumber(v){
+    return listFmt.format(n(v));
+  }
+
+  function currencyHtml(v,currency){
+    return '<span class="currency-tag">'+currency+'</span><span class="currency-value">'+currencyNumber(v,currency)+'</span>';
+  }
+
+  function tcHtml(v){
+    return '<span class="currency-tag">CLP</span><span class="currency-value">'+tcFmt.format(n(v))+'</span>';
+  }
+
+  function summaryPairHtml(usdValue,clpValue){
+    return '<span class="summary-money">'+
+      '<span class="summary-money-number usd-number">'+currencyNumber(usdValue,"USD")+'</span>'+
+      '<span class="summary-money-code usd">USD</span>'+
+      '<span class="summary-money-sep">/</span>'+
+      '<span class="summary-money-number clp-number">'+currencyNumber(clpValue,"CLP")+'</span>'+
+      '<span class="summary-money-code clp">CLP</span>'+
+    '</span>';
+  }
+
+  function summaryListPairHtml(usdValue,clpValue){
+    return '<span class="summary-money">'+
+      '<span class="summary-money-number usd-number">'+listNumber(usdValue)+'</span>'+
+      '<span class="summary-money-code usd">USD</span>'+
+      '<span class="summary-money-sep">/</span>'+
+      '<span class="summary-money-number clp-number">'+currencyNumber(clpValue,"CLP")+'</span>'+
+      '<span class="summary-money-code clp">CLP</span>'+
+    '</span>';
+  }
+
+  function summaryTotalHtml(usdValue){
+    return '<span class="summary-total-line usd">'+
+      '<span class="summary-money-number">'+currencyNumber(usdValue,"USD")+'</span>'+
+      '<span class="summary-money-code usd">USD</span>'+
+    '</span>';
+  }
+
+  function compactPairHtml(usdValue,clpValue){
+    return currencyHtml(usdValue,"USD")+
+      '<span class="inline-currency-sep">|</span>'+
+      currencyHtml(clpValue,"CLP");
+  }
+
+  function setupMoneyInput(input,onChange=null){
+    if(!input || input.dataset.moneyReady==="1") return;
+    input.dataset.moneyReady="1";
+    const notify=()=>{
+      const formatted=formatMoneyText(input.value);
+      if(input.value!==formatted) input.value=formatted;
+      if(typeof onChange==="function")onChange(input);
+      recalc();
+    };
+    input.addEventListener("keydown",e=>{
+      if(e.ctrlKey||e.metaKey||e.altKey) return;
+      const allowed=["Backspace","Delete","ArrowLeft","ArrowRight","ArrowUp","ArrowDown","Home","End","Tab","Enter"];
+      if(allowed.includes(e.key)) return;
+      if(!/^[0-9.,]$/.test(e.key)) e.preventDefault();
+    });
+    input.addEventListener("input",notify);
+    input.addEventListener("paste",()=>setTimeout(notify,0));
+    input.addEventListener("blur",notify);
+  }
+
+  function pct(v){ return Number.isFinite(v)?new Intl.NumberFormat("es-CL",{minimumFractionDigits:0,maximumFractionDigits:2}).format(round2(v))+"%":"—"; }
+  function discountPct(v){ return Number.isFinite(v)?new Intl.NumberFormat("es-CL",{minimumFractionDigits:2,maximumFractionDigits:2}).format(round2(v))+"%":"—"; }
+  function safeName(s){ return (s||"Cliente").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[<>:"/\\|?*\x00-\x1F]+/g," ").replace(/\s+/g," ").trim().slice(0,80)||"Cliente"; }
+  function escapeHtml(s){ return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c])); }
+  function uuid(){
+    if (crypto && typeof crypto.randomUUID==="function") return crypto.randomUUID();
+    return "q-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,10);
+  }
+  function toast(msg,type=""){
+    const el=$("toast"); el.textContent=msg; el.className="toast show"+(type?" "+type:"");
+    clearTimeout(toast._t); toast._t=setTimeout(()=>el.className="toast",3200);
+  }
+  function beginBusy(title="Procesando…",message="No cierres esta pestaña hasta que termine."){
+    state.busyCount=Math.max(0,n(state.busyCount))+1;
+    $("busyTitle").textContent=title;
+    $("busyText").textContent=message;
+    $("busyOverlay").hidden=false;
+    document.documentElement.setAttribute("aria-busy","true");
+  }
+  function endBusy(){
+    state.busyCount=Math.max(0,n(state.busyCount)-1);
+    if(state.busyCount===0){
+      $("busyOverlay").hidden=true;
+      document.documentElement.removeAttribute("aria-busy");
+    }
+  }
+  function isBusy(){ return n(state.busyCount)>0; }
+  function openModal(id){ $(id).classList.add("open"); }
+  function closeModal(id){ $(id).classList.remove("open"); }
+  function selectedModel(){ return MODELS.find(m=>m.id===$("model").value)||null; }
+
+  function normalizeSearch(s){
+    return String(s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/\s+/g," ").trim();
+  }
+
+  function clientMatches(name,query){
+    const n=normalizeSearch(name), q=normalizeSearch(query);
+    if(!q)return true;
+    const terms=q.split(" ").filter(Boolean);
+    return terms.every(t=>n.includes(t));
+  }
+
+  function scoreClient(name,query){
+    const n=normalizeSearch(name),q=normalizeSearch(query);
+    if(!q)return 9;
+    if(n===q)return 0;
+    if(n.startsWith(q))return 1;
+    if(n.split(" ").some(w=>w.startsWith(q)))return 2;
+    if(n.includes(q))return 3;
+    return 4;
+  }
+
+  function findClientRecord(name){
+    const key=normalizeSearch(name);
+    return state.clients.find(c=>normalizeSearch(c.name)===key)||null;
+  }
+
+  function applyClientRecord(record){
+    if(!record)return;
+    $("client").value=record.name||"";
+    $("clientAlias").value=record.alias||"";
+    state.autoAliasClient=record.name||"";
+    state.autoAliasValue=record.alias||"";
+    closeClientSuggestions();
+    recalc();
+  }
+
+  function autofillAliasForExactClient(){
+    const record=findClientRecord($("client").value);
+    if(!record)return;
+    const alias=$("clientAlias").value.trim();
+    if(!alias || (state.autoAliasValue && alias===state.autoAliasValue)){
+      $("clientAlias").value=record.alias||"";
+      state.autoAliasClient=record.name||"";
+      state.autoAliasValue=record.alias||"";
+    }
+  }
+
+  function highlightClient(name,query){
+    const q=String(query||"").trim();
+    if(!q)return escapeHtml(name);
+    const safe=escapeHtml(name);
+    const terms=normalizeSearch(q).split(" ").filter(Boolean);
+    // Keep output simple and safe; highlight only when literal substring can be found.
+    let out=safe;
+    terms.forEach(t=>{
+      if(!t)return;
+      const re=new RegExp("("+t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+")","ig");
+      out=out.replace(re,"<mark>$1</mark>");
+    });
+    return out;
+  }
+
+  function closeClientSuggestions(){
+    const box=$("clientSuggestions");
+    box.classList.remove("open");
+    box.innerHTML="";
+    state.clientSuggestionIndex=-1;
+    $("client").setAttribute("aria-expanded","false");
+  }
+
+  function renderClientSuggestions(){
+    const input=$("client"),box=$("clientSuggestions"),query=input.value;
+    const matches=state.clients
+      .filter(c=>clientMatches(c.name,query)||clientMatches(c.alias||"",query))
+      .sort((a,b)=>{
+        const sa=Math.min(scoreClient(a.name,query),a.alias?scoreClient(a.alias,query)+.25:99);
+        const sb=Math.min(scoreClient(b.name,query),b.alias?scoreClient(b.alias,query)+.25:99);
+        return sa-sb||a.name.localeCompare(b.name,"es",{sensitivity:"base"});
+      })
+      .slice(0,8);
+
+    box.innerHTML="";
+    state.clientSuggestionIndex=-1;
+    if(!matches.length){
+      closeClientSuggestions();
+      return;
+    }
+
+    matches.forEach((record,i)=>{
+      const b=document.createElement("button");
+      b.type="button";
+      b.className="client-option";
+      b.setAttribute("role","option");
+      b.dataset.index=String(i);
+      b.dataset.client=record.name||"";
+      b.dataset.alias=record.alias||"";
+      b.innerHTML='<span class="client-option-main">'+highlightClient(record.name,query)+'</span>'+
+        (record.alias?'<span class="client-option-alias">Apodo: '+escapeHtml(record.alias)+'</span>':"");
+      b.addEventListener("mousedown",e=>e.preventDefault());
+      b.addEventListener("click",()=>{
+        applyClientRecord(record);
+        input.focus();
+      });
+      box.appendChild(b);
+    });
+    box.classList.add("open");
+    input.setAttribute("aria-expanded","true");
+  }
+
+  function moveClientSuggestion(delta){
+    const opts=[...$("clientSuggestions").querySelectorAll(".client-option")];
+    if(!opts.length)return;
+    state.clientSuggestionIndex=(state.clientSuggestionIndex+delta+opts.length)%opts.length;
+    opts.forEach((o,i)=>o.classList.toggle("active",i===state.clientSuggestionIndex));
+    opts[state.clientSuggestionIndex].scrollIntoView({block:"nearest"});
+  }
+
+  function todayIso(){
+    const d=new Date();
+    return String(d.getFullYear()).padStart(4,"0")+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  }
+  const MONTHS_SHORT=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+  function displayDate(value){
+    const s=String(value||"").trim();
+    let m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if(m){
+      const month=MONTHS_SHORT[Math.max(0,Math.min(11,Number(m[2])-1))];
+      return Number(m[3])+" "+month+" "+m[1];
+    }
+    m=s.match(/^(\d{2})[-\/](\d{2})[-\/](\d{4})/);
+    if(m){
+      const month=MONTHS_SHORT[Math.max(0,Math.min(11,Number(m[2])-1))];
+      return Number(m[1])+" "+month+" "+m[3];
+    }
+    return s||"—";
+  }
+  function filenameDate(iso){
+    return displayDate(iso).replace(/[<>:"/\\|?*\x00-\x1F]+/g," ").replace(/\s+/g," ").trim();
+  }
+  function updateQuoteDatePretty(){
+    const el=$("quoteDatePretty");
+    if(el)el.textContent=displayDate(state.quoteDate||$("quoteDate").value);
+  }
+  function setQuoteDate(iso){
+    state.quoteDate=/^\d{4}-\d{2}-\d{2}$/.test(String(iso||"")) ? String(iso) : todayIso();
+    $("quoteDate").value=state.quoteDate;
+    updateQuoteDatePretty();
+    $("sumDate").textContent=displayDate(state.quoteDate);
+  }
+
+  function buildModels(){
+    const sel=$("model");
+    MODELS.forEach(m=>{
+      const o=document.createElement("option");o.value=m.id;o.textContent=m.label;sel.appendChild(o);
+    });
+    buildModelDropdown();
+    syncModelPicker();
+  }
+
+  function buildModelDropdown(){
+    let box=$("modelDropdown");
+    if(!box){
+      box=document.createElement("div");
+      box.id="modelDropdown";
+      box.className="model-dropdown";
+      box.setAttribute("role","listbox");
+      document.body.appendChild(box);
+    }
+
+    box.innerHTML="";
+    const sel=$("model");
+    [...sel.options].forEach(opt=>{
+      const btn=document.createElement("button");
+      btn.type="button";
+      btn.className="model-option";
+      btn.dataset.value=opt.value;
+      btn.textContent=opt.textContent;
+      btn.setAttribute("role","option");
+      btn.addEventListener("click",()=>{
+        sel.value=opt.value;
+        sel.dispatchEvent(new Event("change",{bubbles:true}));
+        closeModelDropdown();
+      });
+      box.appendChild(btn);
+    });
+  }
+
+  function syncModelPicker(){
+    const sel=$("model"),label=$("modelPickerText");
+    if(!sel||!label)return;
+    const opt=sel.options[sel.selectedIndex];
+    label.textContent=opt?opt.textContent:"Modelo…";
+    const box=$("modelDropdown");
+    if(box){
+      [...box.querySelectorAll(".model-option")].forEach(btn=>{
+        const active=btn.dataset.value===sel.value;
+        btn.classList.toggle("active",active);
+        btn.setAttribute("aria-selected",active?"true":"false");
+      });
+    }
+  }
+
+  function positionModelDropdown(){
+    const btn=$("modelPickerButton"),box=$("modelDropdown");
+    if(!btn||!box)return;
+    const r=btn.getBoundingClientRect();
+    box.style.left=(r.left+window.scrollX)+"px";
+    box.style.top=(r.bottom+window.scrollY+6)+"px";
+    box.style.width=r.width+"px";
+  }
+
+  function openModelDropdown(){
+    const box=$("modelDropdown"),btn=$("modelPickerButton");
+    if(!box||!btn)return;
+    positionModelDropdown();
+    syncModelPicker();
+    box.classList.add("open");
+    btn.setAttribute("aria-expanded","true");
+    const active=box.querySelector(".model-option.active");
+    if(active)setTimeout(()=>active.scrollIntoView({block:"nearest"}),0);
+  }
+
+  function closeModelDropdown(){
+    const box=$("modelDropdown"),btn=$("modelPickerButton");
+    if(box)box.classList.remove("open");
+    if(btn)btn.setAttribute("aria-expanded","false");
+  }
+
+  function renderModel(setDefaultPrice=true){
+    const m=selectedModel();state.selected=m;
+    syncModelPicker();
+    if(!m){
+      $("listPrice").value="—";
+      $("sumModel").textContent="—";recalc();return;
+    }
+    $("listPrice").value=usd.format(m.priceUsd);
+    if(setDefaultPrice) $("salePrice").value=formatMoneyValue(m.priceUsd);
+    $("sumModel").textContent=m.label;recalc();
+  }
+
+  function syncExtraRow(tr,sourceCurrency){
+    if(!tr || tr.dataset.dualCurrency!=="1")return;
+    const usdInput=tr.querySelector(".row-usd");
+    const clpInput=tr.querySelector(".row-clp-input");
+    if(!usdInput||!clpInput)return;
+    tr.dataset.baseCurrency=sourceCurrency;
+    if(sourceCurrency==="CLP"){
+      const clpValue=moneyN(clpInput.value);
+      if(state.tc>0)usdInput.value=formatMoneyValue(round2(clpValue/state.tc));
+    }else{
+      const usdValue=moneyN(usdInput.value);
+      if(state.tc>0)clpInput.value=formatMoneyValue(round2(usdValue*state.tc));
+    }
+  }
+
+  function addMoneyRow(tbody,name="",value=0,rowData=null){
+    const data=rowData||{};
+    const dual=tbody.id==="extrasBody";
+    const tr=document.createElement("tr");
+
+    if(dual){
+      const baseCurrency=String(data.currency||data.baseCurrency||"USD").toUpperCase()==="CLP"?"CLP":"USD";
+      let usdValue=n(data.usd!=null?data.usd:value);
+      let clpValue=n(data.clp);
+      if(baseCurrency==="CLP" && !(clpValue>0) && state.tc>0)clpValue=round2(usdValue*state.tc);
+      if(baseCurrency==="USD" && !(clpValue>0) && state.tc>0)clpValue=round2(usdValue*state.tc);
+      tr.dataset.dualCurrency="1";
+      tr.dataset.baseCurrency=baseCurrency;
+      tr.innerHTML=`<td><input class="row-name" type="text" value="${escapeHtml(name)}"></td>
+        <td><div class="money-field"><span class="money-prefix">USD</span><input class="row-usd money-input" data-currency="USD" type="text" inputmode="decimal" autocomplete="off" value="${formatMoneyValue(usdValue)}"></div></td>
+        <td class="num hide-sm"><div class="money-field clp"><span class="money-prefix">CLP</span><input class="row-clp-input money-input" data-currency="CLP" type="text" inputmode="decimal" autocomplete="off" value="${formatMoneyValue(clpValue)}"></div></td>
+        <td class="num"><button type="button" class="remove" aria-label="Eliminar">×</button></td>`;
+      setupMoneyInput(tr.querySelector(".row-usd"),()=>syncExtraRow(tr,"USD"));
+      setupMoneyInput(tr.querySelector(".row-clp-input"),()=>syncExtraRow(tr,"CLP"));
+    }else{
+      tr.innerHTML=`<td><input class="row-name" type="text" value="${escapeHtml(name)}"></td>
+        <td><div class="money-field"><span class="money-prefix">USD</span><input class="row-usd money-input" data-currency="USD" type="text" inputmode="decimal" autocomplete="off" value="${formatMoneyValue(n(value))}"></div></td>
+        <td class="num hide-sm row-clp"><span class="currency-tag">CLP</span><span class="currency-value">0</span></td>
+        <td class="num"><button type="button" class="remove" aria-label="Eliminar">×</button></td>`;
+      setupMoneyInput(tr.querySelector(".row-usd"));
+    }
+
+    tr.querySelector(".row-name").addEventListener("input",recalc);
+    tr.querySelector(".remove").addEventListener("click",()=>{tr.remove();recalc()});
+    tbody.appendChild(tr);
+  }
+
+  function readMoneyRows(tbody){
+    return [...tbody.querySelectorAll("tr")].map(tr=>{
+      const name=tr.querySelector(".row-name").value.trim();
+      const usdInput=tr.querySelector(".row-usd");
+      if(tr.dataset.dualCurrency==="1"){
+        const clpInput=tr.querySelector(".row-clp-input");
+        const currency=tr.dataset.baseCurrency==="CLP"?"CLP":"USD";
+        const rawUsd=moneyN(usdInput.value),rawClp=moneyN(clpInput.value);
+        const usdValue=currency==="CLP" ? (state.tc>0?round2(rawClp/state.tc):0) : rawUsd;
+        const clpValue=currency==="USD" ? round2(rawUsd*state.tc) : rawClp;
+        return {name,usd:round2(usdValue),clp:round2(clpValue),currency};
+      }
+      return {name,usd:round2(moneyN(usdInput.value))};
+    });
+  }
+
+  function rowsTotal(tbody){
+    let total=0;
+    [...tbody.querySelectorAll("tr")].forEach(tr=>{
+      if(tr.dataset.dualCurrency==="1"){
+        const usdInput=tr.querySelector(".row-usd");
+        const clpInput=tr.querySelector(".row-clp-input");
+        if(tr.dataset.baseCurrency==="CLP"){
+          const clpValue=moneyN(clpInput.value);
+          const usdValue=state.tc>0?round2(clpValue/state.tc):0;
+          usdInput.value=formatMoneyValue(usdValue);
+          total=round2(total+usdValue);
+        }else{
+          const usdValue=moneyN(usdInput.value);
+          const clpValue=round2(usdValue*state.tc);
+          clpInput.value=formatMoneyValue(clpValue);
+          total=round2(total+usdValue);
+        }
+      }else{
+        const v=moneyN(tr.querySelector(".row-usd").value);total=round2(total+v);
+        const rowClp=tr.querySelector(".row-clp");
+        if(rowClp)rowClp.innerHTML=currencyHtml(round2(v*state.tc),"CLP");
+      }
+    });
+    return total;
+  }
+
+  function buildPayments(){
+    [{name:"Leasing",pct:75},{name:"Pie",pct:25},{name:"",pct:0}].forEach((p,i)=>{
+      const row=document.createElement("div");row.className="payment-row";
+      row.innerHTML=`<div><label>Forma ${i+1}</label><input class="pay-name" type="text" value="${p.name}"></div>
+        <div><label>%</label><input class="pay-pct" type="number" min="0" max="100" step="0.01" value="${p.pct}"></div>
+        <div class="amount"><label>Monto CLP</label><div class="money-field clp"><span class="money-prefix">CLP</span><input class="pay-amount" type="text" readonly value="0"></div></div>`;
+      row.querySelectorAll("input").forEach(x=>x.addEventListener("input",recalc));$("payments").appendChild(row);
+    });
+  }
+
+  function addScheduleRow(name="",amount=0){
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td><input class="sch-name" type="text" value="${escapeHtml(name)}"></td>
+      <td><div class="money-field clp"><span class="money-prefix">CLP</span><input class="sch-amount money-input" data-currency="CLP" type="text" inputmode="decimal" autocomplete="off" value="${formatMoneyValue(n(amount))}"></div></td>
+      <td class="num"><button type="button" class="remove" aria-label="Eliminar">×</button></td>`;
+    setupMoneyInput(tr.querySelector(".sch-amount"));
+    tr.querySelector(".sch-name").addEventListener("input",recalc);
+    tr.querySelector(".remove").addEventListener("click",()=>{tr.remove();recalc()});
+    $("scheduleBody").appendChild(tr);
+  }
+  function buildSchedule(){
+    ["Depósito Directo","Cheque 30","Cheque 60","Cheque 90","Cheque 120","Cheque 150","Cheque 180"].forEach(x=>addScheduleRow(x,0));
+  }
+  function readSchedule(){
+    return [...$("scheduleBody").querySelectorAll("tr")].map(tr=>({name:tr.querySelector(".sch-name").value.trim(),amount:round2(moneyN(tr.querySelector(".sch-amount").value))}));
+  }
+
+  function computedValues(){
+    const m=selectedModel();
+    const qty=Math.max(1,Math.round(n($("qty").value)||1));
+    const sale=Math.max(0,round2(moneyN($("salePrice").value)));
+    const list=m?n(m.priceUsd):0;
+    const extra=round2(readMoneyRows($("extrasBody")).reduce((a,b)=>round2(a+n(b.usd)),0));
+    const kit=$("kitRequired").value==="si"?round2(readMoneyRows($("kitBody")).reduce((a,b)=>round2(a+n(b.usd)),0)):0;
+    const all=round2(extra+kit);
+    const finalUnit=round2(sale+all);
+    const netUsd=round2(finalUnit*qty);
+    const net=round2(netUsd*state.tc);
+    const vat=round2(net*IVA);
+    const total=round2(net+vat);
+    const totalUsd=state.tc>0?round2(total/state.tc):round2(netUsd*(1+IVA));
+    return {qty,sale,list,extra,kit,all,finalUnit,chassisSale:sale,netUsd,net,vat,total,totalUsd};
+  }
+
+  function recalc(){
+    const c=computedValues();
+    if(String(c.qty)!=$("qty").value)$("qty").value=String(c.qty);
+
+    rowsTotal($("extrasBody"));
+    rowsTotal($("kitBody"));
+
+    const discount=c.list>0?((c.list-c.sale)/c.list)*100:NaN;
+    const storedKitTotal=round2(readMoneyRows($("kitBody")).reduce((a,b)=>round2(a+n(b.usd)),0));
+
+    $("mainDiscount").textContent=discountPct(discount);
+    $("salePlusExtras").innerHTML=currencyHtml(c.finalUnit,"USD");
+
+    // El encabezado "Adicionales" representa todo lo incluido en esa categoría,
+    // incluido el kit minero cuando está activado.
+    $("extrasUsd").innerHTML=currencyHtml(c.all,"USD");
+    $("extrasClp").innerHTML=currencyHtml(round2(c.all*state.tc),"CLP");
+
+    $("kitTotalMain").innerHTML=currencyHtml($("kitRequired").value==="si"?storedKitTotal:0,"USD");
+    $("kitModalUsd").innerHTML=currencyHtml(storedKitTotal,"USD");
+    $("kitModalClp").innerHTML=currencyHtml(round2(storedKitTotal*state.tc),"CLP");
+    $("editKit").hidden=$("kitRequired").value!=="si";
+
+    const netUsd=c.netUsd;
+    const vatUsd=state.tc>0?round2(c.vat/state.tc):0;
+
+    $("netClp").innerHTML=summaryPairHtml(netUsd,c.net);
+    $("vatClp").innerHTML=summaryPairHtml(vatUsd,c.vat);
+    $("totalClp").innerHTML=summaryTotalHtml(c.totalUsd);
+
+    $("sumClient").textContent=$("client").value.trim()||"—";
+    $("sumChassis").textContent=$("chassis").value.trim()||"—";
+    $("sumQty").textContent=String(c.qty);
+    $("sumTc").innerHTML=state.tc>0?tcHtml(state.tc):"—";
+    $("sumDiscount").textContent=discountPct(discount);
+
+    $("sumList").innerHTML=c.list?summaryListPairHtml(c.list,round2(c.list*state.tc)):"—";
+    $("sumSaleUnit").innerHTML=summaryPairHtml(c.sale,round2(c.sale*state.tc));
+    $("sumExtras").innerHTML=summaryPairHtml(c.all,round2(c.all*state.tc));
+    $("sumFinalUnit").innerHTML=summaryPairHtml(c.finalUnit,round2(c.finalUnit*state.tc));
+
+    let pctSum=0;
+    [...$("payments").querySelectorAll(".payment-row")].forEach(row=>{
+      const p=Math.max(0,round2(n(row.querySelector(".pay-pct").value)));pctSum=round2(pctSum+p);
+      row.querySelector(".pay-amount").value=currencyNumber(round2(c.total*p/100),"CLP");
+    });
+    const warn=$("paymentsWarn");
+    if(Math.abs(pctSum-100)<.005){warn.textContent="Distribución: 100%";warn.className="warn ok";}
+    else{warn.textContent="Las formas de pago suman "+pct(pctSum)+". Deben sumar 100%.";warn.className="warn";}
+
+    $("scheduleTotal").innerHTML=currencyHtml(round2(readSchedule().reduce((a,b)=>round2(a+b.amount),0)),"CLP");
+  }
+
+  function readTcDateCache(){
+    try{
+      const x=JSON.parse(localStorage.getItem(TC_DATE_CACHE_KEY)||"{}");
+      return x&&typeof x==="object"?x:{};
+    }catch(e){return {}}
+  }
+
+  function getTcDateCache(requestedDate){
+    try{
+      const x=readTcDateCache()[requestedDate];
+      if(!x||!(n(x.rate)>0))return null;
+      const today=todayIso();
+      if(requestedDate<today)return x;
+      if(requestedDate===today && Date.now()-n(x.at)<60*60*1000)return x;
+    }catch(e){}
+    return null;
+  }
+
+  function saveTcDateCache(requestedDate,rate,rateDate){
+    if(!requestedDate||!(n(rate)>0))return;
+    try{
+      const all=readTcDateCache();
+      all[requestedDate]={rate:n(rate),rateDate:rateDate||requestedDate,at:Date.now()};
+      localStorage.setItem(TC_DATE_CACHE_KEY,JSON.stringify(all));
+    }catch(e){}
+  }
+
+  function setTc(rate,date="",source="",persist=true,requestedDate="",sessionLoaded=true){
+    rate=n(rate);if(!(rate>0))return false;
+    state.tc=rate;
+    state.tcDate=date||"";
+    state.tcRequestedDate=requestedDate||state.tcRequestedDate||"";
+    state.tcSessionLoaded=!!sessionLoaded;
+    $("tcDisplay").textContent=formatTc(rate)+" / USD";
+    $("tcStatus").textContent=date?((source||"Banco Central")+" · "+displayDate(date)):(source||"Actualizado");
+    $("tcStatus").className="status ok";
+    if(persist){
+      try{
+        localStorage.setItem(TC_STORAGE_KEY,JSON.stringify({
+          rate,date,requestedDate:state.tcRequestedDate,at:Date.now()
+        }));
+      }catch(e){}
+      if(state.tcRequestedDate)saveTcDateCache(state.tcRequestedDate,rate,date);
+    }
+    recalc();return true;
+  }
+
+  function loadTcBackup(){
+    try{
+      const x=JSON.parse(localStorage.getItem(TC_STORAGE_KEY)||"null");
+      if(x&&x.rate>0){
+        setTc(x.rate,x.date,"Último valor guardado",false,x.requestedDate||"",false);
+      }
+    }catch(e){}
+  }
+
+  function fetchBcchDirect(requestedDate){
+    return new Promise((resolve,reject)=>{
+      const cb="__bcch_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+      const script=document.createElement("script");
+      const timer=setTimeout(()=>cleanup(new Error("Tiempo de espera agotado")),12000);
+      function cleanup(err,data){
+        clearTimeout(timer);try{delete window[cb]}catch(e){window[cb]=undefined}script.remove();
+        err?reject(err):resolve(data);
+      }
+      window[cb]=data=>cleanup(null,data);
+      script.onerror=()=>cleanup(new Error("No se pudo conectar al servicio"));
+      let url=BCCH_URL+"?key="+encodeURIComponent(BCCH_KEY);
+      if(requestedDate)url+="&fecha="+encodeURIComponent(requestedDate);
+      script.src=url+"&callback="+encodeURIComponent(cb)+"&_="+Date.now();
+      document.head.appendChild(script);
+    });
+  }
+
+  async function fetchTc(targetDate="",force=false){
+    const requested=/^\d{4}-\d{2}-\d{2}$/.test(String(targetDate||""))?String(targetDate):todayIso();
+
+    if(!force){
+      if(state.tc>0 && state.tcRequestedDate===requested && state.tcSessionLoaded){
+        return {skipped:true,source:"session"};
+      }
+
+      const cached=getTcDateCache(requested);
+      if(cached){
+        setTc(cached.rate,cached.rateDate||requested,"Caché local",false,requested,true);
+        return {skipped:true,source:"local"};
+      }
+    }
+
+    const version=++state.tcRequestVersion;
+    $("tcStatus").textContent="Consultando tipo de cambio";
+    $("tcStatus").className="status loading";
+    $("tcRefresh").classList.add("loading");$("tcRefresh").disabled=true;
+    beginBusy(
+      force?"Actualizando dólar":"Cargando dólar",
+      force?"Consultando el Banco Central y actualizando la base central…":"Consultando el tipo de cambio guardado. Si falta, se buscará en el Banco Central…"
+    );
+
+    try{
+      let data=null;
+      const db=getDbUrl();
+
+      // v7: primero consulta la base central. Los históricos finalizados no vuelven
+      // a golpear al Banco Central; el valor de hoy se refresca periódicamente.
+      if(db){
+        try{
+          const r=await jsonp(db,{action:"fx",date:requested,force:force?1:0},22000);
+          if(r&&r.ok&&n(r.rate)>0)data=r;
+          else if(r&&r.error)throw new Error(r.error);
+        }catch(e){
+          console.warn("Caché central T/C no disponible, usando consulta directa.",e);
+        }
+      }
+
+      // Compatibilidad de emergencia si todavía no se desplegó v7 o falla el backend.
+      if(!data){
+        const direct=await fetchBcchDirect(requested);
+        data={
+          rate:n(
+            direct&&direct.e3_clp_por_usd!=null?direct.e3_clp_por_usd:
+            direct&&direct.dolar&&direct.dolar.valor!=null?direct.dolar.valor:
+            direct&&typeof direct.dolar==="number"?direct.dolar:0
+          ),
+          rateDate:(direct&&direct.fecha_bcch)||(direct&&direct.dolar&&direct.dolar.fecha)||(direct&&direct.actualizado)||requested,
+          adjustedBusinessDay:!!(direct&&direct.ajuste_dia_habil),
+          fromCache:false,
+          source:"Banco Central"
+        };
+      }
+
+      if(version!==state.tcRequestVersion)return;
+      const rate=n(data.rate);
+      const rateDate=String(data.rateDate||requested);
+      const source=data.fromCache?"Base de datos":"Banco Central";
+      if(!setTc(rate,rateDate,source,true,requested,true))throw new Error("Respuesta sin dólar válido");
+      state.loadedSaved=false;
+
+      if(force)toast("Dólar actualizado","success");
+      else if(data.adjustedBusinessDay)toast("Se usó el último día hábil disponible","success");
+    }catch(err){
+      if(version!==state.tcRequestVersion)return;
+      $("tcStatus").textContent=state.tc>0?"Sin conexión · se mantiene el valor anterior":"Sin conexión";
+      $("tcStatus").className="status err";
+      console.warn(err);
+      toast("No se pudo cargar el dólar","error");
+    }finally{
+      if(version===state.tcRequestVersion){
+        $("tcRefresh").classList.remove("loading");
+        $("tcRefresh").disabled=false;
+      }
+      endBusy();
+    }
+  }
+
+  function quoteData(){
+    const m=selectedModel();const c=computedValues();
+    if(!state.quoteId)state.quoteId=uuid();
+    return {
+      version:7,quoteId:state.quoteId,savedAt:new Date().toISOString(),quoteDate:state.quoteDate,
+      client:$("client").value.trim(),clientAlias:$("clientAlias").value.trim(),chassis:$("chassis").value.trim(),
+      modelId:$("model").value,model:m?{...m}:null,
+      tc:state.tc,tcDate:state.tcDate,qty:c.qty,salePrice:c.sale,kitRequired:$("kitRequired").value,
+      extras:readMoneyRows($("extrasBody")),kit:readMoneyRows($("kitBody")),
+      payments:[...$("payments").querySelectorAll(".payment-row")].map(row=>({name:row.querySelector(".pay-name").value.trim(),pct:round2(n(row.querySelector(".pay-pct").value))})),
+      schedule:readSchedule(),
+      computed:{listPriceUsd:c.list,extrasUsd:c.extra,kitUsd:c.kit,allExtrasUsd:c.all,chassisSaleUsd:c.sale,finalUnitUsd:c.finalUnit,netClp:c.net,vatClp:c.vat,totalClp:c.total,totalUsd:c.totalUsd}
+    };
+  }
+
+  function validateQuote(){
+    if(!$("client").value.trim()){toast("Ingresa el nombre del cliente","error");$("client").focus();return false}
+    if(!selectedModel()){toast("Selecciona un modelo","error");$("modelPickerButton").focus();return false}
+    if(!(state.tc>0)){toast("No hay un tipo de cambio válido","error");return false}
+    return true;
+  }
+
+  function getDbUrl(){
+    const v=(state.dbUrl||"").trim();
+    return /^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec(?:\?.*)?$/.test(v)?v:"";
+  }
+
+  function jsonp(url,params={},timeoutMs=12000){
+    return new Promise((resolve,reject)=>{
+      const cb="__cotizador_"+Date.now()+"_"+Math.random().toString(36).slice(2);
+      const u=new URL(url);Object.entries(params).forEach(([k,v])=>u.searchParams.set(k,String(v)));
+      u.searchParams.set("callback",cb);u.searchParams.set("_",Date.now());
+      const script=document.createElement("script");
+      const timer=setTimeout(()=>cleanup(new Error("Tiempo de espera agotado")),timeoutMs);
+      function cleanup(err,data){
+        clearTimeout(timer);try{delete window[cb]}catch(e){window[cb]=undefined}script.remove();
+        err?reject(err):resolve(data);
+      }
+      window[cb]=data=>cleanup(null,data);
+      script.onerror=()=>cleanup(new Error("No se pudo conectar"));
+      script.src=u.toString();document.head.appendChild(script);
+    });
+  }
+
+
+  function detectDeviceInfo(){
+    const ua=navigator.userAgent||"";
+    const isIpad=/iPad/i.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+    const isIphone=/iPhone|iPod/i.test(ua);
+    const isAndroid=/Android/i.test(ua);
+    const isAndroidTablet=isAndroid&&!/Mobile/i.test(ua);
+    let type="desktop",label="PC / notebook";
+    if(isIpad||isAndroidTablet){
+      type="tablet";label=isIpad?"Tablet iPad":"Tablet Android";
+    }else if(isIphone||isAndroid){
+      type="mobile";label=isIphone?"iPhone":"Teléfono Android";
+    }else if(/Windows/i.test(ua)) label="PC Windows";
+    else if(/Macintosh|Mac OS X/i.test(ua)) label="Mac";
+    else if(/CrOS/i.test(ua)) label="Chromebook";
+    return {type,label,isDesktop:type==="desktop",isMobile:type!=="desktop"};
+  }
+
+  function loadIdentity(){
+    try{
+      const x=JSON.parse(localStorage.getItem(IDENTITY_STORAGE_KEY)||"null");
+      if(x&&x.workspaceId&&x.deviceId&&x.deviceToken)return x;
+    }catch(e){}
+    return null;
+  }
+
+  function persistIdentity(identity){
+    state.identity={
+      workspaceId:String(identity.workspaceId||""),deviceId:String(identity.deviceId||""),
+      deviceToken:String(identity.deviceToken||""),deviceName:String(identity.deviceName||state.deviceInfo.label),
+      deviceType:String(identity.deviceType||state.deviceInfo.type)
+    };
+    localStorage.setItem(IDENTITY_STORAGE_KEY,JSON.stringify(state.identity));
+    state.workspaceReady=true;
+    updateWorkspaceStatusUi();
+  }
+
+  function clearIdentity(){
+    state.identity=null;state.workspaceReady=false;state.clients=[];state.savedQuotes=[];
+    try{localStorage.removeItem(IDENTITY_STORAGE_KEY)}catch(e){}
+    updateWorkspaceStatusUi();
+  }
+
+  function authParams(extra={}){
+    if(!state.identity)throw new Error("Este dispositivo no está vinculado.");
+    return {...extra,workspaceId:state.identity.workspaceId,deviceId:state.identity.deviceId,deviceToken:state.identity.deviceToken};
+  }
+
+  function authJsonp(action,extra={},timeoutMs=12000){
+    const url=getDbUrl();if(!url)return Promise.reject(new Error("Base de datos no disponible."));
+    return jsonp(url,authParams({action,...extra}),timeoutMs);
+  }
+
+  function ensureWorkspaceReady(){
+    if(state.workspaceReady&&state.identity)return true;
+    setAccessView("create");openModal("accessModal");return false;
+  }
+
+  function updateWorkspaceStatusUi(){
+    const btn=$("workspaceBtn");
+    if(!btn)return;
+    btn.textContent=state.workspaceReady?"Mi espacio":"Configurar nube";
+  }
+
+  function setAccessState(id,msg,type=""){
+    const el=$(id);el.textContent=msg||"";el.className="access-state"+(type?" "+type:"");
+  }
+
+  function setAccessView(view){
+    stopQrScanner();
+    $("accessCreateView").hidden=view!=="create";
+    $("accessRecoverView").hidden=view!=="recover";
+    $("accessLinkView").hidden=view!=="link";
+    setAccessState("createWorkspaceState","");setAccessState("recoverWorkspaceState","");setAccessState("linkWorkspaceState","");
+    if(view==="link"){
+      const d=state.deviceInfo;
+      $("mobileQrActions").hidden=!d.isMobile;
+      $("linkAccessLead").textContent=d.isMobile?
+        "Escanea el QR mostrado en un PC/notebook que ya tenga acceso, o escribe su código temporal.":
+        "Escribe el código temporal mostrado en un dispositivo que ya tenga acceso.";
+    }
+  }
+
+  async function sha256Hex(value){
+    const s=String(value||"");
+    if(window.crypto&&crypto.subtle&&window.TextEncoder){
+      const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
+      return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
+    }
+    return sha256Fallback(s);
+  }
+
+  function sha256Fallback(ascii){
+    function rightRotate(value,amount){return (value>>>amount)|(value<<(32-amount));}
+    ascii=unescape(encodeURIComponent(ascii));
+    const mathPow=Math.pow,maxWord=mathPow(2,32),lengthProperty="length";
+    let i,j,result="",words=[],asciiBitLength=ascii[lengthProperty]*8;
+    let hash=sha256Fallback.h=sha256Fallback.h||[],k=sha256Fallback.k=sha256Fallback.k||[],primeCounter=k[lengthProperty],isComposite={};
+    for(let candidate=2;primeCounter<64;candidate++){
+      if(!isComposite[candidate]){
+        for(i=0;i<313;i+=candidate)isComposite[i]=candidate;
+        hash[primeCounter]=(mathPow(candidate,.5)*maxWord)|0;
+        k[primeCounter++]=(mathPow(candidate,1/3)*maxWord)|0;
+      }
+    }
+    ascii+="\x80";
+    while(ascii[lengthProperty]%64-56)ascii+="\x00";
+    for(i=0;i<ascii[lengthProperty];i++){
+      j=ascii.charCodeAt(i);if(j>>8)return "";
+      words[i>>2]|=j<<((3-i)%4)*8;
+    }
+    words[words[lengthProperty]]=((asciiBitLength/maxWord)|0);
+    words[words[lengthProperty]]=asciiBitLength;
+    for(j=0;j<words[lengthProperty];){
+      const w=words.slice(j,j+=16),oldHash=hash.slice(0);hash=hash.slice(0,8);
+      for(i=0;i<64;i++){
+        const i2=i+j,w15=w[i-15],w2=w[i-2];
+        const a=hash[0],e=hash[4];
+        const temp1=hash[7]+(rightRotate(e,6)^rightRotate(e,11)^rightRotate(e,25))+((e&hash[5])^((~e)&hash[6]))+k[i]+(w[i]=(i<16)?w[i]:(w[i-16]+(rightRotate(w15,7)^rightRotate(w15,18)^(w15>>>3))+w[i-7]+(rightRotate(w2,17)^rightRotate(w2,19)^(w2>>>10)))|0);
+        const temp2=(rightRotate(a,2)^rightRotate(a,13)^rightRotate(a,22))+((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+        hash=[(temp1+temp2)|0].concat(hash);hash[4]=(hash[4]+temp1)|0;hash.pop();
+      }
+      for(i=0;i<8;i++)hash[i]=(hash[i]+oldHash[i])|0;
+    }
+    for(i=0;i<8;i++)for(j=3;j+1;j--){const b=(hash[i]>>(j*8))&255;result+=(b<16?0:"")+b.toString(16);}
+    return result;
+  }
+
+  function validateRecoveryPair(a,b){
+    const key=String(a??""),confirmKey=String(b??"");
+    if(key.length===0)throw new Error("Escribe una clave de recuperación.");
+    if(key!==confirmKey)throw new Error("Las claves no coinciden.");
+    return key;
+  }
+
+  async function createWorkspace(){
+    const btn=$("createWorkspaceBtn");
+    try{
+      const key=validateRecoveryPair($("createRecoveryKey").value,$("createRecoveryKey2").value);
+      btn.disabled=true;setAccessState("createWorkspaceState","Creando espacio privado…");
+      const digest=await sha256Hex(key);
+      const r=await jsonp(getDbUrl(),{action:"create_workspace",recoveryDigest:digest,deviceName:state.deviceInfo.label,deviceType:state.deviceInfo.type},15000);
+      if(!r||!r.ok||!r.identity)throw new Error((r&&r.error)||"No se pudo crear el espacio.");
+      persistIdentity(r.identity);$("createRecoveryKey").value="";$("createRecoveryKey2").value="";
+      closeModal("accessModal");toast("Espacio privado creado","success");refreshClients();
+    }catch(e){setAccessState("createWorkspaceState",e.message||"No se pudo crear el espacio.","err");}
+    finally{btn.disabled=false;}
+  }
+
+  async function recoverWorkspace(){
+    const btn=$("recoverWorkspaceBtn");
+    try{
+      const key=String($("recoverKey").value??"");
+      if(key.length===0)throw new Error("Escribe tu clave de recuperación.");
+      btn.disabled=true;setAccessState("recoverWorkspaceState","Buscando tu espacio…");
+      const digest=await sha256Hex(key);
+      const r=await jsonp(getDbUrl(),{action:"recover_workspace",recoveryDigest:digest,deviceName:state.deviceInfo.label,deviceType:state.deviceInfo.type},15000);
+      if(!r||!r.ok||!r.identity)throw new Error((r&&r.error)||"No se pudo recuperar el espacio.");
+      persistIdentity(r.identity);$("recoverKey").value="";closeModal("accessModal");toast("Datos recuperados","success");refreshClients();
+    }catch(e){setAccessState("recoverWorkspaceState",e.message||"No se pudo recuperar el espacio.","err");}
+    finally{btn.disabled=false;}
+  }
+
+  function normalizeLinkCode(v){return String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");}
+
+  async function claimLink({ticket="",code=""}={}){
+    const btn=$("claimLinkCodeBtn");
+    try{
+      const cleanCode=normalizeLinkCode(code||$("linkCodeInput").value);
+      if(!ticket&&!cleanCode)throw new Error("Ingresa el código de vinculación.");
+      btn.disabled=true;setAccessState("linkWorkspaceState","Vinculando dispositivo…");
+      const r=await jsonp(getDbUrl(),{action:"claim_link",ticket,code:cleanCode,deviceName:state.deviceInfo.label,deviceType:state.deviceInfo.type},15000);
+      if(!r||!r.ok||!r.identity)throw new Error((r&&r.error)||"No se pudo vincular el dispositivo.");
+      stopQrScanner();persistIdentity(r.identity);$("linkCodeInput").value="";closeModal("accessModal");toast("Dispositivo vinculado","success");refreshClients();
+    }catch(e){setAccessState("linkWorkspaceState",e.message||"No se pudo vincular.","err");}
+    finally{btn.disabled=false;}
+  }
+
+  function parseLinkQr(data){
+    const s=String(data||"").trim();
+    if(s.startsWith("COTIZADOR_LINK:"))return s.slice("COTIZADOR_LINK:".length).trim();
+    return "";
+  }
+
+  function loadScriptOnce(src,test){
+    if(test())return Promise.resolve();
+    return new Promise((resolve,reject)=>{
+      const s=document.createElement("script");s.src=src;s.onload=()=>test()?resolve():reject(new Error("Biblioteca no disponible"));
+      s.onerror=()=>reject(new Error("No se pudo cargar la biblioteca"));document.head.appendChild(s);
+    });
+  }
+
+  async function ensureJsQr(){return loadScriptOnce("https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js",()=>typeof window.jsQR==="function");}
+  async function ensureQrCode(){return loadScriptOnce("https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js",()=>typeof window.QRCode==="function");}
+
+  function stopQrScanner(){
+    if(state.scannerTimer){cancelAnimationFrame(state.scannerTimer);state.scannerTimer=null;}
+    if(state.scannerStream){state.scannerStream.getTracks().forEach(t=>t.stop());state.scannerStream=null;}
+    const v=$("scannerVideo");if(v)v.srcObject=null;
+    if($("scannerWrap"))$("scannerWrap").hidden=true;
+  }
+
+  async function startQrScanner(){
+    if(!state.deviceInfo.isMobile)return;
+    try{
+      if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error("La cámara no está disponible en este navegador. Usa el código temporal.");
+      await ensureJsQr();stopQrScanner();
+      $("scannerWrap").hidden=false;$("scannerState").textContent="Solicitando cámara…";
+      const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:"environment"}},audio:false});
+      state.scannerStream=stream;const video=$("scannerVideo");video.srcObject=stream;await video.play();
+      $("scannerState").textContent="Apunta la cámara al QR mostrado en el PC/notebook.";
+      const canvas=$("scannerCanvas"),ctx=canvas.getContext("2d",{willReadFrequently:true});
+      let lastScan=0;
+      const tick=async ts=>{
+        if(!state.scannerStream)return;
+        if(video.readyState>=2&&ts-lastScan>220){
+          lastScan=ts;canvas.width=video.videoWidth;canvas.height=video.videoHeight;
+          ctx.drawImage(video,0,0,canvas.width,canvas.height);
+          const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+          const found=window.jsQR(img.data,img.width,img.height,{inversionAttempts:"dontInvert"});
+          if(found&&found.data){
+            const ticket=parseLinkQr(found.data);
+            if(ticket){stopQrScanner();await claimLink({ticket});return;}
+          }
+        }
+        state.scannerTimer=requestAnimationFrame(tick);
+      };
+      state.scannerTimer=requestAnimationFrame(tick);
+    }catch(e){stopQrScanner();$("scannerWrap").hidden=false;$("scannerState").textContent=e.message||"No se pudo abrir la cámara. Usa el código temporal.";}
+  }
+
+  async function initWorkspaceSecurity(){
+    state.deviceInfo=detectDeviceInfo();configureWorkspaceUiForDevice();
+    const saved=loadIdentity();
+    if(!saved){clearIdentity();setAccessView("create");openModal("accessModal");return;}
+    state.identity=saved;
+    try{
+      const r=await authJsonp("workspace_status",{},10000);
+      if(!r||!r.ok)throw new Error((r&&r.error)||"Acceso no válido");
+      state.workspaceReady=true;
+      if(r.device){state.identity.deviceName=r.device.name||state.identity.deviceName;state.identity.deviceType=r.device.type||state.identity.deviceType;localStorage.setItem(IDENTITY_STORAGE_KEY,JSON.stringify(state.identity));}
+      updateWorkspaceStatusUi();refreshClients();
+    }catch(e){
+      clearIdentity();setAccessView("create");openModal("accessModal");
+    }
+  }
+
+  function configureWorkspaceUiForDevice(){
+    state.deviceInfo=state.deviceInfo||detectDeviceInfo();
+    $("mobileQrActions").hidden=!state.deviceInfo.isMobile;
+    updateWorkspaceStatusUi();
+  }
+
+  async function openWorkspaceSettings(){
+    if(!ensureWorkspaceReady())return;
+    $("currentDeviceName").textContent=state.identity.deviceName||state.deviceInfo.label;
+    $("currentDeviceDetail").textContent=state.deviceInfo.isDesktop?"PC/notebook vinculado a tu espacio privado":"Dispositivo móvil vinculado a tu espacio privado";
+    $("linkSharePanel").hidden=true;$("changeRecoveryPanel").hidden=true;setAccessState("changeRecoveryState","");
+    openModal("workspaceModal");await refreshDevices();
+  }
+
+  async function refreshDevices(){
+    if(!state.workspaceReady)return;
+    const root=$("devicesList");root.innerHTML='<div class="empty-state">Cargando…</div>';
+    try{
+      const r=await authJsonp("devices");if(!r||!r.ok)throw new Error((r&&r.error)||"No se pudieron cargar");
+      root.innerHTML="";
+      const arr=r.devices||[];
+      if(!arr.length){root.innerHTML='<div class="empty-state">No hay dispositivos vinculados.</div>';return;}
+      arr.forEach(d=>{
+        const row=document.createElement("div");row.className="device-item";
+        const copy=document.createElement("div");
+        copy.innerHTML=`<strong>${escapeHtml(d.name||"Dispositivo")}${d.current?'<span class="device-badge">Este</span>':''}</strong><small>Último uso: ${escapeHtml(d.lastSeenText||"—")}</small>`;
+        row.appendChild(copy);
+        if(!d.current){
+          const remove=document.createElement("button");remove.type="button";remove.className="device-remove";remove.textContent="Quitar";
+          remove.addEventListener("click",()=>revokeDevice(d.deviceId,d.name));row.appendChild(remove);
+        }
+        root.appendChild(row);
+      });
+    }catch(e){root.innerHTML='<div class="empty-state">No se pudieron cargar los dispositivos.</div>';}
+  }
+
+  async function revokeDevice(deviceId,name){
+    if(!confirm('¿Quitar el acceso de '+(name||"este dispositivo")+'?'))return;
+    try{
+      const r=await authJsonp("revoke_device",{targetDeviceId:deviceId});if(!r||!r.ok)throw new Error((r&&r.error)||"No se pudo quitar");
+      toast("Dispositivo desvinculado","success");refreshDevices();
+    }catch(e){toast(e.message||"No se pudo quitar el dispositivo","error");}
+  }
+
+  async function unlinkCurrentDevice(){
+    if(!state.identity)return;
+    if(!confirm("¿Quitar el acceso de este dispositivo? Tus datos seguirán en la nube y podrás recuperarlos con tu clave."))return;
+    try{await authJsonp("revoke_device",{targetDeviceId:state.identity.deviceId});}catch(e){}
+    clearIdentity();closeModal("workspaceModal");setAccessView("create");openModal("accessModal");toast("Este dispositivo fue desvinculado");
+  }
+
+  async function createTemporaryLink(){
+    if(!ensureWorkspaceReady())return;
+    const btn=$("createLinkBtn");btn.disabled=true;
+    try{
+      const r=await authJsonp("create_link");if(!r||!r.ok)throw new Error((r&&r.error)||"No se pudo generar el vínculo");
+      $("linkSharePanel").hidden=false;$("linkCodeDesktop").textContent=r.code;$("linkCodeMobile").textContent=r.code;
+      $("desktopLinkShare").hidden=!state.deviceInfo.isDesktop;$("mobileLinkShare").hidden=state.deviceInfo.isDesktop;
+      startLinkCountdown(r.expiresAt);
+      if(state.deviceInfo.isDesktop){
+        const root=$("linkQr");root.innerHTML='<div class="qr-fallback">Generando QR…</div>';
+        try{
+          await ensureQrCode();root.innerHTML="";
+          new QRCode(root,{text:"COTIZADOR_LINK:"+r.ticket,width:190,height:190,correctLevel:QRCode.CorrectLevel.M});
+        }catch(e){root.innerHTML='<div class="qr-fallback">No se pudo generar el QR. Usa el código temporal.</div>';}
+      }
+    }catch(e){toast(e.message||"No se pudo generar el vínculo","error");}
+    finally{btn.disabled=false;}
+  }
+
+  function startLinkCountdown(expiresAt){
+    clearInterval(state.linkTimer);const end=new Date(expiresAt).getTime();
+    const draw=()=>{
+      const left=Math.max(0,Math.ceil((end-Date.now())/1000)),m=Math.floor(left/60),s=String(left%60).padStart(2,"0");
+      $("linkExpiresText").textContent=left?`Vence en ${m}:${s}`:"Código vencido";
+      if(!left)clearInterval(state.linkTimer);
+    };draw();state.linkTimer=setInterval(draw,1000);
+  }
+
+  async function changeRecoveryKey(){
+    const btn=$("changeRecoveryBtn");
+    try{
+      const key=validateRecoveryPair($("newRecoveryKey").value,$("newRecoveryKey2").value);btn.disabled=true;
+      setAccessState("changeRecoveryState","Guardando nueva clave…");const digest=await sha256Hex(key);
+      const r=await authJsonp("set_recovery",{recoveryDigest:digest},15000);if(!r||!r.ok)throw new Error((r&&r.error)||"No se pudo cambiar la clave");
+      $("newRecoveryKey").value="";$("newRecoveryKey2").value="";$("changeRecoveryPanel").hidden=true;
+      setAccessState("changeRecoveryState","Clave de recuperación actualizada.","ok");toast("Clave actualizada","success");
+    }catch(e){setAccessState("changeRecoveryState",e.message||"No se pudo cambiar la clave.","err");}
+    finally{btn.disabled=false;}
+  }
+
+
+  async function saveToDatabase(){
+    if(!validateQuote())return;
+    if(!ensureWorkspaceReady())return;
+    const url=getDbUrl();if(!url){toast("Base de datos no disponible","error");return}
+    const data=quoteData();
+    $("saveState").textContent="Guardando en tu espacio privado…";$("saveState").className="save-state";
+    beginBusy("Guardando cotización","No cierres ni recargues la página hasta confirmar el guardado.");
+    try{
+      await fetch(url,{
+        method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,
+        headers:{"Content-Type":"text/plain;charset=UTF-8"},
+        body:JSON.stringify({action:"save",auth:state.identity,quote:data})
+      });
+      let confirmed=false;
+      for(const wait of [500,900,1500]){
+        await new Promise(r=>setTimeout(r,wait));
+        try{
+          const chk=await authJsonp("get",{id:data.quoteId},8000);
+          if(chk&&chk.ok&&chk.quote){confirmed=true;break}
+        }catch(e){}
+      }
+      if(!confirmed)throw new Error("El servidor recibió la solicitud, pero todavía no fue posible verificarla.");
+      $("saveState").textContent="Guardado · "+new Date().toLocaleString("es-CL");$("saveState").className="save-state ok";
+      toast("Cotización guardada en tu espacio","success");
+      refreshClients();
+    }catch(e){
+      $("saveState").textContent="No se pudo confirmar el guardado.";$("saveState").className="save-state err";
+      toast(e.message||"Error al guardar","error");
+    }finally{
+      endBusy();
+    }
+  }
+
+  async function refreshClients(){
+    const url=getDbUrl();if(!url||!state.workspaceReady||!state.identity)return;
+    try{
+      const r=await authJsonp("clients");
+      if(!r||!r.ok)return;
+      const map=new Map();
+      (r.clients||[]).forEach(c=>{
+        const name=String(c.name||"").trim();
+        if(!name)return;
+        map.set(normalizeSearch(name),{name,alias:String(c.alias||"").trim()});
+      });
+      state.clients=[...map.values()].sort((a,b)=>a.name.localeCompare(b.name,"es",{sensitivity:"base"}));
+      if(document.activeElement===$("client"))renderClientSuggestions();
+      autofillAliasForExactClient();
+    }catch(e){console.warn(e)}
+  }
+
+  async function openSavedQuotes(){
+    const url=getDbUrl();if(!url){toast("Base de datos no disponible","error");return}
+    if(!ensureWorkspaceReady())return;
+    openModal("loadModal");$("savedList").innerHTML='<div class="empty-state">Cargando…</div>';
+    try{
+      const r=await authJsonp("list",{limit:100});
+      if(!r||!r.ok)throw new Error((r&&r.error)||"No se pudo cargar");
+      state.savedQuotes=r.quotes||[];renderSavedQuotes("");
+    }catch(e){
+      $("savedList").innerHTML='<div class="empty-state">No se pudieron cargar las cotizaciones.</div>';
+    }
+  }
+
+  function renderSavedQuotes(filter){
+    filter=(filter||"").trim().toLowerCase();
+    const arr=state.savedQuotes.filter(q=>!filter||[q.client,q.model,q.chassis].join(" ").toLowerCase().includes(filter));
+    const root=$("savedList");root.innerHTML="";
+    if(!arr.length){root.innerHTML='<div class="empty-state">No hay resultados.</div>';return}
+    arr.forEach(q=>{
+      const row=document.createElement("div");row.className="saved-row";
+
+      const b=document.createElement("button");b.type="button";b.className="saved-item";
+      const displayName=(q.clientAlias||q.client||"Sin cliente");
+      const clientDetail=q.clientAlias&&q.client?escapeHtml(q.client)+" · ":"";
+      b.innerHTML=`<div><strong>${escapeHtml(displayName)}</strong><small>${clientDetail}${escapeHtml(q.savedAtText||"")} · ${escapeHtml(q.model||"Sin modelo")}${q.chassis?" · "+escapeHtml(q.chassis):""}</small></div><div class="saved-total">${"CLP "+currencyNumber(n(q.totalClp),"CLP")}</div>`;
+      b.addEventListener("click",()=>loadSavedQuote(q.quoteId));
+
+      const del=document.createElement("button");
+      del.type="button";
+      del.className="saved-delete";
+      del.setAttribute("aria-label","Borrar cotización");
+      del.textContent="×";
+      del.addEventListener("click",(e)=>{
+        e.stopPropagation();
+        deleteSavedQuote(q.quoteId,q.client||"esta cotización");
+      });
+
+      row.appendChild(b);
+      row.appendChild(del);
+      root.appendChild(row);
+    });
+  }
+
+  async function loadSavedQuote(id){
+    const url=getDbUrl();if(!url)return;
+    $("savedList").innerHTML='<div class="empty-state">Abriendo cotización…</div>';
+    try{
+      const r=await authJsonp("get",{id});
+      if(!r||!r.ok||!r.quote)throw new Error((r&&r.error)||"No se encontró");
+      applyQuote(r.quote);closeModal("loadModal");toast("Cotización cargada · se conserva su dólar guardado","success");
+    }catch(e){
+      toast("No se pudo cargar la cotización","error");renderSavedQuotes($("savedSearch").value);
+    }
+  }
+
+  async function deleteSavedQuote(id,label){
+    const url=getDbUrl();if(!url)return;
+    if(!confirm('¿Borrar '+label+'? Esta acción no se puede deshacer.')) return;
+    try{
+      const r=await authJsonp("delete",{id});
+      if(!r||!r.ok) throw new Error((r&&r.error)||"No se pudo borrar");
+      state.savedQuotes=state.savedQuotes.filter(q=>q.quoteId!==id);
+      renderSavedQuotes($("savedSearch").value);
+      refreshClients();
+      toast("Cotización eliminada","success");
+    }catch(e){
+      toast(e.message||"No se pudo borrar la cotización","error");
+    }
+  }
+
+  function restoreRows(tbody,rows){
+    tbody.innerHTML="";
+    (rows||[]).forEach(r=>addMoneyRow(tbody,r.name||"",n(r.usd),r));
+    if(!tbody.children.length)addMoneyRow(tbody,"",0,{usd:0,currency:"USD"});
+  }
+
+  function applyQuote(d){
+    state.tcRequestVersion++;
+    $("tcRefresh").classList.remove("loading");$("tcRefresh").disabled=false;
+    state.quoteId=d.quoteId||uuid();state.loadedSaved=true;
+    const loadedDate=d.quoteDate||(d.savedAt?String(d.savedAt).slice(0,10):todayIso());
+    setQuoteDate(loadedDate);
+    $("client").value=d.client||"";$("clientAlias").value=d.clientAlias||"";$("chassis").value=d.chassis||"";$("model").value=d.modelId||"";
+    state.autoAliasClient=d.client||"";state.autoAliasValue=d.clientAlias||"";
+    renderModel(false);
+    $("qty").value=Math.max(1,n(d.qty)||1);
+    // V1-V5: salePrice representaba el total antes de IVA y se restaban los agregados
+    // para obtener la venta del chasis. Al cargar esos archivos se migra sin cambiar
+    // el total histórico: el nuevo precio venta base pasa a ser chassisSaleUsd.
+    const legacySale=(n(d.version)<6 && d.computed && d.computed.chassisSaleUsd!=null)
+      ?n(d.computed.chassisSaleUsd):n(d.salePrice);
+    $("salePrice").value=formatMoneyValue(legacySale);
+    $("kitRequired").value=d.kitRequired==="si"?"si":"no";
+    restoreRows($("extrasBody"),d.extras);restoreRows($("kitBody"),d.kit);
+
+    const payRows=[...$("payments").querySelectorAll(".payment-row")];
+    payRows.forEach((row,i)=>{
+      const p=(d.payments||[])[i]||{name:"",pct:0};
+      row.querySelector(".pay-name").value=p.name||"";row.querySelector(".pay-pct").value=n(p.pct);
+    });
+
+    $("scheduleBody").innerHTML="";(d.schedule||[]).forEach(s=>addScheduleRow(s.name||"",n(s.amount)));
+    if(!$("scheduleBody").children.length)buildSchedule();
+    if(n(d.tc)>0)setTc(n(d.tc),d.tcDate||"","Guardado",false,d.quoteDate||"",true);
+    else{$("tcDisplay").textContent="Sin valor";$("tcStatus").textContent="La cotización guardada no tenía T/C";$("tcStatus").className="status err";}
+    $("saveState").textContent="";
+    $("saveState").className="save-state";recalc();
+  }
+
+  function resetQuote(){
+    if(!confirm("¿Crear una cotización nueva? Se limpiarán los datos actuales."))return;
+    state.quoteId=null;state.loadedSaved=false;setQuoteDate(todayIso());
+    $("client").value="";$("clientAlias").value="";state.autoAliasClient="";state.autoAliasValue="";
+    $("chassis").value="";$("model").value="";$("qty").value="1";$("salePrice").value="";
+    $("kitRequired").value="no";$("saveState").textContent="";
+    restoreRows($("extrasBody"),[
+      {name:"",usd:0},{name:"",usd:0},{name:"",usd:0},{name:"",usd:0}
+    ]);
+    restoreRows($("kitBody"),[{name:"",usd:0}]);
+    [...$("payments").querySelectorAll(".payment-row")].forEach((row,i)=>{
+      row.querySelector(".pay-name").value=i===0?"Leasing":i===1?"Pie":"";
+      row.querySelector(".pay-pct").value=i===0?75:i===1?25:0;
+    });
+    $("scheduleBody").innerHTML="";buildSchedule();renderModel();recalc();fetchTc();
+  }
+
+  function ensureExcelJS(){
+    if(window.ExcelJS)return Promise.resolve();
+    return new Promise((resolve,reject)=>{
+      const s=document.createElement("script");
+      s.src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js";
+      s.onload=()=>resolve();s.onerror=()=>reject(new Error("No se pudo cargar el generador de Excel"));
+      document.head.appendChild(s);
+    });
+  }
+
+  function excelStyleCell(cell,opts={}){
+    cell.font={name:"Arial",size:opts.size||10,bold:!!opts.bold,color:opts.color?{argb:opts.color}:undefined};
+    if(opts.fill)cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:opts.fill}};
+    if(opts.align)cell.alignment=opts.align;
+    if(opts.border!==false)cell.border={top:{style:"thin",color:{argb:"FFD9E0E5"}},left:{style:"thin",color:{argb:"FFD9E0E5"}},bottom:{style:"thin",color:{argb:"FFD9E0E5"}},right:{style:"thin",color:{argb:"FFD9E0E5"}}};
+  }
+
+  async function buildExcelBuffer(){
+    await ensureExcelJS();
+    const data=quoteData(),c=data.computed,m=data.model||{};
+    const wb=new ExcelJS.Workbook();
+    wb.creator="Cotizador";
+    wb.created=new Date();
+
+    const ws=wb.addWorksheet("Cotización",{views:[{showGridLines:false}]});
+    ws.columns=[
+      {width:24},{width:25},{width:18},{width:22},{width:22},{width:22}
+    ];
+
+    ws.mergeCells("A1:F2");
+    const title=ws.getCell("A1");
+    title.value="COTIZACIÓN";
+    excelStyleCell(title,{
+      fill:"FF13212B",color:"FFFFFFFF",bold:true,size:18,
+      align:{vertical:"middle",horizontal:"left"}
+    });
+    ws.getRow(1).height=26;ws.getRow(2).height=9;
+
+    const setLabel=(cell,value)=>{
+      const c=ws.getCell(cell);
+      c.value=value;
+      excelStyleCell(c,{fill:"FFEFF3F6",bold:true,color:"FF425563"});
+    };
+    const setValue=(range,value,opts={})=>{
+      ws.mergeCells(range);
+      const cell=ws.getCell(range.split(":")[0]);
+      cell.value=value;
+      if(opts.numFmt)cell.numFmt=opts.numFmt;
+      excelStyleCell(cell,{
+        fill:opts.fill||"FFFFFFFF",
+        bold:!!opts.bold,
+        color:opts.color,
+        size:opts.size,
+        align:{vertical:"middle",horizontal:opts.align||"left"}
+      });
+    };
+
+    setLabel("A4","Cliente");setValue("B4:C4",data.client||"");
+    setLabel("D4","Fecha");setValue("E4:F4",displayDate(data.quoteDate));
+
+    setLabel("A5","Apodo");setValue("B5:C5",data.clientAlias||"");
+    setLabel("D5","Modelo");setValue("E5:F5",m.labelBase||m.label||"");
+
+    setLabel("A6","Chasis");setValue("B6:C6",data.chassis||"");
+    setLabel("D6","Cantidad");setValue("E6:F6",data.qty);
+
+    setLabel("A7","Tipo de cambio");
+    setValue("B7:C7",data.tc,{numFmt:'"$" #,##0.############'});
+    setLabel("D7","Descuento");
+    const discount=c.listPriceUsd>0?((c.listPriceUsd-data.salePrice)/c.listPriceUsd):null;
+    setValue("E7:F7",discount,{numFmt:"0.00%",bold:true,color:"FF0D6DA8"});
+
+    let row=9;
+    ws.mergeCells(`A${row}:F${row}`);
+    ws.getCell(`A${row}`).value="RESUMEN";
+    excelStyleCell(ws.getCell(`A${row}`),{
+      fill:"FF1769A6",color:"FFFFFFFF",bold:true
+    });
+    row++;
+
+    const finalUnitUsd=round2(
+      c.finalUnitUsd!=null?c.finalUnitUsd:round2(data.salePrice+n(c.allExtrasUsd))
+    );
+    const totalUsd=round2(
+      c.totalUsd!=null?c.totalUsd:(data.tc>0?round2(c.totalClp/data.tc):0)
+    );
+
+    const rows=[
+      ["Precio de lista",c.listPriceUsd,"USD_LIST"],
+      ["Precio de Venta",data.salePrice,"USD"],
+      ["Precio venta + agregados",finalUnitUsd,"USD"],
+      ["Total cotización",totalUsd,"USD"]
+    ];
+
+    rows.forEach((r,i)=>{
+      const isTotal=i===rows.length-1;
+
+      ws.mergeCells(`A${row}:C${row}`);
+      ws.getCell(`A${row}`).value=r[0];
+      excelStyleCell(ws.getCell(`A${row}`),{
+        bold:isTotal,
+        fill:isTotal?"FFEAF7F0":"FFFFFFFF",
+        size:isTotal?11:10
+      });
+
+      ws.mergeCells(`D${row}:F${row}`);
+      const cell=ws.getCell(`D${row}`);
+      cell.value=r[1];
+      cell.numFmt=r[2]==="USD_LIST"?'"USD" #,##0.############':'"USD" #,##0.##';
+      excelStyleCell(cell,{
+        bold:true,
+        fill:isTotal?"FFEAF7F0":"FFFFFFFF",
+        color:isTotal?"FF1769A6":undefined,
+        size:isTotal?12:10,
+        align:{horizontal:"right",vertical:"middle"}
+      });
+      row++;
+    });
+
+    // Se conservan todos los datos internamente para que "Cargar Excel"
+    // siga restaurando la cotización completa.
+    const dataSheet=wb.addWorksheet("__DATA__");
+    dataSheet.state="veryHidden";
+    dataSheet.getCell("A1").value="COTIZADOR_JSON_V1";
+    dataSheet.getCell("A2").value=JSON.stringify(data);
+
+    ws.pageSetup={
+      orientation:"portrait",fitToPage:true,fitToWidth:1,fitToHeight:1,
+      margins:{left:.35,right:.35,top:.45,bottom:.45,header:.15,footer:.15}
+    };
+    ws.headerFooter.oddFooter="Cotizador";
+    return wb.xlsx.writeBuffer();
+  }
+
+  async function exportExcel(){
+    if(!validateQuote())return;
+    const client=safeName($("client").value.trim());
+    const rawAlias=$("clientAlias").value.trim();
+    const alias=rawAlias?safeName(rawAlias):"";
+    const saveName=alias||client;
+    const selected=selectedModel();
+    const modelName=safeName(selected?.label||selected?.labelBase||$("model").selectedOptions[0]?.textContent||"Modelo");
+    const stamp=filenameDate(state.quoteDate||todayIso());
+    const filename=`Cot-${saveName}-${modelName}-${stamp}.xlsx`;
+    const btn=$("exportExcel");btn.disabled=true;
+    try{
+      toast("Generando Excel…");
+      const buffer=await buildExcelBuffer();
+      if("showDirectoryPicker" in window){
+        const root=await window.showDirectoryPicker({mode:"readwrite"});
+        const dir=await root.getDirectoryHandle(saveName,{create:true});
+        const file=await dir.getFileHandle(filename,{create:true});
+        const writable=await file.createWritable();await writable.write(buffer);await writable.close();
+        toast("Excel guardado en la carpeta "+saveName,"success");
+      }else{
+        const blob=new Blob([buffer],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"});
+        const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();a.remove();
+        setTimeout(()=>URL.revokeObjectURL(a.href),1200);
+        toast("Excel descargado. Este navegador no permite crear carpetas locales automáticamente.","success");
+      }
+    }catch(e){
+      if(e&&e.name==="AbortError")toast("Guardado cancelado");
+      else{console.error(e);toast(e.message||"No se pudo generar el Excel","error")}
+    }finally{btn.disabled=false}
+  }
+
+
+  function ensureJsPDF(){
+    if(window.jspdf&&window.jspdf.jsPDF)return Promise.resolve();
+    if(ensureJsPDF._p)return ensureJsPDF._p;
+    ensureJsPDF._p=new Promise((resolve,reject)=>{
+      const s=document.createElement("script");
+      s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+      s.onload=()=>resolve();
+      s.onerror=()=>reject(new Error("No se pudo cargar el generador PDF."));
+      document.head.appendChild(s);
+    }).finally(()=>{ensureJsPDF._p=null});
+    return ensureJsPDF._p;
+  }
+
+  function pdfSafe(v,fallback="—"){
+    const s=String(v??"").trim();
+    return s||fallback;
+  }
+
+  function pdfMoney(v,currency="USD",exact=false){
+    const value=exact?listNumber(v):currencyNumber(v,currency);
+    return value+" "+currency;
+  }
+
+  async function exportPdf(){
+    if(!validateQuote())return;
+    beginBusy("Generando PDF","Preparando una cotización limpia y lista para compartir.");
+    try{
+      await ensureJsPDF();
+      const {jsPDF}=window.jspdf;
+      const doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+      const c=computedValues();
+      const d=quoteData();
+      const discount=c.list>0?((c.list-c.sale)/c.list)*100:NaN;
+      const pageW=210,pageH=297,margin=14,contentW=pageW-margin*2;
+      const ink=[20,46,62],accent=[24,105,166],muted=[101,119,132];
+      const line=[220,228,233],soft=[246,249,251],blueSoft=[237,247,252];
+      let y=0,pageNo=1;
+
+      function setText(color=ink,size=9,style="normal"){
+        doc.setTextColor(...color);doc.setFont("helvetica",style);doc.setFontSize(size);
+      }
+      function lineY(yv,x1=margin,x2=pageW-margin,color=line){
+        doc.setDrawColor(...color);doc.line(x1,yv,x2,yv);
+      }
+      function footer(){
+        setText([128,142,151],7,"normal");
+        doc.text("Cotización generada desde Cotizador idea Cris",margin,pageH-7);
+        doc.text("Página "+pageNo,pageW-margin,pageH-7,{align:"right"});
+      }
+      function addPage(){
+        footer();doc.addPage();pageNo++;y=14;
+      }
+      function need(h){
+        if(y+h>pageH-15)addPage();
+      }
+      function sectionTitle(title){
+        need(11);
+        setText(accent,9,"bold");
+        doc.text(String(title).toUpperCase(),margin,y);
+        y+=3.5;lineY(y);y+=5;
+      }
+      function infoRow(label,value,opts={}){
+        need(8);
+        const xValue=opts.xValue||72;
+        setText(muted,8,"bold");doc.text(label,margin,y);
+        setText(opts.color||ink,9,opts.bold===false?"normal":"bold");
+        const lines=doc.splitTextToSize(String(value),pageW-margin-xValue);
+        doc.text(lines,xValue,y);
+        y+=Math.max(6,lines.length*4.1);
+      }
+      function valueRow(label,usdValue,clpValue,{list=false,emphasis=false,usdOnly=false}={}){
+        need(8);
+        if(emphasis){
+          doc.setFillColor(...blueSoft);doc.roundedRect(margin-2,y-4.7,contentW+4,8,2,2,"F");
+        }
+        setText(emphasis?[49,95,124]:muted,8,emphasis?"bold":"normal");doc.text(label,margin,y);
+        const right=pageW-margin;
+        if(usdOnly){
+          setText(accent,9.4,"bold");doc.text(pdfMoney(usdValue,"USD",list),right,y,{align:"right"});
+        }else{
+          const clpText=pdfMoney(clpValue,"CLP");
+          setText([82,111,126],9.2,"bold");doc.text(clpText,right,y,{align:"right"});
+          const clpWidth=doc.getTextWidth(clpText);
+          const usdText=pdfMoney(usdValue,"USD",list);
+          setText([34,100,139],9.2,"bold");doc.text(usdText,right-clpWidth-7,y,{align:"right"});
+          setText([154,168,177],8,"bold");doc.text("|",right-clpWidth-3.5,y,{align:"center"});
+        }
+        y+=7;
+      }
+      function tableHeader(cols,widths){
+        need(8);
+        doc.setFillColor(...soft);doc.roundedRect(margin,y-4.5,contentW,7,1.5,1.5,"F");
+        let x=margin+2;setText(muted,7.2,"bold");
+        cols.forEach((col,i)=>{
+          const align=i===0?"left":"right";
+          doc.text(col,align==="left"?x:x+widths[i]-2,y,{align});
+          x+=widths[i];
+        });
+        y+=6;
+      }
+      function tableRow(values,widths){
+        const nameLines=doc.splitTextToSize(String(values[0]||"—"),widths[0]-4);
+        const rowH=Math.max(7,nameLines.length*3.8+2);
+        need(rowH);
+        let x=margin+2;setText(ink,8,"normal");doc.text(nameLines,x,y);x+=widths[0];
+        for(let i=1;i<values.length;i++){
+          setText(i===1?[34,100,139]:[82,111,126],8,"bold");
+          doc.text(String(values[i]||"—"),x+widths[i]-2,y,{align:"right"});x+=widths[i];
+        }
+        y+=rowH-1;lineY(y-2);
+      }
+
+      // Cabecera profesional, sin encabezados/pies del navegador.
+      doc.setFillColor(...ink);doc.rect(0,0,pageW,31,"F");
+      setText([255,255,255],18,"bold");doc.text("VOLVO",margin,15);
+      setText([208,226,237],8.5,"bold");doc.text("COTIZACIÓN DE CAMIONES",margin,22);
+      setText([255,255,255],10,"bold");
+      doc.text(pdfSafe(d.modelName||$("model").selectedOptions[0]?.textContent),pageW-margin,15,{align:"right"});
+      setText([198,216,227],8,"normal");doc.text(displayDate(d.quoteDate||state.quoteDate),pageW-margin,22,{align:"right"});
+      y=41;
+
+      doc.setFillColor(...soft);doc.roundedRect(margin,y-4,contentW,36,3,3,"F");
+      const col1=margin+4,col2=111;
+      setText(muted,7.5,"bold");doc.text("CLIENTE",col1,y+2);doc.text("FECHA",col2,y+2);
+      setText(ink,10,"bold");doc.text(pdfSafe(d.client),col1,y+8);doc.text(displayDate(d.quoteDate),col2,y+8);
+      setText(muted,7.5,"bold");doc.text("APODO",col1,y+17);doc.text("TIPO DE CAMBIO",col2,y+17);
+      setText(ink,9,"bold");doc.text(pdfSafe(d.clientAlias,"—"),col1,y+23);
+      setText(ink,9,"bold");doc.text(tcFmt.format(n(d.tc))+" CLP/USD",col2,y+23);
+      y+=39;
+
+      sectionTitle("Configuración");
+      infoRow("Modelo",pdfSafe(d.modelName||$("model").selectedOptions[0]?.textContent));
+      infoRow("Chasis",pdfSafe(d.chassis));
+      infoRow("Cantidad",String(c.qty));
+      infoRow("Descuento",discountPct(discount),{color:accent});
+
+      sectionTitle("Valores");
+      valueRow("Precio de lista",c.list,round2(c.list*state.tc),{list:true});
+      valueRow("Precio de Venta",c.sale,round2(c.sale*state.tc));
+      valueRow("Adicionales + kit x unidad",c.all,round2(c.all*state.tc));
+      valueRow("Precio venta + agregados",c.finalUnit,0,{emphasis:true,usdOnly:true});
+
+      need(35);y+=3;
+      doc.setFillColor(241,246,249);doc.roundedRect(margin,y-4,contentW,27,3,3,"F");
+      setText(muted,8,"bold");doc.text("NETO",margin+4,y+3);doc.text("IVA 19%",margin+4,y+11);
+      setText([34,100,139],9,"bold");doc.text(pdfMoney(c.netUsd,"USD")+"  /",pageW-76,y+3,{align:"right"});
+      setText([82,111,126],9,"bold");doc.text(pdfMoney(c.net,"CLP"),pageW-margin-4,y+3,{align:"right"});
+      const vatUsd=state.tc>0?round2(c.vat/state.tc):0;
+      setText([34,100,139],9,"bold");doc.text(pdfMoney(vatUsd,"USD")+"  /",pageW-76,y+11,{align:"right"});
+      setText([82,111,126],9,"bold");doc.text(pdfMoney(c.vat,"CLP"),pageW-margin-4,y+11,{align:"right"});
+      y+=31;
+
+      doc.setFillColor(...ink);doc.roundedRect(margin,y-4,contentW,20,3,3,"F");
+      setText([198,216,227],8,"bold");doc.text("TOTAL COTIZACIÓN",margin+5,y+2);
+      setText([255,255,255],18,"bold");doc.text(pdfMoney(c.totalUsd,"USD"),pageW-margin-5,y+9,{align:"right"});
+      y+=25;
+
+      const extras=d.extras||[],kit=d.kit||[];
+      if(extras.some(r=>r.name||n(r.usd)>0) || (d.kitRequired==="si"&&kit.some(r=>r.name||n(r.usd)>0))){
+        sectionTitle("Detalle de adicionales");
+        const widths=[82,48,52];
+        tableHeader(["Elemento","USD","CLP"],widths);
+        extras.filter(r=>r.name||n(r.usd)>0).forEach(r=>{
+          const usdV=round2(n(r.usd));
+          const clpV=r.clp!=null?round2(n(r.clp)):round2(usdV*state.tc);
+          tableRow([pdfSafe(r.name,"Adicional"),currencyNumber(usdV,"USD"),currencyNumber(clpV,"CLP")],widths);
+        });
+        if(d.kitRequired==="si"){
+          kit.filter(r=>r.name||n(r.usd)>0).forEach(r=>{
+            const usdV=round2(n(r.usd));
+            tableRow(["Kit minero · "+pdfSafe(r.name,"Campo"),currencyNumber(usdV,"USD"),currencyNumber(round2(usdV*state.tc),"CLP")],widths);
+          });
+        }
+        y+=3;
+      }
+
+      const payments=(d.payments||[]).filter(p=>n(p.pct)>0);
+      if(payments.length){
+        sectionTitle("Formas de pago");
+        const widths=[92,32,58];
+        tableHeader(["Forma","%","Monto CLP"],widths);
+        payments.forEach(p=>{
+          tableRow([pdfSafe(p.name,"Forma de pago"),pct(n(p.pct)),currencyNumber(round2(c.total*n(p.pct)/100),"CLP")],widths);
+        });
+        y+=3;
+      }
+
+      const schedule=(d.schedule||[]).filter(x=>n(x.amount)>0);
+      if(schedule.length){
+        sectionTitle("Detalle del pie / pagos diferidos");
+        const widths=[124,58];
+        tableHeader(["Forma de pago","Monto CLP"],widths);
+        schedule.forEach(x=>tableRow([pdfSafe(x.name),currencyNumber(round2(n(x.amount)),"CLP")],widths));
+        const scheduleTotal=round2(schedule.reduce((a,b)=>a+n(b.amount),0));
+        need(8);setText(ink,9,"bold");
+        doc.text("Total con interés / detalle",margin,y);
+        doc.text(pdfMoney(scheduleTotal,"CLP"),pageW-margin,y,{align:"right"});
+        y+=7;
+      }
+
+      footer();
+      const fileBase=safeName(d.clientAlias||d.client||"Cliente");
+      const modelFile=safeName(d.model?.label||d.model?.labelBase||$("model").selectedOptions[0]?.textContent||"Modelo");
+      const dateFile=filenameDate(d.quoteDate||todayIso());
+      doc.save("Cot-"+fileBase+"-"+modelFile+"-"+dateFile+".pdf");
+      toast("PDF generado","success");
+    }catch(e){
+      console.error(e);
+      toast(e.message||"No se pudo generar el PDF","error");
+    }finally{
+      endBusy();
+    }
+  }
+
+
+  async function loadQuoteExcel(file){
+    await ensureExcelJS();
+    const wb=new ExcelJS.Workbook();
+    await wb.xlsx.load(await file.arrayBuffer());
+    const ds=wb.getWorksheet("__DATA__");
+    if(!ds) throw new Error("Este Excel no contiene los datos internos del cotizador.");
+    const marker=String(ds.getCell("A1").value||"");
+    if(marker!=="COTIZADOR_JSON_V1") throw new Error("Formato de cotizador no reconocido.");
+    const raw=String(ds.getCell("A2").value||"");
+    const data=JSON.parse(raw);
+    applyQuote(data);
+    toast("Cotización cargada desde Excel","success");
+  }
+
+  function normalizeHeader(v){
+    return String(v??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g," ").trim();
+  }
+
+  function cellNumber(v){
+    if(v==null)return NaN;
+    if(typeof v==="number")return v;
+    if(typeof v==="object"){
+      if(typeof v.result==="number")return v.result;
+      if(v.result!=null)v=v.result;
+      else if(v.text!=null)v=v.text;
+    }
+    let s=String(v).trim().replace(/[^\d.,-]/g,"");
+    if(!s)return NaN;
+    if(s.includes(",") && s.includes(".")){
+      if(s.lastIndexOf(",")>s.lastIndexOf(".")) s=s.replace(/\./g,"").replace(",",".");
+      else s=s.replace(/,/g,"");
+    }else if(s.includes(",")){
+      const parts=s.split(",");
+      if(parts.length===2 && parts[1].length<=6) s=parts[0].replace(/\./g,"")+"."+parts[1];
+      else s=s.replace(/,/g,"");
+    }else{
+      const parts=s.split(".");
+      if(parts.length>2) s=parts.join("");
+    }
+    const x=Number(s);
+    return Number.isFinite(x)?x:NaN;
+  }
+
+  function buildOverridePayload(updates,fileName,type){
+    const prices={};
+    updates.forEach(x=>prices[x.id]=x.priceUsd);
+    return {prices,updatedAt:new Date().toISOString(),sourceFile:fileName||"",sourceType:type||""};
+  }
+
+  function applyPriceOverridePayload(data){
+    if(!data||!data.prices)return 0;
+    let count=0;
+    MODELS.forEach(m=>{
+      if(Object.prototype.hasOwnProperty.call(data.prices,m.id)){
+        const v=Number(data.prices[m.id]);
+        if(Number.isFinite(v) && v>0){m.priceUsd=v;count++}
+      }
+    });
+    try{localStorage.setItem("cotizador_price_overrides_v1",JSON.stringify(data))}catch(e){}
+    if(selectedModel()) renderModel(false);
+    return count;
+  }
+
+  async function savePriceOverrides(data){
+    const url=getDbUrl();
+    if(!url)throw new Error("Base de datos no disponible.");
+    if(!ensureWorkspaceReady())throw new Error("Configura tu espacio antes de actualizar la lista.");
+    beginBusy("Guardando lista de precios","No cierres ni recargues la página hasta confirmar la actualización.");
+    try{
+      await fetch(url,{
+        method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,
+        headers:{"Content-Type":"text/plain;charset=UTF-8"},
+        body:JSON.stringify({action:"save_prices",auth:state.identity,data})
+      });
+
+      let confirmed=false;
+      for(const wait of [500,900,1500]){
+        await new Promise(r=>setTimeout(r,wait));
+        try{
+          const r=await jsonp(url,{action:"prices"},8000);
+          if(r&&r.ok&&r.data&&r.data.updatedAt===data.updatedAt){confirmed=true;break}
+        }catch(e){}
+      }
+      if(!confirmed)throw new Error("No fue posible confirmar la actualización en la nube.");
+    }finally{
+      endBusy();
+    }
+  }
+
+  async function loadPriceOverrides(){
+    let local=null;
+    try{local=JSON.parse(localStorage.getItem("cotizador_price_overrides_v1")||"null")}catch(e){}
+    if(local)applyPriceOverridePayload(local);
+
+    const url=getDbUrl();
+    if(!url)return;
+    try{
+      const r=await jsonp(url,{action:"prices"});
+      if(r&&r.ok&&r.data&&r.data.prices)applyPriceOverridePayload(r.data);
+    }catch(e){console.warn(e)}
+  }
+
+  async function parsePriceExcel(file){
+    await ensureExcelJS();
+    const wb=new ExcelJS.Workbook();
+    await wb.xlsx.load(await file.arrayBuffer());
+
+    const ws=wb.worksheets.find(s=>normalizeHeader(s.name)==="precios") || wb.worksheets[1] || wb.worksheets[0];
+    if(!ws)throw new Error("No se encontró una hoja de precios.");
+
+    let headerRow=0, priceCol=0;
+    for(let r=1;r<=Math.min(ws.rowCount,20);r++){
+      const row=ws.getRow(r);
+      row.eachCell({includeEmpty:false},(cell,c)=>{
+        const h=normalizeHeader(cell.value);
+        if(h.includes("aumento") && h.includes("2027")){headerRow=r;priceCol=c}
+      });
+      if(priceCol)break;
+    }
+    if(!priceCol)throw new Error('No se encontró la columna "Aumento 2027".');
+
+    const rowByModel=new Map();
+    for(let r=Math.max(2,headerRow+1);r<=ws.rowCount;r++){
+      const row=ws.getRow(r);
+      for(let c=1;c<=Math.min(row.cellCount||3,3);c++){
+        const key=normalizeHeader(row.getCell(c).value);
+        if(key && !rowByModel.has(key))rowByModel.set(key,r);
+      }
+    }
+
+    const updates=[];
+    MODELS.forEach(m=>{
+      let r=rowByModel.get(normalizeHeader(m.sourceModel));
+      if(!r && m.sourceRow<=ws.rowCount)r=m.sourceRow;
+      if(!r)return;
+      const value=cellNumber(ws.getRow(r).getCell(priceCol).value);
+      if(Number.isFinite(value) && value>0)updates.push({id:m.id,priceUsd:value});
+    });
+
+    if(!updates.length)throw new Error("No se pudieron identificar precios en el archivo.");
+    return updates;
+  }
+
+  async function ensurePdfJs(){
+    if(window.__cotizadorPdfJs)return window.__cotizadorPdfJs;
+    const pdfjs=await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs");
+    pdfjs.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
+    window.__cotizadorPdfJs=pdfjs;
+    return pdfjs;
+  }
+
+  function groupPdfRows(items){
+    const groups=[];
+    const sorted=items.map(it=>({text:String(it.str||"").trim(),x:it.transform?it.transform[4]:0,y:it.transform?it.transform[5]:0}))
+      .filter(x=>x.text).sort((a,b)=>b.y-a.y||a.x-b.x);
+    sorted.forEach(it=>{
+      let g=groups.find(r=>Math.abs(r.y-it.y)<=2.5);
+      if(!g){g={y:it.y,items:[]};groups.push(g)}
+      g.items.push(it);
+    });
+    groups.forEach(g=>g.items.sort((a,b)=>a.x-b.x));
+    return groups;
+  }
+
+  async function parsePricePdf(file){
+    const pdfjs=await ensurePdfJs();
+    const pdf=await pdfjs.getDocument({data:new Uint8Array(await file.arrayBuffer())}).promise;
+    const updates=new Map();
+
+    for(let p=1;p<=pdf.numPages;p++){
+      const page=await pdf.getPage(p);
+      const content=await page.getTextContent();
+      const rows=groupPdfRows(content.items);
+      const header=rows.find(r=>{
+        const t=normalizeHeader(r.items.map(i=>i.text).join(" "));
+        return t.includes("aumento") && t.includes("2027");
+      });
+      if(!header)continue;
+
+      const hItem=header.items.find(i=>normalizeHeader(i.text).includes("aumento")) || header.items[header.items.length-1];
+      const priceX=hItem.x;
+
+      MODELS.forEach(m=>{
+        if(updates.has(m.id))return;
+        const key=normalizeHeader(m.sourceModel);
+        const row=rows.find(r=>normalizeHeader(r.items.map(i=>i.text).join(" ")).includes(key));
+        if(!row)return;
+        const candidates=row.items
+          .map(i=>({i,val:cellNumber(i.text)}))
+          .filter(x=>Number.isFinite(x.val) && x.val>1000)
+          .sort((a,b)=>Math.abs(a.i.x-priceX)-Math.abs(b.i.x-priceX));
+        if(candidates.length)updates.set(m.id,{id:m.id,priceUsd:candidates[0].val});
+      });
+    }
+
+    const arr=[...updates.values()];
+    if(!arr.length)throw new Error("No se pudo reconocer la tabla de precios del PDF.");
+    return arr;
+  }
+
+  async function importPriceFile(file){
+    const ext=(file.name.split(".").pop()||"").toLowerCase();
+    if(ext==="pdf")return {updates:await parsePricePdf(file),type:"PDF"};
+    if(ext==="xlsx"||ext==="xlsm")return {updates:await parsePriceExcel(file),type:"Excel"};
+    throw new Error("Formato no compatible. Usa XLSX, XLSM o PDF.");
+  }
+
+  buildModels();buildPayments();buildSchedule();
+  [{name:"",usd:0,currency:"USD"},{name:"",usd:0,currency:"USD"},{name:"",usd:0,currency:"USD"},{name:"",usd:0,currency:"USD"}].forEach(x=>addMoneyRow($("extrasBody"),x.name,x.usd,x));
+  addMoneyRow($("kitBody"),"",0);
+  setQuoteDate(todayIso());
+
+  $("model").addEventListener("change",()=>renderModel(true));
+  $("modelPickerButton").addEventListener("click",()=>{
+    const box=$("modelDropdown");
+    if(box&&box.classList.contains("open"))closeModelDropdown();
+    else openModelDropdown();
+  });
+  $("modelPickerButton").addEventListener("keydown",e=>{
+    if(e.key==="ArrowDown"||e.key==="Enter"||e.key===" "){
+      e.preventDefault();openModelDropdown();
+    }else if(e.key==="Escape"){
+      closeModelDropdown();
+    }
+  });
+  document.addEventListener("mousedown",e=>{
+    if(!e.target.closest(".model-picker")&&!e.target.closest("#modelDropdown")){
+      closeModelDropdown();
+    }
+  });
+  window.addEventListener("resize",()=>{
+    if($("modelDropdown")?.classList.contains("open"))positionModelDropdown();
+  });
+  window.addEventListener("scroll",()=>{
+    if($("modelDropdown")?.classList.contains("open"))positionModelDropdown();
+  },true);
+  ["chassis","qty"].forEach(id=>$(id).addEventListener("input",recalc));
+
+  $("client").addEventListener("input",()=>{
+    if(state.autoAliasClient && normalizeSearch($("client").value)!==normalizeSearch(state.autoAliasClient)){
+      if($("clientAlias").value.trim()===state.autoAliasValue){
+        $("clientAlias").value="";
+      }
+      state.autoAliasClient="";
+      state.autoAliasValue="";
+    }
+    const exact=findClientRecord($("client").value);
+    if(exact && !$("clientAlias").value.trim()){
+      $("clientAlias").value=exact.alias||"";
+      state.autoAliasClient=exact.name||"";
+      state.autoAliasValue=exact.alias||"";
+    }
+    recalc();
+    renderClientSuggestions();
+  });
+  $("clientAlias").addEventListener("input",()=>{
+    state.autoAliasValue="";
+  });
+  $("client").addEventListener("focus",renderClientSuggestions);
+  $("client").addEventListener("keydown",e=>{
+    const box=$("clientSuggestions");
+    if(e.key==="ArrowDown"){
+      if(!box.classList.contains("open"))renderClientSuggestions();
+      moveClientSuggestion(1);
+      e.preventDefault();
+    }else if(e.key==="ArrowUp"){
+      if(!box.classList.contains("open"))renderClientSuggestions();
+      moveClientSuggestion(-1);
+      e.preventDefault();
+    }else if(e.key==="Enter" && box.classList.contains("open") && state.clientSuggestionIndex>=0){
+      const opt=box.querySelectorAll(".client-option")[state.clientSuggestionIndex];
+      if(opt){
+        applyClientRecord({name:opt.dataset.client||"",alias:opt.dataset.alias||""});
+        e.preventDefault();
+      }
+    }else if(e.key==="Escape"){
+      closeClientSuggestions();
+    }
+  });
+  $("client").addEventListener("blur",()=>{
+    autofillAliasForExactClient();
+    setTimeout(closeClientSuggestions,120);
+  });
+  document.addEventListener("mousedown",e=>{
+    if(!e.target.closest(".client-autocomplete"))closeClientSuggestions();
+  });
+
+  setupMoneyInput($("salePrice"));
+  $("quoteDate").addEventListener("change",()=>{
+    const v=$("quoteDate").value;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(v)){
+      state.quoteDate=v;
+      updateQuoteDatePretty();
+      $("sumDate").textContent=displayDate(v);
+      fetchTc(v,false);
+    }
+  });
+  $("kitRequired").addEventListener("change",()=>{
+    const enabled=$("kitRequired").value==="si";
+    recalc();
+    if(enabled)openModal("kitModal");
+  });
+  $("editKit").addEventListener("click",()=>openModal("kitModal"));
+  $("closeKitModal").addEventListener("click",()=>{recalc();closeModal("kitModal")});
+  $("finishKit").addEventListener("click",()=>{recalc();closeModal("kitModal")});
+  $("toggleExtras").addEventListener("click",()=>{
+    const panel=$("extrasPanel");
+    const opening=panel.hidden;
+    panel.hidden=!opening;
+    $("toggleExtras").setAttribute("aria-expanded",opening?"true":"false");
+  });
+  $("addExtra").addEventListener("click",()=>{
+    addMoneyRow($("extrasBody"),"",0,{usd:0,clp:0,currency:"USD"});
+    recalc();
+  });
+  $("addKit").addEventListener("click",()=>{
+    addMoneyRow($("kitBody"),"",0);
+    recalc();
+  });
+  $("tcRefresh").addEventListener("click",()=>fetchTc("",true));
+  $("saveDb").addEventListener("click",saveToDatabase);
+  $("exportExcel").addEventListener("click",exportExcel);
+  $("exportPdf").addEventListener("click",exportPdf);
+  $("loadSaved").addEventListener("click",openSavedQuotes);
+  $("workspaceBtn").addEventListener("click",openWorkspaceSettings);
+  $("goRecoverAccess").addEventListener("click",()=>setAccessView("recover"));
+  $("goLinkAccess").addEventListener("click",()=>setAccessView("link"));
+  $("backFromRecover").addEventListener("click",()=>setAccessView("create"));
+  $("backFromLink").addEventListener("click",()=>setAccessView("create"));
+  $("createWorkspaceBtn").addEventListener("click",createWorkspace);
+  $("recoverWorkspaceBtn").addEventListener("click",recoverWorkspace);
+  $("claimLinkCodeBtn").addEventListener("click",()=>claimLink());
+  $("scanQrBtn").addEventListener("click",startQrScanner);
+  $("createLinkBtn").addEventListener("click",createTemporaryLink);
+  $("refreshDevicesBtn").addEventListener("click",refreshDevices);
+  $("showChangeRecovery").addEventListener("click",()=>{$("changeRecoveryPanel").hidden=!$("changeRecoveryPanel").hidden;setAccessState("changeRecoveryState","");});
+  $("changeRecoveryBtn").addEventListener("click",changeRecoveryKey);
+  $("unlinkCurrentDevice").addEventListener("click",unlinkCurrentDevice);
+  $("linkCodeInput").addEventListener("input",e=>{e.target.value=e.target.value.toUpperCase().replace(/[^A-Z0-9-]/g,"");});
+  $("createRecoveryKey2").addEventListener("keydown",e=>{if(e.key==="Enter")createWorkspace();});
+  $("recoverKey").addEventListener("keydown",e=>{if(e.key==="Enter")recoverWorkspace();});
+  $("linkCodeInput").addEventListener("keydown",e=>{if(e.key==="Enter")claimLink();});
+
+  $("loadExcelBtn").addEventListener("click",()=>$("loadExcelInput").click());
+  $("loadExcelInput").addEventListener("change",async e=>{
+    const file=e.target.files&&e.target.files[0];
+    e.target.value="";
+    if(!file)return;
+    try{
+      toast("Cargando Excel…");
+      await loadQuoteExcel(file);
+    }catch(err){
+      console.error(err);toast(err.message||"No se pudo cargar el Excel","error");
+    }
+  });
+
+  let pendingPriceFile=null;
+  $("updatePricesBtn").addEventListener("click",()=>{
+    pendingPriceFile=null;
+    $("priceFileInput").value="";
+    $("priceFileName").textContent="";
+    $("priceImportState").textContent="";
+    $("applyPriceFile").disabled=true;
+    openModal("priceModal");
+  });
+  $("priceFileInput").addEventListener("change",e=>{
+    pendingPriceFile=e.target.files&&e.target.files[0]||null;
+    $("priceFileName").textContent=pendingPriceFile?pendingPriceFile.name:"";
+    $("priceImportState").textContent="";
+    $("applyPriceFile").disabled=!pendingPriceFile;
+  });
+  $("applyPriceFile").addEventListener("click",async()=>{
+    if(!pendingPriceFile)return;
+    const btn=$("applyPriceFile");btn.disabled=true;
+    $("priceImportState").textContent="Leyendo archivo…";$("priceImportState").className="save-state";
+    try{
+      const parsed=await importPriceFile(pendingPriceFile);
+      const data=buildOverridePayload(parsed.updates,pendingPriceFile.name,parsed.type);
+      const count=applyPriceOverridePayload(data);
+      $("priceImportState").textContent=`${count} modelos actualizados. Guardando en la nube…`;
+      await savePriceOverrides(data);
+      $("priceImportState").textContent=`Lista actualizada: ${count} modelos.`;
+      $("priceImportState").className="save-state ok";
+      toast("Lista de precios actualizada","success");
+      setTimeout(()=>closeModal("priceModal"),650);
+    }catch(err){
+      console.error(err);
+      $("priceImportState").textContent=err.message||"No se pudo actualizar la lista.";
+      $("priceImportState").className="save-state err";
+      toast("No se pudo actualizar la lista","error");
+    }finally{btn.disabled=false}
+  });
+
+  $("resetQuote").addEventListener("click",resetQuote);
+  $("savedSearch").addEventListener("input",()=>renderSavedQuotes($("savedSearch").value));
+  document.querySelectorAll("[data-close]").forEach(b=>b.addEventListener("click",()=>{if(b.dataset.close==="workspaceModal")clearInterval(state.linkTimer);closeModal(b.dataset.close)}));
+  document.querySelectorAll(".modal-backdrop").forEach(m=>m.addEventListener("click",e=>{
+    if(e.target===m&&m.dataset.locked!=="true"){if(m.id==="kitModal")recalc();if(m.id==="workspaceModal")clearInterval(state.linkTimer);closeModal(m.id)}
+  }));
+  document.addEventListener("keydown",e=>{
+    if(e.key==="Escape")document.querySelectorAll(".modal-backdrop.open").forEach(m=>{if(m.dataset.locked==="true")return;if(m.id==="kitModal")recalc();if(m.id==="workspaceModal")clearInterval(state.linkTimer);closeModal(m.id)})
+  });
+
+  window.addEventListener("beforeunload",e=>{
+    if(!isBusy())return;
+    e.preventDefault();
+    e.returnValue="";
+  });
+  state.dbUrl=DEFAULT_DB_URL;
+  state.deviceInfo=detectDeviceInfo();configureWorkspaceUiForDevice();
+  loadTcBackup();recalc();fetchTc();loadPriceOverrides();initWorkspaceSecurity();
+})();
+</script>
+</body>
+</html>
