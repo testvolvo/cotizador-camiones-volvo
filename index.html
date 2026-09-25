@@ -4,6 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cotizador Camiones Volvo</title>
+<meta name="theme-color" content="#13212b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cotizador Camiones Volvo">
+<meta name="application-name" content="Cotizador Camiones Volvo">
+<meta name="description" content="Cotizador de camiones Volvo">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+
 <style>
   :root{
     --ink:#13212b;
@@ -528,7 +538,7 @@
   .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
 
 
-  /* V2.43 */
+  /* V2.44 */
   .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
   .btn.pdf:hover{background:#ffe9e7}
   .additional-kit-box{
@@ -576,7 +586,7 @@
   .summary-hero .summary-total-line .summary-money-number{font-size:36px}
   .summary-hero .summary-total-line .summary-money-code{font-size:12px}
 
-  /* V2.43 · refinamiento del resumen */
+  /* V2.44 · refinamiento del resumen */
   .summary-list{border-top:1px solid #dfe6eb}
   .summary-row{
     padding:10px 2px;gap:14px
@@ -613,7 +623,7 @@
   }
 
 
-  /* V2.43 · bloqueo de operaciones críticas */
+  /* V2.44 · bloqueo de operaciones críticas */
   .busy-overlay{
     position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
     padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
@@ -641,10 +651,10 @@
     .quote-top-row{grid-template-columns:1fr}
     .payment-row{grid-template-columns:1fr .7fr}.payment-row .amount{grid-column:1/-1}
     .hide-sm{display:none!important}
-    #extrasBody .hide-sm{display:table-cell!important}
-    #extrasBody td{padding-left:3px;padding-right:3px}
-    #extrasBody .money-field input{font-size:12px;padding-left:39px}
-    #extrasBody .money-prefix{left:8px;font-size:9px}
+    #extrasBody .hide-sm,#kitBody .hide-sm{display:table-cell!important}
+    #extrasBody td,#kitBody td{padding-left:3px;padding-right:3px}
+    #extrasBody .money-field input,#kitBody .money-field input{font-size:12px;padding-left:39px}
+    #extrasBody .money-prefix,#kitBody .money-prefix{left:8px;font-size:9px}
     .additional-toggle{align-items:flex-start}
     .additional-toggle-total{gap:8px;font-size:12px}
     .summary-row{align-items:flex-start}
@@ -1552,7 +1562,7 @@
 
   function addMoneyRow(tbody,name="",value=0,rowData=null){
     const data=rowData||{};
-    const dual=tbody.id==="extrasBody";
+    const dual=tbody.id==="extrasBody"||tbody.id==="kitBody";
     const tr=document.createElement("tr");
 
     if(dual){
@@ -3229,5 +3239,19 @@
   loadTcBackup();recalc();fetchTc();loadPriceOverrides();initWorkspaceSecurity();
 })();
 </script>
+
+<script>
+if ("serviceWorker" in navigator && location.protocol !== "file:") {
+  window.addEventListener("load", async () => {
+    try {
+      const registration = await navigator.serviceWorker.register("./service-worker.js", {scope:"./"});
+      registration.update().catch(()=>{});
+    } catch (err) {
+      console.warn("No se pudo registrar el modo PWA.", err);
+    }
+  });
+}
+</script>
+
 </body>
 </html>
