@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cotizador</title>
+<title>Cotizador Camiones Volvo</title>
 <style>
   :root{
     --ink:#13212b;
@@ -324,15 +324,12 @@
   .additional-panel{
     padding:10px 10px 6px;border-top:1px solid var(--line);background:#fff
   }
-  .additional-panel-head{
-    display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:8px
-  }
-  .additional-panel-head .mini:empty{display:none}
   table{width:100%;border-collapse:collapse}
   th,td{padding:7px 6px;border-bottom:1px solid #e6ebef;vertical-align:middle}
   th{text-align:left;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.035em}
   th.elements-head-col{text-align:center}
-  td input,td select{padding:8px 9px;font-size:13px}
+  th.elements-actions-head{text-align:right}
+    td input,td select{padding:8px 9px;font-size:13px}
   td.num,th.num{text-align:right}
   .remove{width:33px;height:33px;border-radius:8px;border:1px solid #efcfcc;background:#fff7f6;color:var(--red);font-size:18px}
   .addbtn{border:1px solid #bed5e5;background:#f5fbff;color:var(--accent);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750}
@@ -531,7 +528,7 @@
   .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
 
 
-  /* V2.41 */
+  /* V2.43 */
   .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
   .btn.pdf:hover{background:#ffe9e7}
   .additional-kit-box{
@@ -579,7 +576,7 @@
   .summary-hero .summary-total-line .summary-money-number{font-size:36px}
   .summary-hero .summary-total-line .summary-money-code{font-size:12px}
 
-  /* V2.41 · refinamiento del resumen */
+  /* V2.43 · refinamiento del resumen */
   .summary-list{border-top:1px solid #dfe6eb}
   .summary-row{
     padding:10px 2px;gap:14px
@@ -616,7 +613,7 @@
   }
 
 
-  /* V2.41 · bloqueo de operaciones críticas */
+  /* V2.43 · bloqueo de operaciones críticas */
   .busy-overlay{
     position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
     padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
@@ -650,7 +647,6 @@
     #extrasBody .money-prefix{left:8px;font-size:9px}
     .additional-toggle{align-items:flex-start}
     .additional-toggle-total{gap:8px;font-size:12px}
-    .additional-panel-head{align-items:center}
     .summary-row{align-items:flex-start}
     .summary-row strong{max-width:72%}
     .summary-hero .summary-total-line .summary-money-number{font-size:26px}
@@ -692,7 +688,7 @@
   <path d="M493.39.22c-19.86,0-30.41,9.91-30.41,22.34s10.16,22.66,30.53,22.66,30.41-10.05,30.41-22.66S513.26.22,493.39.22ZM503.99,22.67c-.14,7.78-3.35,15.88-10.82,15.74-7.25-.13-10.44-8.15-10.3-16.11.14-8.25,4.09-15.44,10.89-15.33,6.8.12,10.38,7.45,10.24,15.7,0,0-.01,0-.01,0Z"/>
 </svg>
     </div>
-    <h1>Cotizador idea Cris</h1>
+    <h1>Cotizador Camiones Volvo</h1>
   </div>
 
   <div class="fx-card">
@@ -862,12 +858,15 @@
                 </div>
               </div>
 
-              <div class="additional-panel-head additional-panel-head-actions">
-                <span></span>
-                <button class="addbtn" id="addExtra" type="button">+ Agregar elemento</button>
-              </div>
               <table>
-                <thead><tr><th class="elements-head-col">Elementos</th><th class="num"></th><th class="num hide-sm"></th><th></th></tr></thead>
+                <thead>
+                  <tr>
+                    <th class="elements-head-col">Elementos</th>
+                    <th class="elements-actions-head" colspan="3">
+                      <button class="addbtn" id="addExtra" type="button">+ Agregar elemento</button>
+                    </th>
+                  </tr>
+                </thead>
                 <tbody id="extrasBody"></tbody>
               </table>
             </div>
@@ -2648,7 +2647,7 @@
       }
       function footer(){
         setText([128,142,151],7,"normal");
-        doc.text("Cotización generada desde Cotizador idea Cris",margin,pageH-7);
+        doc.text("Cotización generada desde Cotizador Camiones Volvo",margin,pageH-7);
         doc.text("Página "+pageNo,pageW-margin,pageH-7,{align:"right"});
       }
       function addPage(){
