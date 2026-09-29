@@ -1,4 +1,4 @@
-const CACHE_NAME="cotizador-volvo-v2-55-pwa-1";
+const CACHE_NAME="cotizador-volvo-v2-56-pwa-1";
 const APP_SHELL=[
   "./",
   "./index.html",
@@ -66,7 +66,5 @@ self.addEventListener("fetch",event=>{
     return;
   }
 
-  event.respondWith(
-    caches.match(request).then(cached=>cached || fetch(request))
-  );
+  event.respondWith(caches.match(request).then(cached=>cached || fetch(request)));
 });

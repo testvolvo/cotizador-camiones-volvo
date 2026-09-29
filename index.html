@@ -335,7 +335,7 @@
   .addbtn{border:1px solid #bed5e5;background:#f5fbff;color:var(--accent);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750}
   .subtotal{display:flex;justify-content:flex-end;gap:20px;padding-top:10px;font-size:13px;font-weight:750;flex-wrap:wrap}
 
-  /* V2.55 · calculadora de formas de pago */
+  /* V2.56 · calculadora de formas de pago */
   .payment-plan-summary{
     border:1px solid #d9e3e9;border-radius:12px;background:#f8fafb;padding:14px
   }
@@ -725,7 +725,7 @@
   .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
 
 
-  /* V2.55 */
+  /* V2.56 */
   .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
   .btn.pdf:hover{background:#ffe9e7}
   .additional-kit-box{
@@ -773,7 +773,7 @@
   .summary-hero .summary-total-line .summary-money-number{font-size:36px}
   .summary-hero .summary-total-line .summary-money-code{font-size:12px}
 
-  /* V2.55 · refinamiento del resumen */
+  /* V2.56 · refinamiento del resumen */
   .summary-list{border-top:1px solid #dfe6eb}
   .summary-row{
     padding:10px 2px;gap:14px
@@ -810,7 +810,7 @@
   }
 
 
-  /* V2.55 · bloqueo de operaciones críticas */
+  /* V2.56 · bloqueo de operaciones críticas */
   .busy-overlay{
     position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
     padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
@@ -883,7 +883,7 @@
     .print-title{display:block;margin:0 0 12px;font-size:20px}
   }
 
-  /* V2.55 · Forma de pago simplificada según casillas amarillas */
+  /* V2.56 · Forma de pago simplificada según casillas amarillas */
   .payment-simple-body{width:min(1180px,calc(100% - 40px))}
   .payment-quote-strip-simple{grid-template-columns:1.25fr 1.1fr 1fr .75fr .55fr .75fr}
   .payment-simple-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
@@ -962,7 +962,7 @@
     padding:6px 9px;font-size:10px;color:#49616f;font-weight:750
   }
 
-  /* V2.55 · Forma de pago simple */
+  /* V2.56 · Forma de pago simple */
   .payment-easy-body{width:min(920px,calc(100% - 36px));margin:0 auto;padding:22px 0 34px}
   .payment-easy-context{
     display:grid;grid-template-columns:auto minmax(120px,1fr) minmax(150px,1.2fr) minmax(170px,1fr) minmax(110px,.7fr);
@@ -1047,7 +1047,7 @@
     .payment-easy-actions>div .btn{flex:1}
   }
 
-  /* V2.55 · bloquear scroll de la página principal mientras Forma de pago está abierta */
+  /* V2.56 · bloquear scroll de la página principal mientras Forma de pago está abierta */
   body.payment-page-locked{
     position:fixed;
     left:0;
@@ -1063,7 +1063,7 @@
     overscroll-behavior:contain;
   }
 
-  /* V2.55 · Datos de ficha según el Excel original */
+  /* V2.56 · Datos de ficha según el Excel original */
   .payment-sheet-info{
     background:#fff;border:1px solid #dce5ea;border-radius:14px;
     padding:16px 18px;margin-bottom:12px
@@ -3987,7 +3987,27 @@
   }
 
   function officialGuaranteeText(instrument){
-    return instrument==="prenda"?"Prenda y pagaré":"Pagaré";
+    if(instrument==="prenda")return "Prenda y pagaré";
+    if(instrument==="pagare")return "Pagaré";
+    return "";
+  }
+
+  function setWorkbookActiveSheet(bytes,sheetIndex){
+    const parts=[];
+    parseBiffRecords(bytes).forEach(rec=>{
+      // BrtBookView. En esta plantilla:
+      // offset 20 = pestaña activa, offset 24 = primera pestaña visible.
+      if(rec.id===0x019e && rec.payload.length>=28){
+        const p=new Uint8Array(rec.payload);
+        const dv=new DataView(p.buffer);
+        dv.setUint32(20,sheetIndex>>>0,true);
+        dv.setUint32(24,sheetIndex>>>0,true);
+        parts.push(makeRecord(rec.id,p));
+      }else{
+        parts.push(rec.raw);
+      }
+    });
+    return concatU8(parts);
   }
 
   async function buildOfficialPaymentXlsbBlob(){
@@ -4000,77 +4020,92 @@
     const zip=await JSZip.loadAsync(templateBytes);
 
     const isUsd=state.paymentPlan.currency==="USD";
-    const sheetNo=isUsd?2:1;
-    const sheetId=isUsd?1:10;
-    const sheetPath=`xl/worksheets/sheet${sheetNo}.bin`;
-    const indexPath=`xl/worksheets/binaryIndex${sheetNo}.bin`;
+    const c=computedValues();
 
-    const required=[
-      officialFormText(state.paymentPlan.formType),
-      officialGuaranteeText(state.paymentPlan.instrument)
-    ];
+    const formText=officialFormText(state.paymentPlan.formType);
+    const guaranteeText=pd.financedClp>0
+      ? officialGuaranteeText(state.paymentPlan.instrument)
+      : "";
 
-    if(isUsd){
-      required.push(selectedModel()?.label||"");
-      required.push($("chassis").value.trim()||"");
-    }
+    // Las dos fichas normales quedan sincronizadas con la misma operación:
+    // CLP usa el valor neto convertido; USD usa el valor neto original.
+    // La ficha seleccionada por el usuario será la que Excel abra primero.
+    const modelText=selectedModel()?.label||"";
+    const chassisText=$("chassis").value.trim()||"";
 
+    const required=[formText,guaranteeText,modelText,chassisText];
     const sstOriginal=new Uint8Array(await zip.file("xl/sharedStrings.bin").async("uint8array"));
     const {bytes:sstPatched,indexMap}=patchSharedStringsBin(sstOriginal,required);
 
-    const formText=officialFormText(state.paymentPlan.formType);
-    const guaranteeText=officialGuaranteeText(state.paymentPlan.instrument);
-    const c=computedValues();
     const firstPct=(pd.leasingPct||0)/100;
     const secondPct=(pd.retomaPct||0)/100;
     const interestFraction=(pd.ratePct||0)/100;
+    const dateSerial=excelSerialFromIso(state.quoteDate);
+    const checks=pd.financedClp>0 ? (pd.nChecks||0) : 0;
 
-    const patches={};
-    const setNum=(r,c,v)=>patches[`${r},${c}`]={type:"num",value:Number(v)||0};
-    const setStr=(r,c,s)=>patches[`${r},${c}`]={type:"str",sstIndex:indexMap.get(String(s??""))};
+    const clpPatches={};
+    const usdPatches={};
 
-    if(isUsd){
-      // Ficha USD
-      setStr(3,6,formText);                         // G4
-      setNum(4,6,excelSerialFromIso(state.quoteDate)); // G5
-      setStr(5,6,selectedModel()?.label||"");      // G6
-      setStr(6,6,$("chassis").value.trim()||"");   // G7
-      setNum(7,6,c.qty);                            // G8
-      setNum(8,6,c.finalUnit);                      // G9
-      setNum(4,11,state.tc);                        // L5
-      setNum(15,7,firstPct);                        // H16
-      setNum(16,7,secondPct);                       // H17
-      setStr(18,6,guaranteeText);                   // G19
-      setNum(21,6,pd.cashClp);                      // G22
-      setNum(22,6,pd.nChecks);                      // G23
-      setNum(10,30,interestFraction);               // AE11
-    }else{
-      // Ficha CLP
-      setStr(3,6,formText);                         // G4
-      setNum(4,6,excelSerialFromIso(state.quoteDate)); // G5
-      setNum(5,6,c.qty);                            // G6
-      setNum(6,6,round2(c.finalUnit*state.tc));     // G7
-      setNum(4,11,state.tc);                        // L5
-      setNum(13,7,firstPct);                        // H14
-      setNum(14,7,secondPct);                       // H15
-      setStr(16,6,guaranteeText);                   // G17
-      setNum(19,6,pd.cashClp);                      // G20
-      setNum(20,6,pd.nChecks);                      // G21
-      setNum(8,30,interestFraction);                // AE9
-    }
+    const setNum=(bag,r,c,v)=>bag[`${r},${c}`]={type:"num",value:Number(v)||0};
+    const setStr=(bag,r,c,s)=>bag[`${r},${c}`]={
+      type:"str",
+      sstIndex:indexMap.get(String(s??""))
+    };
 
-    const sheetOriginal=new Uint8Array(await zip.file(sheetPath).async("uint8array"));
-    const sheetPatched=patchWorksheetBin(sheetOriginal,patches);
-    const indexPatched=buildWorksheetBinaryIndex(sheetPatched);
+    // -----------------------------------------------------------------
+    // Ficha CLP · sheet1.bin
+    // -----------------------------------------------------------------
+    setStr(clpPatches,3,6,formText);                              // G4 Forma de Pago
+    setNum(clpPatches,4,6,dateSerial);                            // G5 Fecha
+    setNum(clpPatches,5,6,c.qty);                                // G6 Cantidad
+    setNum(clpPatches,6,6,round2(c.finalUnit*state.tc));         // G7 Valor Unitario Neto CLP
+    setNum(clpPatches,4,11,state.tc);                             // L5 Tipo de Cambio
+    setNum(clpPatches,13,7,firstPct);                             // H14 Leasing %
+    setNum(clpPatches,14,7,secondPct);                            // H15 Retoma %
+    setStr(clpPatches,16,6,guaranteeText);                        // G17 Prenda / Pagaré
+    setNum(clpPatches,19,6,pd.cashClp);                           // G20 Contado / Cheque al día
+    setNum(clpPatches,20,6,checks);                               // G21 N° Cheques Saldo
+    setNum(clpPatches,8,30,interestFraction);                     // AE9 Interés mensual
 
+    // -----------------------------------------------------------------
+    // Ficha USD · sheet2.bin
+    // -----------------------------------------------------------------
+    setStr(usdPatches,3,6,formText);                              // G4 Forma de Pago
+    setNum(usdPatches,4,6,dateSerial);                            // G5 Fecha
+    setStr(usdPatches,5,6,modelText);                             // G6 Modelo
+    setStr(usdPatches,6,6,chassisText);                           // G7 N° Chasis
+    setNum(usdPatches,7,6,c.qty);                                // G8 Cantidad
+    setNum(usdPatches,8,6,c.finalUnit);                           // G9 Valor Unitario Neto USD
+    setNum(usdPatches,4,11,state.tc);                             // L5 Tipo de Cambio
+    setNum(usdPatches,15,7,firstPct);                             // H16 Leasing %
+    setNum(usdPatches,16,7,secondPct);                            // H17 Retoma %
+    setStr(usdPatches,18,6,guaranteeText);                        // G19 Prenda / Pagaré
+    setNum(usdPatches,21,6,pd.cashClp);                           // G22 Contado / Cheque al día (CLP)
+    setNum(usdPatches,22,6,checks);                               // G23 N° Cheques Saldo
+    setNum(usdPatches,10,30,interestFraction);                    // AE11 Interés mensual
+
+    const patchSheet=async(sheetNo,patches)=>{
+      const sheetPath=`xl/worksheets/sheet${sheetNo}.bin`;
+      const indexPath=`xl/worksheets/binaryIndex${sheetNo}.bin`;
+      const original=new Uint8Array(await zip.file(sheetPath).async("uint8array"));
+      const patched=patchWorksheetBin(original,patches);
+      zip.file(sheetPath,patched);
+      zip.file(indexPath,buildWorksheetBinaryIndex(patched));
+    };
+
+    await patchSheet(1,clpPatches);
+    await patchSheet(2,usdPatches);
     zip.file("xl/sharedStrings.bin",sstPatched);
-    zip.file(sheetPath,sheetPatched);
-    zip.file(indexPath,indexPatched);
 
-    // No editamos calcChain.bin: si alguna de las celdas amarillas venía
-    // originalmente como fórmula, una cadena de cálculo parcialmente modificada
-    // puede quedar inválida. La quitamos correctamente del paquete y Excel la
-    // reconstruye al abrir el archivo, sin mostrar reparación.
+    // Al abrir el archivo, dejar seleccionada exactamente la ficha elegida:
+    // índice 0 = Ficha CLP, índice 1 = Ficha USD.
+    const workbookOriginal=new Uint8Array(await zip.file("xl/workbook.bin").async("uint8array"));
+    let workbookPatched=setWorkbookActiveSheet(workbookOriginal,isUsd?1:0);
+    workbookPatched=forceWorkbookFullCalc(workbookPatched);
+    zip.file("xl/workbook.bin",workbookPatched);
+
+    // La cadena de cálculo se elimina de forma válida del paquete para que
+    // Excel la reconstruya y recalcule ambas fichas con los nuevos datos.
     await removeCalcChainFromPackage(zip);
 
     return zip.generateAsync({
@@ -4107,7 +4142,7 @@
       const url=a.href;
       a.remove();
       setTimeout(()=>URL.revokeObjectURL(url),1800);
-      toast("Ficha oficial XLSB exportada","success");
+      toast("Ficha oficial XLSB exportada · CLP y USD sincronizadas","success");
     }catch(e){
       console.error(e);
       toast(e.message||"No se pudo exportar la ficha oficial","error");
