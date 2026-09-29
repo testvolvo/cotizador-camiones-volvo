@@ -4,16 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Cotizador Camiones Volvo</title>
-<meta name="theme-color" content="#13212b">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Cotizador Camiones Volvo">
-<meta name="application-name" content="Cotizador Camiones Volvo">
-<meta name="description" content="Cotizador de camiones Volvo">
-<link rel="manifest" href="./manifest.webmanifest">
-<link rel="icon" href="./favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="./apple-touch-icon.png">
-
 <style>
   :root{
     --ink:#13212b;
@@ -345,7 +335,7 @@
   .addbtn{border:1px solid #bed5e5;background:#f5fbff;color:var(--accent);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750}
   .subtotal{display:flex;justify-content:flex-end;gap:20px;padding-top:10px;font-size:13px;font-weight:750;flex-wrap:wrap}
 
-  /* V2.53 · calculadora de formas de pago */
+  /* V2.54 · calculadora de formas de pago */
   .payment-plan-summary{
     border:1px solid #d9e3e9;border-radius:12px;background:#f8fafb;padding:14px
   }
@@ -735,7 +725,7 @@
   .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
 
 
-  /* V2.53 */
+  /* V2.54 */
   .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
   .btn.pdf:hover{background:#ffe9e7}
   .additional-kit-box{
@@ -783,7 +773,7 @@
   .summary-hero .summary-total-line .summary-money-number{font-size:36px}
   .summary-hero .summary-total-line .summary-money-code{font-size:12px}
 
-  /* V2.53 · refinamiento del resumen */
+  /* V2.54 · refinamiento del resumen */
   .summary-list{border-top:1px solid #dfe6eb}
   .summary-row{
     padding:10px 2px;gap:14px
@@ -820,7 +810,7 @@
   }
 
 
-  /* V2.53 · bloqueo de operaciones críticas */
+  /* V2.54 · bloqueo de operaciones críticas */
   .busy-overlay{
     position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
     padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
@@ -893,7 +883,7 @@
     .print-title{display:block;margin:0 0 12px;font-size:20px}
   }
 
-  /* V2.53 · Forma de pago simplificada según casillas amarillas */
+  /* V2.54 · Forma de pago simplificada según casillas amarillas */
   .payment-simple-body{width:min(1180px,calc(100% - 40px))}
   .payment-quote-strip-simple{grid-template-columns:1.25fr 1.1fr 1fr .75fr .55fr .75fr}
   .payment-simple-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
@@ -972,7 +962,7 @@
     padding:6px 9px;font-size:10px;color:#49616f;font-weight:750
   }
 
-  /* V2.53 · Forma de pago simple */
+  /* V2.54 · Forma de pago simple */
   .payment-easy-body{width:min(920px,calc(100% - 36px));margin:0 auto;padding:22px 0 34px}
   .payment-easy-context{
     display:grid;grid-template-columns:auto minmax(120px,1fr) minmax(150px,1.2fr) minmax(170px,1fr) minmax(110px,.7fr);
@@ -1057,7 +1047,7 @@
     .payment-easy-actions>div .btn{flex:1}
   }
 
-  /* V2.53 · bloquear scroll de la página principal mientras Forma de pago está abierta */
+  /* V2.54 · bloquear scroll de la página principal mientras Forma de pago está abierta */
   body.payment-page-locked{
     position:fixed;
     left:0;
@@ -3841,6 +3831,36 @@
     return concatU8(parts);
   }
 
+  async function removeCalcChainFromPackage(zip){
+    // Si modificamos una celda que antes participaba en calcChain,
+    // conservar una cadena vieja puede hacer que Excel la considere corrupta.
+    // La solución estándar es quitar calcChain y sus referencias; Excel la
+    // reconstruye automáticamente al abrir/recalcular el libro.
+    zip.remove("xl/calcChain.bin");
+
+    const relPath="xl/_rels/workbook.bin.rels";
+    const relFile=zip.file(relPath);
+    if(relFile){
+      let rels=await relFile.async("string");
+      rels=rels.replace(
+        /<Relationship\b[^>]*Type="http:\/\/schemas\.openxmlformats\.org\/officeDocument\/2006\/relationships\/calcChain"[^>]*\/>/g,
+        ""
+      );
+      zip.file(relPath,rels);
+    }
+
+    const ctPath="[Content_Types].xml";
+    const ctFile=zip.file(ctPath);
+    if(ctFile){
+      let ct=await ctFile.async("string");
+      ct=ct.replace(
+        /<Override\b[^>]*PartName="\/xl\/calcChain\.bin"[^>]*\/>/g,
+        ""
+      );
+      zip.file(ctPath,ct);
+    }
+  }
+
   function excelSerialFromIso(iso){
     const m=String(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if(!m)return 0;
@@ -3938,20 +3958,11 @@
     zip.file(sheetPath,sheetPatched);
     zip.file(indexPath,indexPatched);
 
-    // Al convertir las celdas amarillas que venían con una fórmula por defecto
-    // en valores escritos por el usuario, quitamos esas entradas concretas de
-    // calcChain y pedimos un recálculo completo al abrir el libro.
-    const calcFile=zip.file("xl/calcChain.bin");
-    if(calcFile){
-      const calcOriginal=new Uint8Array(await calcFile.async("uint8array"));
-      const formulaCells=isUsd
-        ? [[4,6],[18,6]]                       // G5, G19
-        : [[4,6],[4,11],[8,30],[16,6]];      // G5, L5, AE9, G17
-      zip.file("xl/calcChain.bin",patchCalcChainBin(calcOriginal,sheetId,formulaCells));
-    }
-
-    const wbOriginal=new Uint8Array(await zip.file("xl/workbook.bin").async("uint8array"));
-    zip.file("xl/workbook.bin",forceWorkbookFullCalc(wbOriginal));
+    // No editamos calcChain.bin: si alguna de las celdas amarillas venía
+    // originalmente como fórmula, una cadena de cálculo parcialmente modificada
+    // puede quedar inválida. La quitamos correctamente del paquete y Excel la
+    // reconstruye al abrir el archivo, sin mostrar reparación.
+    await removeCalcChainFromPackage(zip);
 
     return zip.generateAsync({
       type:"blob",
@@ -4800,19 +4811,5 @@
   loadTcBackup();recalc();fetchTc();loadPriceOverrides();initWorkspaceSecurity();
 })();
 </script>
-
-<script>
-if ("serviceWorker" in navigator && location.protocol !== "file:") {
-  window.addEventListener("load", async () => {
-    try {
-      const registration = await navigator.serviceWorker.register("./service-worker.js", {scope:"./"});
-      registration.update().catch(()=>{});
-    } catch (err) {
-      console.warn("No se pudo registrar el modo PWA.", err);
-    }
-  });
-}
-</script>
-
 </body>
 </html>
