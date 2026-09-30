@@ -335,7 +335,7 @@
   .addbtn{border:1px solid #bed5e5;background:#f5fbff;color:var(--accent);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750}
   .subtotal{display:flex;justify-content:flex-end;gap:20px;padding-top:10px;font-size:13px;font-weight:750;flex-wrap:wrap}
 
-  /* V2.56 · calculadora de formas de pago */
+  /* V2.57 · calculadora de formas de pago */
   .payment-plan-summary{
     border:1px solid #d9e3e9;border-radius:12px;background:#f8fafb;padding:14px
   }
@@ -725,7 +725,7 @@
   .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
 
 
-  /* V2.56 */
+  /* V2.57 */
   .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
   .btn.pdf:hover{background:#ffe9e7}
   .additional-kit-box{
@@ -773,7 +773,7 @@
   .summary-hero .summary-total-line .summary-money-number{font-size:36px}
   .summary-hero .summary-total-line .summary-money-code{font-size:12px}
 
-  /* V2.56 · refinamiento del resumen */
+  /* V2.57 · refinamiento del resumen */
   .summary-list{border-top:1px solid #dfe6eb}
   .summary-row{
     padding:10px 2px;gap:14px
@@ -810,7 +810,7 @@
   }
 
 
-  /* V2.56 · bloqueo de operaciones críticas */
+  /* V2.57 · bloqueo de operaciones críticas */
   .busy-overlay{
     position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
     padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
@@ -883,7 +883,7 @@
     .print-title{display:block;margin:0 0 12px;font-size:20px}
   }
 
-  /* V2.56 · Forma de pago simplificada según casillas amarillas */
+  /* V2.57 · Forma de pago simplificada según casillas amarillas */
   .payment-simple-body{width:min(1180px,calc(100% - 40px))}
   .payment-quote-strip-simple{grid-template-columns:1.25fr 1.1fr 1fr .75fr .55fr .75fr}
   .payment-simple-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
@@ -962,7 +962,7 @@
     padding:6px 9px;font-size:10px;color:#49616f;font-weight:750
   }
 
-  /* V2.56 · Forma de pago simple */
+  /* V2.57 · Forma de pago simple */
   .payment-easy-body{width:min(920px,calc(100% - 36px));margin:0 auto;padding:22px 0 34px}
   .payment-easy-context{
     display:grid;grid-template-columns:auto minmax(120px,1fr) minmax(150px,1.2fr) minmax(170px,1fr) minmax(110px,.7fr);
@@ -1047,7 +1047,7 @@
     .payment-easy-actions>div .btn{flex:1}
   }
 
-  /* V2.56 · bloquear scroll de la página principal mientras Forma de pago está abierta */
+  /* V2.57 · bloquear scroll de la página principal mientras Forma de pago está abierta */
   body.payment-page-locked{
     position:fixed;
     left:0;
@@ -1063,7 +1063,7 @@
     overscroll-behavior:contain;
   }
 
-  /* V2.56 · Datos de ficha según el Excel original */
+  /* V2.57 · Datos de ficha según el Excel original */
   .payment-sheet-info{
     background:#fff;border:1px solid #dce5ea;border-radius:14px;
     padding:16px 18px;margin-bottom:12px
@@ -1102,6 +1102,16 @@
   @media(max-width:520px){
     .payment-sheet-info-head{align-items:flex-start;flex-direction:column}
     .payment-sheet-grid{grid-template-columns:1fr}
+  }
+
+  /* V2.57 · Prenda/Pagaré automático */
+  .payment-auto-field{
+    background:#f7fafb;
+  }
+  .payment-auto-value{
+    min-height:42px;display:flex;align-items:center;padding:0 13px;
+    border:1px solid #d9e5eb;border-radius:10px;background:#eef6f2;
+    color:#294c3c;font-size:12px;font-weight:850
   }
 </style>
 </head>
@@ -1622,17 +1632,13 @@
             <em>Editable</em>
           </div>
 
-          <div class="payment-easy-field" id="ppGuaranteeRow">
+          <div class="payment-easy-field payment-auto-field" id="ppGuaranteeRow">
             <div>
-              <label for="ppInstrument">Garantía</label>
-              <small>Selecciona lo indicado para la operación.</small>
+              <label>Prenda / Pagaré</label>
+              <small>Se determina automáticamente según la forma de pago.</small>
             </div>
-            <select id="ppInstrument" class="yellow-input">
-              <option value="">Seleccionar…</option>
-              <option value="pagare">Pagaré</option>
-              <option value="prenda">Prenda y pagaré</option>
-            </select>
-            <em></em>
+            <div class="payment-auto-value" id="ppGuaranteeAuto">—</div>
+            <em>Calculado por la ficha</em>
           </div>
         </div>
       </section>
@@ -1694,6 +1700,7 @@
         <button class="btn ghost" id="clearPaymentPlan" type="button">Quitar forma de pago</button>
         <div>
           <button class="btn ghost" id="exportPaymentPlanExcel" type="button">Exportar ficha Excel</button>
+          <button class="btn ghost" id="exportPaymentPlanPdf" type="button">Exportar ficha PDF</button>
           <button class="btn ghost" id="cancelPaymentPlan" type="button">Volver</button>
           <button class="btn primary" id="savePaymentPlan" type="button">Guardar forma de pago</button>
         </div>
@@ -2395,6 +2402,19 @@
     return PAYMENT_FORMS[plan?.formType]?.label||"Sin seleccionar";
   }
 
+  function automaticInstrumentForForm(formType){
+    if(formType==="credito_directo" || formType==="credito_retoma")return "prenda";
+    if(formType==="leasing_cheque" || formType==="leasing_retoma_cheque")return "pagare";
+    return "";
+  }
+
+  function automaticGuaranteeLabel(formType){
+    const instrument=automaticInstrumentForForm(formType);
+    if(instrument==="prenda")return "Prenda y pagaré";
+    if(instrument==="pagare")return "Pagaré";
+    return "—";
+  }
+
   function addDaysIso(iso,days){
     const m=String(iso||"").match(/^(\d{4})-(\d{2})-(\d{2})$/);
     if(!m)return "";
@@ -2471,7 +2491,7 @@
     }
 
     const checksTotalClp=round2(financedClp+totalInterestClp);
-    const instrument=String(plan.instrument||"");
+    const instrument=automaticInstrumentForForm(plan.formType);
     const instrumentCostClp=instrument==="prenda"?400000:instrument==="pagare"?180000:0;
     const stampTaxClp=round2(financedClp*0.00066*Math.max(0,nChecks));
     const operationalCostClp=round2(stampTaxClp+instrumentCostClp);
@@ -2516,7 +2536,7 @@
       cashClp:round2(moneyN($("ppCashAmount").value)),
       nChecks:$("ppNChecks").value.trim()===""?null:Math.max(1,Math.min(12,Math.round(n($("ppNChecks").value)))),
       monthlyRatePct:$("ppInterestRate").value.trim()===""?null:Math.max(0,n($("ppInterestRate").value)),
-      instrument:$("ppInstrument").value||"",
+      instrument:automaticInstrumentForForm($("ppFormType").value||""),
       firstDueDays:30,
       sekPerUsd:10.98
     };
@@ -2577,12 +2597,15 @@
       ?("CLP "+currencyNumber(d.checksTotalClp,"CLP"))
       :"—";
     $("ppFinancedClp").textContent="CLP "+currencyNumber(d.financedClp,"CLP");
+    $("ppGuaranteeAuto").textContent=automaticGuaranteeLabel(p.formType);
 
     // Si ya no queda saldo, los datos de cheques no son necesarios.
+    // Prenda/Pagaré se mantiene visible porque en el Excel depende de G4,
+    // no del saldo financiado.
     const noCredit=d.formReady&&d.financedClp<=0;
     $("ppNChecksRow").hidden=noCredit;
     $("ppInterestRow").hidden=noCredit;
-    $("ppGuaranteeRow").hidden=noCredit;
+    $("ppGuaranteeRow").hidden=!d.formReady;
 
     $("ppExposureClp").textContent="CLP "+currencyNumber(d.exposureClp,"CLP");
     $("ppExposureUsd").textContent="USD "+currencyNumber(d.exposureUsd,"USD");
@@ -2633,7 +2656,6 @@
     $("ppCashAmount").value=n(p.cashClp)>0?formatMoneyValue(p.cashClp):"";
     $("ppNChecks").value=p.nChecks?String(p.nChecks):"";
     $("ppInterestRate").value=p.monthlyRatePct!=null?String(p.monthlyRatePct):"1.70";
-    $("ppInstrument").value=p.instrument||"";
 
     const c=computedValues();
     const isUsd=p.currency==="USD";
@@ -2710,10 +2732,6 @@
       toast("Completa N° de cheques e interés mensual","error");
       return;
     }
-    if(d.financedClp>0 && !p.instrument){
-      toast("Selecciona Pagaré o Prenda y pagaré","error");
-      return;
-    }
     state.paymentPlan=p;
     closeModal("paymentPlanModal");
     renderPaymentPlanSummary();
@@ -2747,11 +2765,13 @@
     if(d.retomaPct>0)parts.push(`Retoma ${pct(d.retomaPct)}`);
     if(d.cashClp>0)parts.push(`Al día CLP ${currencyNumber(d.cashClp,"CLP")}`);
     parts.push(`Cheques ${pct(d.financedPct)}`);
+    parts.push(`Prenda/Pagaré: ${automaticGuaranteeLabel(d.formType)}`);
 
     box.innerHTML=`<div class="payment-summary-head">
       <div><span>Forma de pago</span><strong>${escapeHtml(d.formName)} · Ficha ${d.currency}</strong></div>
       <div class="payment-summary-actions">
         <button class="btn excel" id="exportPaymentPlanExcelSummary" type="button">Exportar ficha Excel</button>
+        <button class="btn ghost" id="exportPaymentPlanPdfSummary" type="button">Exportar ficha PDF</button>
         <button class="btn ghost" id="editPaymentPlan" type="button">Editar</button>
         <button class="btn ghost" id="removePaymentPlan" type="button">Quitar</button>
       </div>
@@ -2763,6 +2783,7 @@
     </div>`;
 
     $("exportPaymentPlanExcelSummary").addEventListener("click",exportPaymentPlanExcel);
+    $("exportPaymentPlanPdfSummary").addEventListener("click",exportPaymentPlanPdf);
     $("editPaymentPlan").addEventListener("click",openPaymentPlan);
     $("removePaymentPlan").addEventListener("click",clearPaymentPlan);
   }
@@ -4023,9 +4044,8 @@
     const c=computedValues();
 
     const formText=officialFormText(state.paymentPlan.formType);
-    const guaranteeText=pd.financedClp>0
-      ? officialGuaranteeText(state.paymentPlan.instrument)
-      : "";
+    // Prenda/Pagaré no se escribe: se conserva la fórmula original del Excel
+    // para que el libro lo determine automáticamente desde la Forma de Pago.
 
     // Las dos fichas normales quedan sincronizadas con la misma operación:
     // CLP usa el valor neto convertido; USD usa el valor neto original.
@@ -4033,7 +4053,7 @@
     const modelText=selectedModel()?.label||"";
     const chassisText=$("chassis").value.trim()||"";
 
-    const required=[formText,guaranteeText,modelText,chassisText];
+    const required=[formText,modelText,chassisText];
     const sstOriginal=new Uint8Array(await zip.file("xl/sharedStrings.bin").async("uint8array"));
     const {bytes:sstPatched,indexMap}=patchSharedStringsBin(sstOriginal,required);
 
@@ -4062,7 +4082,6 @@
     setNum(clpPatches,4,11,state.tc);                             // L5 Tipo de Cambio
     setNum(clpPatches,13,7,firstPct);                             // H14 Leasing %
     setNum(clpPatches,14,7,secondPct);                            // H15 Retoma %
-    setStr(clpPatches,16,6,guaranteeText);                        // G17 Prenda / Pagaré
     setNum(clpPatches,19,6,pd.cashClp);                           // G20 Contado / Cheque al día
     setNum(clpPatches,20,6,checks);                               // G21 N° Cheques Saldo
     setNum(clpPatches,8,30,interestFraction);                     // AE9 Interés mensual
@@ -4079,7 +4098,6 @@
     setNum(usdPatches,4,11,state.tc);                             // L5 Tipo de Cambio
     setNum(usdPatches,15,7,firstPct);                             // H16 Leasing %
     setNum(usdPatches,16,7,secondPct);                            // H17 Retoma %
-    setStr(usdPatches,18,6,guaranteeText);                        // G19 Prenda / Pagaré
     setNum(usdPatches,21,6,pd.cashClp);                           // G22 Contado / Cheque al día (CLP)
     setNum(usdPatches,22,6,checks);                               // G23 N° Cheques Saldo
     setNum(usdPatches,10,30,interestFraction);                    // AE11 Interés mensual
@@ -4146,6 +4164,195 @@
     }catch(e){
       console.error(e);
       toast(e.message||"No se pudo exportar la ficha oficial","error");
+    }
+  }
+
+
+  async function exportPaymentPlanPdf(){
+    if(!state.paymentPlan){
+      toast("Primero configura y guarda la forma de pago","error");
+      return;
+    }
+    const pd=paymentPlanDetails(state.paymentPlan);
+    if(!pd?.valid){
+      toast("Completa y guarda la forma de pago antes de exportarla","error");
+      return;
+    }
+
+    beginBusy("Generando ficha PDF","Preparando la forma de pago para compartir.");
+    try{
+      await ensureJsPDF();
+      const {jsPDF}=window.jspdf;
+      const doc=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+      const c=computedValues();
+      const isUsd=state.paymentPlan.currency==="USD";
+      const pageW=210,pageH=297,margin=14,contentW=pageW-margin*2;
+      const ink=[28,49,62],accent=[18,105,166],muted=[99,118,129];
+      const line=[218,227,233],soft=[247,250,252],greenSoft=[239,247,242];
+      let y=14,pageNo=1;
+
+      const safe=v=>pdfSafe(v,"—");
+      const fmtClp=v=>"CLP "+currencyNumber(v,"CLP");
+      const fmtUsd=v=>"USD "+currencyNumber(v,"USD");
+      const fmtPct=v=>pct(v);
+
+      function txt(color=ink,size=9,style="normal"){
+        doc.setTextColor(...color);doc.setFont("helvetica",style);doc.setFontSize(size);
+      }
+      function rule(yv){
+        doc.setDrawColor(...line);doc.line(margin,yv,pageW-margin,yv);
+      }
+      function footer(){
+        txt([130,144,153],7,"normal");
+        doc.text("Ficha de forma de pago - Cotizador Camiones Volvo",margin,pageH-7);
+        doc.text("Página "+pageNo,pageW-margin,pageH-7,{align:"right"});
+      }
+      function addPage(){
+        footer();doc.addPage();pageNo++;y=14;
+      }
+      function need(h){
+        if(y+h>pageH-15)addPage();
+      }
+      function section(title){
+        need(12);
+        txt(accent,9,"bold");doc.text(String(title).toUpperCase(),margin,y);
+        y+=3.5;rule(y);y+=5;
+      }
+      function pair(label,value,x,w,opts={}){
+        doc.setFillColor(...(opts.fill||soft));
+        doc.roundedRect(x,y,w,17,2,2,"F");
+        txt(muted,6.8,"bold");doc.text(String(label).toUpperCase(),x+3,y+5);
+        txt(opts.color||ink,9,opts.bold===false?"normal":"bold");
+        const lines=doc.splitTextToSize(String(value),w-6);
+        doc.text(lines,x+3,y+10.5);
+      }
+      function infoRow(label,value,opts={}){
+        need(7);
+        txt(muted,7.5,"bold");doc.text(label,margin,y);
+        txt(opts.color||ink,8.7,opts.bold===false?"normal":"bold");
+        const lines=doc.splitTextToSize(String(value),104);
+        doc.text(lines,92,y);
+        y+=Math.max(6,lines.length*3.8);
+      }
+
+      // Cabecera
+      doc.setFillColor(...ink);doc.rect(0,0,pageW,29,"F");
+      txt([255,255,255],17,"bold");doc.text("VOLVO",margin,13);
+      txt([207,226,238],8.5,"bold");doc.text("FICHA FORMA DE PAGO",margin,20);
+      txt([255,255,255],10,"bold");
+      doc.text("Ficha "+state.paymentPlan.currency,pageW-margin,13,{align:"right"});
+      txt([205,220,230],7.5,"normal");
+      doc.text(displayDate(state.quoteDate),pageW-margin,20,{align:"right"});
+      y=37;
+
+      // Datos de la operación
+      section("Datos de la ficha");
+      const gap=4,w=(contentW-gap)/2;
+      pair("Cliente",$("client").value.trim()||"—",margin,w);
+      pair("Fecha",displayDate(state.quoteDate),margin+w+gap,w);
+      y+=21;
+
+      if(isUsd){
+        pair("Modelo",selectedModel()?.label||"—",margin,w);
+        pair("N° Chasis",$("chassis").value.trim()||"—",margin+w+gap,w);
+        y+=21;
+        pair("Cantidad",String(c.qty),margin,w);
+        pair("Valor Unitario Neto",fmtUsd(c.finalUnit),margin+w+gap,w);
+        y+=21;
+        pair("Valor Total Neto",fmtUsd(c.netUsd),margin,w);
+        pair("Tipo de Cambio",tcFmt.format(state.tc)+" CLP/USD",margin+w+gap,w);
+        y+=21;
+        pair("IVA",fmtClp(c.vat),margin,w);
+        pair("Total",fmtClp(c.total),margin+w+gap,w);
+        y+=22;
+      }else{
+        pair("Cantidad",String(c.qty),margin,w);
+        pair("Valor Unitario Neto",fmtClp(round2(c.finalUnit*state.tc)),margin+w+gap,w);
+        y+=21;
+        pair("Valor Total Neto",fmtClp(c.net),margin,w);
+        pair("IVA",fmtClp(c.vat),margin+w+gap,w);
+        y+=21;
+        pair("Total",fmtClp(c.total),margin,w);
+        pair("Tipo de Cambio",tcFmt.format(state.tc)+" CLP/USD",margin+w+gap,w);
+        y+=22;
+      }
+
+      // Forma de pago
+      section("Forma de pago");
+      infoRow("Forma de Pago",pd.formName,{color:accent});
+      if(pd.leasingPct>0)infoRow("Leasing",fmtPct(pd.leasingPct)+"  ·  "+fmtClp(pd.leasingClp));
+      if(pd.retomaPct>0)infoRow("Retoma",fmtPct(pd.retomaPct)+"  ·  "+fmtClp(pd.retomaClp));
+      infoRow("Contado / Cheque al día",fmtClp(pd.cashClp)+"  ·  "+fmtPct(pd.cashPct));
+      infoRow("Prenda / Pagaré",automaticGuaranteeLabel(pd.formType));
+      if(pd.financedClp>0){
+        infoRow("N° Cheques Saldo",String(pd.nChecks));
+        infoRow("Interés Mensual",tcFmt.format(pd.ratePct||0)+"%");
+      }
+
+      // Resultado
+      section("Resultado");
+      pair("Saldo cliente cheques",fmtClp(pd.financedClp),margin,w,{fill:greenSoft});
+      pair("Total cheques con interés",fmtClp(pd.checksTotalClp),margin+w+gap,w,{fill:greenSoft});
+      y+=21;
+      pair("Nivel de aprobación",pd.approval.cc+" · "+pd.approval.approval,margin,w,{fill:greenSoft});
+      pair("Plazo respuesta",pd.approval.time,margin+w+gap,w,{fill:greenSoft});
+      y+=22;
+
+      // Detalle financiero
+      section("Detalle de aprobación");
+      infoRow("Exposición CLP",fmtClp(pd.exposureClp));
+      infoRow("Exposición USD",fmtUsd(pd.exposureUsd));
+      infoRow("Exposición %",fmtPct(pd.exposurePct));
+      infoRow("Exposición MSEK",tcFmt.format(pd.exposureMsek));
+      infoRow("Gastos operacionales",fmtClp(pd.operationalCostClp));
+      infoRow("Prenda mínima sugerida",pd.minPledgeUsd>0?fmtUsd(pd.minPledgeUsd):"No requerida");
+
+      // Cheques
+      if(pd.schedule?.length){
+        section("Detalle de cheques");
+        const widths=[12,18,27,39,39,43];
+        const headers=["N°","Días","Fecha","Capital","Interés","Monto cheque"];
+        need(9);
+        doc.setFillColor(...soft);doc.rect(margin,y-4.5,contentW,7,"F");
+        let x=margin;
+        txt(muted,6.5,"bold");
+        headers.forEach((h,i)=>{
+          doc.text(h,i<3?x+2:x+widths[i]-2,y,{align:i<3?"left":"right"});
+          x+=widths[i];
+        });
+        y+=6;
+        pd.schedule.forEach(r=>{
+          need(7);
+          let xx=margin;
+          const vals=[
+            String(r.n),
+            String(r.days),
+            displayDate(r.date),
+            currencyNumber(r.capital,"CLP"),
+            currencyNumber(r.interest,"CLP"),
+            currencyNumber(r.payment,"CLP")
+          ];
+          vals.forEach((v,i)=>{
+            txt(i===5?accent:ink,7.2,i===5?"bold":"normal");
+            doc.text(v,i<3?xx+2:xx+widths[i]-2,y,{align:i<3?"left":"right"});
+            xx+=widths[i];
+          });
+          y+=5.5;rule(y-2);
+        });
+      }
+
+      footer();
+
+      const client=safeName($("clientAlias").value.trim()||$("client").value.trim()||"Cliente");
+      const model=safeName(selectedModel()?.label||"Modelo");
+      const date=filenameDate(state.quoteDate||todayIso());
+      doc.save(`FormaPago-${client}-${model}-${date}.pdf`);
+      toast("Ficha PDF exportada","success");
+    }catch(e){
+      console.error(e);
+      toast(e.message||"No se pudo exportar la ficha PDF","error");
+    }finally{
+      endBusy();
     }
   }
 
@@ -4846,7 +5053,6 @@
   });
   $("ppNChecks").addEventListener("input",updatePaymentPlanModal);
   $("ppInterestRate").addEventListener("input",updatePaymentPlanModal);
-  $("ppInstrument").addEventListener("change",updatePaymentPlanModal);
 
   $("closePaymentCurrencyModal").addEventListener("click",()=>closeModal("paymentCurrencyModal"));
   [...document.querySelectorAll("[data-payment-currency]")].forEach(btn=>{
@@ -4858,6 +5064,7 @@
   $("savePaymentPlan").addEventListener("click",savePaymentPlan);
   $("savePaymentPlanTop").addEventListener("click",savePaymentPlan);
   $("exportPaymentPlanExcel").addEventListener("click",exportPaymentPlanExcel);
+  $("exportPaymentPlanPdf").addEventListener("click",exportPaymentPlanPdf);
   $("exportPaymentPlanExcelTop").addEventListener("click",exportPaymentPlanExcel);
   $("clearPaymentPlan").addEventListener("click",clearPaymentPlan);
 
