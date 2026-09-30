@@ -1,4 +1,4 @@
-const CACHE_NAME="cotizador-volvo-v2-59-pwa-1";
+const CACHE_NAME="cotizador-volvo-v2-61-pwa-1";
 const APP_SHELL=[
   "./",
   "./index.html",

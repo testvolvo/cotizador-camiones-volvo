@@ -335,7 +335,7 @@
   .addbtn{border:1px solid #bed5e5;background:#f5fbff;color:var(--accent);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750}
   .subtotal{display:flex;justify-content:flex-end;gap:20px;padding-top:10px;font-size:13px;font-weight:750;flex-wrap:wrap}
 
-  /* V2.59 · calculadora de formas de pago */
+  /* V2.61 · calculadora de formas de pago */
   .payment-plan-summary{
     border:1px solid #d9e3e9;border-radius:12px;background:#f8fafb;padding:14px
   }
@@ -725,7 +725,7 @@
   .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
 
 
-  /* V2.59 */
+  /* V2.61 */
   .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
   .btn.pdf:hover{background:#ffe9e7}
   .additional-kit-box{
@@ -773,7 +773,7 @@
   .summary-hero .summary-total-line .summary-money-number{font-size:36px}
   .summary-hero .summary-total-line .summary-money-code{font-size:12px}
 
-  /* V2.59 · refinamiento del resumen */
+  /* V2.61 · refinamiento del resumen */
   .summary-list{border-top:1px solid #dfe6eb}
   .summary-row{
     padding:10px 2px;gap:14px
@@ -810,7 +810,7 @@
   }
 
 
-  /* V2.59 · bloqueo de operaciones críticas */
+  /* V2.61 · bloqueo de operaciones críticas */
   .busy-overlay{
     position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
     padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
@@ -883,7 +883,7 @@
     .print-title{display:block;margin:0 0 12px;font-size:20px}
   }
 
-  /* V2.59 · Forma de pago simplificada según casillas amarillas */
+  /* V2.61 · Forma de pago simplificada según casillas amarillas */
   .payment-simple-body{width:min(1180px,calc(100% - 40px))}
   .payment-quote-strip-simple{grid-template-columns:1.25fr 1.1fr 1fr .75fr .55fr .75fr}
   .payment-simple-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
@@ -962,7 +962,7 @@
     padding:6px 9px;font-size:10px;color:#49616f;font-weight:750
   }
 
-  /* V2.59 · Forma de pago simple */
+  /* V2.61 · Forma de pago simple */
   .payment-easy-body{width:min(920px,calc(100% - 36px));margin:0 auto;padding:22px 0 34px}
   .payment-easy-context{
     display:grid;grid-template-columns:auto minmax(120px,1fr) minmax(150px,1.2fr) minmax(170px,1fr) minmax(110px,.7fr);
@@ -1047,7 +1047,7 @@
     .payment-easy-actions>div .btn{flex:1}
   }
 
-  /* V2.59 · bloquear scroll de la página principal mientras Forma de pago está abierta */
+  /* V2.61 · bloquear scroll de la página principal mientras Forma de pago está abierta */
   body.payment-page-locked{
     position:fixed;
     left:0;
@@ -1063,7 +1063,7 @@
     overscroll-behavior:contain;
   }
 
-  /* V2.59 · Datos de ficha según el Excel original */
+  /* V2.61 · Datos de ficha según el Excel original */
   .payment-sheet-info{
     background:#fff;border:1px solid #dce5ea;border-radius:14px;
     padding:16px 18px;margin-bottom:12px
@@ -1104,7 +1104,7 @@
     .payment-sheet-grid{grid-template-columns:1fr}
   }
 
-  /* V2.59 · Prenda/Pagaré automático */
+  /* V2.61 · Prenda/Pagaré automático */
   .payment-auto-field{
     background:#f7fafb;
   }
@@ -1114,7 +1114,7 @@
     color:#294c3c;font-size:12px;font-weight:850
   }
 
-  /* V2.59 · Histórico de listas de precios */
+  /* V2.61 · Histórico de listas de precios */
   .price-list-strip{
     display:grid;grid-template-columns:minmax(250px,.9fr) minmax(0,1.1fr);
     gap:12px;align-items:end;padding:12px 13px;border:1px solid #d9e4ea;
@@ -1166,6 +1166,54 @@
     .price-list-strip-meta{grid-template-columns:auto 1fr}
     .price-history-item{grid-template-columns:1fr}
     .price-history-item-side{justify-content:flex-start}
+  }
+
+  /* V2.61 · Lista de precios compacta junto al Modelo */
+  .price-list-select{
+    width:100%;
+    min-height:43px;
+    padding:0 38px 0 13px;
+    border:1px solid #cbd5dc;
+    border-radius:10px;
+    background:#fff;
+    color:var(--text);
+    font-weight:500;
+  }
+  .price-list-select:hover{border-color:#aebdc7;background:#fbfdfe}
+  .price-list-select:focus{
+    outline:none;
+    border-color:#7fb2d3;
+    box-shadow:0 0 0 3px rgba(23,105,166,.10)
+  }
+  .price-list-strip,
+  .price-list-strip-meta,
+  .price-list-status-badge{all:unset}
+
+  /* V2.61 · Vigencia y eliminación del histórico */
+  .price-import-grid{
+    display:grid;grid-template-columns:minmax(0,1.35fr) minmax(190px,.65fr);gap:10px
+  }
+  .price-history-item{
+    position:relative;
+    padding-right:46px;
+  }
+  .price-history-item-side{
+    padding-right:2px;
+  }
+  .price-history-validity{
+    display:block;margin-top:3px;font-size:9px;color:#58717f;font-weight:750
+  }
+  .price-history-remove{
+    position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    width:28px;height:28px;border-radius:8px;border:1px solid #eccdca;
+    background:#fff7f6;color:#a33b34;font-size:17px;line-height:1;
+    display:flex;align-items:center;justify-content:center;font-weight:700
+  }
+  .price-history-remove:hover{background:#ffefed;border-color:#e7b9b5}
+  .price-history-remove[hidden]{display:none!important}
+  @media(max-width:700px){
+    .price-import-grid{grid-template-columns:1fr}
+    .price-history-item{padding-right:44px}
   }
 </style>
 </head>
@@ -1283,7 +1331,11 @@
               <label for="qty">Cantidad</label>
               <input id="qty" type="number" min="1" step="1" value="1">
             </div>
-            <div class="full">
+            <div>
+              <label for="priceListSelect">Lista de precios</label>
+              <select id="priceListSelect" class="price-list-select"></select>
+            </div>
+            <div>
               <label for="modelPickerButton">Modelo</label>
               <div class="model-picker">
                 <select id="model" class="model-native-select" tabindex="-1" aria-hidden="true">
@@ -1294,17 +1346,6 @@
                   <span id="modelPickerText">Modelo…</span>
                   <span class="model-picker-chevron" aria-hidden="true"></span>
                 </button>
-              </div>
-            </div>
-            <div class="full price-list-strip">
-              <div class="price-list-strip-main">
-                <label for="priceListSelect">Lista de precios</label>
-                <select id="priceListSelect"></select>
-              </div>
-              <div class="price-list-strip-meta">
-                <span id="priceListStatusBadge" class="price-list-status-badge">Más reciente</span>
-                <strong id="priceListActiveName">Aumento 2027</strong>
-                <small id="priceListActiveMeta">Lista base incluida en el cotizador</small>
               </div>
             </div>
             <div>
@@ -1399,7 +1440,6 @@
             <div class="summary-row summary-meta-row"><span>Chasis</span><strong id="sumChassis">—</strong></div>
             <div class="summary-row summary-meta-row"><span>Cantidad</span><strong id="sumQty">1</strong></div>
             <div class="summary-row"><span>Tipo de cambio</span><strong id="sumTc">—</strong></div>
-            <div class="summary-row summary-meta-row"><span>Lista de precios</span><strong id="sumPriceList">Aumento 2027</strong></div>
 
             <div class="summary-row pricing-start"><span>Precio de lista</span><strong id="sumList">—</strong></div>
             <div class="summary-row"><span>Precio de Venta</span><strong id="sumSaleUnit"><span class="summary-money"><span class="summary-money-number">0</span><span class="summary-money-code usd">USD</span><span class="summary-money-sep">/</span><span class="summary-money-number">0</span><span class="summary-money-code clp">CLP</span></span></strong></div>
@@ -1467,9 +1507,15 @@
           </label>
         </div>
 
-        <div class="price-import-name">
-          <label for="priceListNameInput">Nombre de la nueva lista</label>
-          <input id="priceListNameInput" type="text" placeholder="Se detectará desde el archivo si lo dejas vacío">
+        <div class="price-import-grid">
+          <div class="price-import-name">
+            <label for="priceListNameInput">Nombre de la nueva lista</label>
+            <input id="priceListNameInput" type="text" placeholder="Se detectará desde el archivo si lo dejas vacío">
+          </div>
+          <div>
+            <label for="priceListValidUntil">Último mes vigente</label>
+            <input id="priceListValidUntil" type="month">
+          </div>
         </div>
 
         <div id="priceFileName" class="save-state"></div>
@@ -1943,6 +1989,7 @@
       sourceFile:"IDEA COTIZADOR CRISTOPHER REYES(1).xlsx",
       sourceType:"Excel",
       priceHeader:"Aumento 2027",
+      validUntil:"2027-12",
       updatedAt:"",
       prices:Object.fromEntries(MODELS.map((m,i)=>[m.id,BUILTIN_PRICE_VALUES_2027[i]]))
     },
@@ -1954,6 +2001,7 @@
       sourceFile:"IDEA COTIZADOR CRISTOPHER REYES(1).xlsx",
       sourceType:"Excel",
       priceHeader:"VALOR hasta agosto 2026",
+      validUntil:"2026-08",
       updatedAt:"",
       prices:Object.fromEntries(MODELS.map((m,i)=>[m.id,BUILTIN_PRICE_VALUES_AUG2026[i]]))
     }
@@ -2967,8 +3015,6 @@
     $("sumQty").textContent=String(c.qty);
     $("sumTc").innerHTML=state.tc>0?tcHtml(state.tc):"—";
     $("sumDiscount").textContent=discountPct(discount);
-    if($("sumPriceList"))$("sumPriceList").textContent=activePriceList()?.name||"—";
-
     $("sumList").innerHTML=c.list?summaryListPairHtml(c.list,round2(c.list*state.tc)):"—";
     $("sumSaleUnit").innerHTML=summaryPairHtml(c.sale,round2(c.sale*state.tc));
     $("sumExtras").innerHTML=summaryPairHtml(c.all,round2(c.all*state.tc));
@@ -4957,6 +5003,30 @@
     return d.toLocaleDateString("es-CL",{day:"2-digit",month:"short",year:"numeric"});
   }
 
+  function priceValidUntilText(value){
+    const m=String(value||"").match(/^(\d{4})-(\d{2})$/);
+    if(!m)return "Sin fecha límite";
+    const names=["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+    const month=Math.max(1,Math.min(12,Number(m[2])));
+    return `Hasta ${names[month-1]} ${m[1]}`;
+  }
+
+  function inferValidUntilFromText(value){
+    const s=String(value||"");
+    const monthMap={
+      enero:"01",febrero:"02",marzo:"03",abril:"04",mayo:"05",junio:"06",
+      julio:"07",agosto:"08",septiembre:"09",setiembre:"09",octubre:"10",
+      noviembre:"11",diciembre:"12"
+    };
+    const lower=normalizeHeader(s);
+    for(const [name,num] of Object.entries(monthMap)){
+      const mm=lower.match(new RegExp(`${name}\\s+(20\\d{2})`));
+      if(mm)return `${mm[1]}-${num}`;
+    }
+    const y=lower.match(/\b(20\d{2})\b/);
+    return y?`${y[1]}-12`:"";
+  }
+
   function priceListMetaText(list){
     if(!list)return "";
     if(list.builtin){
@@ -4983,19 +5053,6 @@
       if(priceListById(state.activePriceListId))sel.value=state.activePriceListId;
     }
 
-    const active=activePriceList();
-    if(active){
-      const latest=state.latestPriceListId||newestPriceListId();
-      $("priceListActiveName").textContent=active.name;
-      $("priceListActiveMeta").textContent=priceListMetaText(active);
-      const badge=$("priceListStatusBadge");
-      if(active.id===latest){
-        badge.textContent="Más reciente";
-      }else{
-        badge.textContent="Histórica";
-      }
-    }
-    if($("sumPriceList"))$("sumPriceList").textContent=active?.name||"—";
     renderPriceHistoryList();
   }
 
@@ -5007,15 +5064,19 @@
     box.innerHTML=ordered.map(list=>{
       const active=list.id===state.activePriceListId;
       const side=list.id===latest?"Más reciente":(list.builtin?"Incluida":"Histórica");
-      return `<button type="button" class="price-history-item${active?" active":""}" data-price-history-id="${escapeHtml(list.id)}">
-        <span class="price-history-item-main">
-          <strong>${escapeHtml(list.name)}</strong>
-          <small>${escapeHtml(priceListMetaText(list))}</small>
-        </span>
-        <span class="price-history-item-side">
-          <span class="price-history-pill">${escapeHtml(side)}</span>
-        </span>
-      </button>`;
+      return `<div class="price-history-item${active?" active":""}">
+        <button type="button" class="price-history-select" data-price-history-id="${escapeHtml(list.id)}" style="all:unset;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;width:100%">
+          <span class="price-history-item-main">
+            <strong>${escapeHtml(list.name)}</strong>
+            <small>${escapeHtml(priceListMetaText(list))}</small>
+            <span class="price-history-validity">${escapeHtml(priceValidUntilText(list.validUntil))}</span>
+          </span>
+          <span class="price-history-item-side">
+            <span class="price-history-pill">${escapeHtml(side)}</span>
+          </span>
+        </button>
+        <button type="button" class="price-history-remove" data-price-history-remove="${escapeHtml(list.id)}" aria-label="Quitar ${escapeHtml(list.name)}" ${list.builtin?"hidden":""}>×</button>
+      </div>`;
     }).join("");
     [...box.querySelectorAll("[data-price-history-id]")].forEach(btn=>{
       btn.addEventListener("click",async()=>{
@@ -5024,6 +5085,22 @@
           toast("Lista de precios activada","success");
         }catch(e){
           console.error(e);toast(e.message||"No se pudo cargar esa lista","error");
+        }
+      });
+    });
+    [...box.querySelectorAll("[data-price-history-remove]")].forEach(btn=>{
+      btn.addEventListener("click",async(e)=>{
+        e.preventDefault();e.stopPropagation();
+        const id=btn.dataset.priceHistoryRemove;
+        const list=priceListById(id);
+        if(!list||list.builtin)return;
+        if(!confirm(`¿Quitar “${list.name}” del histórico?`))return;
+        try{
+          await removePriceList(id);
+          toast("Lista quitada del histórico","success");
+        }catch(err){
+          console.error(err);
+          toast(err.message||"No se pudo quitar la lista","error");
         }
       });
     });
@@ -5057,6 +5134,7 @@
       sourceFile:String(data.sourceFile||""),
       sourceType:String(data.sourceType||""),
       priceHeader:String(data.priceHeader||""),
+      validUntil:String(data.validUntil||""),
       prices:data.prices&&typeof data.prices==="object"?{...data.prices}:null
     };
 
@@ -5118,7 +5196,7 @@
     return list;
   }
 
-  function buildOverridePayload(updates,fileName,type,name="",priceHeader=""){
+  function buildOverridePayload(updates,fileName,type,name="",priceHeader="",validUntil=""){
     const prices={};
     updates.forEach(x=>prices[x.id]=x.priceUsd);
     const fallbackName=priceHeader||String(fileName||"").replace(/\.[^.]+$/,"")||"Lista de precios";
@@ -5129,7 +5207,8 @@
       updatedAt:new Date().toISOString(),
       sourceFile:fileName||"",
       sourceType:type||"",
-      priceHeader:priceHeader||""
+      priceHeader:priceHeader||"",
+      validUntil:String(validUntil||"")
     };
   }
 
@@ -5159,6 +5238,43 @@
       if(!confirmed)throw new Error("No fue posible confirmar la actualización en la nube.");
     }finally{
       endBusy();
+    }
+  }
+
+  async function removePriceList(id){
+    const list=priceListById(id);
+    if(!list||list.builtin)throw new Error("Las listas base no se pueden eliminar.");
+
+    const url=getDbUrl();
+    if(url&&state.identity){
+      beginBusy("Quitando lista","Actualizando el histórico compartido.");
+      try{
+        const r=await jsonp(url,{
+          action:"delete_price_list",
+          workspace:state.identity.workspaceId||"",
+          device:state.identity.deviceId||"",
+          token:state.identity.token||"",
+          id
+        },12000);
+        if(!r||!r.ok)throw new Error((r&&r.error)||"No se pudo quitar la lista de la nube.");
+      }finally{
+        endBusy();
+      }
+    }
+
+    state.priceLists=state.priceLists.filter(x=>x.id!==id);
+    try{
+      const local=readLocalPriceHistory().filter(x=>x.id!==id);
+      localStorage.setItem(PRICE_HISTORY_STORAGE_KEY,JSON.stringify(local));
+    }catch(e){}
+
+    if(state.latestPriceListId===id){
+      state.latestPriceListId=newestPriceListId();
+    }
+    if(state.activePriceListId===id){
+      await selectPriceList(state.latestPriceListId||PRICE_DEFAULT_BUILTIN_ID,{silent:true});
+    }else{
+      renderPriceListControls();
     }
   }
 
@@ -5548,6 +5664,7 @@
     pendingPriceFile=null;
     $("priceFileInput").value="";
     $("priceListNameInput").value="";
+    $("priceListValidUntil").value="";
     $("priceFileName").textContent="";
     $("priceImportState").textContent="";
     $("applyPriceFile").disabled=true;
@@ -5558,6 +5675,9 @@
   $("priceFileInput").addEventListener("change",e=>{
     pendingPriceFile=e.target.files&&e.target.files[0]||null;
     $("priceFileName").textContent=pendingPriceFile?pendingPriceFile.name:"";
+    if(pendingPriceFile&&!$("priceListValidUntil").value){
+      $("priceListValidUntil").value=inferValidUntilFromText(pendingPriceFile.name);
+    }
     $("priceImportState").textContent="";
     $("applyPriceFile").disabled=!pendingPriceFile;
   });
@@ -5569,12 +5689,15 @@
     try{
       const parsed=await importPriceFile(pendingPriceFile);
       const customName=$("priceListNameInput").value.trim();
+      const inferredUntil=$("priceListValidUntil").value
+        || inferValidUntilFromText(customName||parsed.label||parsed.priceHeader||pendingPriceFile.name);
       const data=buildOverridePayload(
         parsed.updates,
         pendingPriceFile.name,
         parsed.type,
         customName||parsed.label,
-        parsed.priceHeader||""
+        parsed.priceHeader||"",
+        inferredUntil
       );
 
       $("priceImportState").textContent=`${parsed.updates.length} modelos detectados. Guardando como “${data.name}”…`;
@@ -5587,6 +5710,7 @@
       $("priceImportState").textContent=`Lista agregada al histórico: ${list.name} · ${parsed.updates.length} modelos.`;
       $("priceImportState").className="save-state ok";
       $("priceListNameInput").value="";
+      $("priceListValidUntil").value="";
       renderPriceHistoryList();
       toast("Nueva lista de precios guardada","success");
     }catch(err){
