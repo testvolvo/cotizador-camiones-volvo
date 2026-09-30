@@ -335,7 +335,7 @@
   .addbtn{border:1px solid #bed5e5;background:#f5fbff;color:var(--accent);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750}
   .subtotal{display:flex;justify-content:flex-end;gap:20px;padding-top:10px;font-size:13px;font-weight:750;flex-wrap:wrap}
 
-  /* V2.61 · calculadora de formas de pago */
+  /* V2.63 · calculadora de formas de pago */
   .payment-plan-summary{
     border:1px solid #d9e3e9;border-radius:12px;background:#f8fafb;padding:14px
   }
@@ -725,7 +725,7 @@
   .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
 
 
-  /* V2.61 */
+  /* V2.63 */
   .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
   .btn.pdf:hover{background:#ffe9e7}
   .additional-kit-box{
@@ -773,7 +773,7 @@
   .summary-hero .summary-total-line .summary-money-number{font-size:36px}
   .summary-hero .summary-total-line .summary-money-code{font-size:12px}
 
-  /* V2.61 · refinamiento del resumen */
+  /* V2.63 · refinamiento del resumen */
   .summary-list{border-top:1px solid #dfe6eb}
   .summary-row{
     padding:10px 2px;gap:14px
@@ -810,7 +810,7 @@
   }
 
 
-  /* V2.61 · bloqueo de operaciones críticas */
+  /* V2.63 · bloqueo de operaciones críticas */
   .busy-overlay{
     position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
     padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
@@ -883,7 +883,7 @@
     .print-title{display:block;margin:0 0 12px;font-size:20px}
   }
 
-  /* V2.61 · Forma de pago simplificada según casillas amarillas */
+  /* V2.63 · Forma de pago simplificada según casillas amarillas */
   .payment-simple-body{width:min(1180px,calc(100% - 40px))}
   .payment-quote-strip-simple{grid-template-columns:1.25fr 1.1fr 1fr .75fr .55fr .75fr}
   .payment-simple-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
@@ -962,7 +962,7 @@
     padding:6px 9px;font-size:10px;color:#49616f;font-weight:750
   }
 
-  /* V2.61 · Forma de pago simple */
+  /* V2.63 · Forma de pago simple */
   .payment-easy-body{width:min(920px,calc(100% - 36px));margin:0 auto;padding:22px 0 34px}
   .payment-easy-context{
     display:grid;grid-template-columns:auto minmax(120px,1fr) minmax(150px,1.2fr) minmax(170px,1fr) minmax(110px,.7fr);
@@ -1047,7 +1047,7 @@
     .payment-easy-actions>div .btn{flex:1}
   }
 
-  /* V2.61 · bloquear scroll de la página principal mientras Forma de pago está abierta */
+  /* V2.63 · bloquear scroll de la página principal mientras Forma de pago está abierta */
   body.payment-page-locked{
     position:fixed;
     left:0;
@@ -1063,7 +1063,7 @@
     overscroll-behavior:contain;
   }
 
-  /* V2.61 · Datos de ficha según el Excel original */
+  /* V2.63 · Datos de ficha según el Excel original */
   .payment-sheet-info{
     background:#fff;border:1px solid #dce5ea;border-radius:14px;
     padding:16px 18px;margin-bottom:12px
@@ -1104,7 +1104,7 @@
     .payment-sheet-grid{grid-template-columns:1fr}
   }
 
-  /* V2.61 · Prenda/Pagaré automático */
+  /* V2.63 · Prenda/Pagaré automático */
   .payment-auto-field{
     background:#f7fafb;
   }
@@ -1114,7 +1114,7 @@
     color:#294c3c;font-size:12px;font-weight:850
   }
 
-  /* V2.61 · Histórico de listas de precios */
+  /* V2.63 · Histórico de listas de precios */
   .price-list-strip{
     display:grid;grid-template-columns:minmax(250px,.9fr) minmax(0,1.1fr);
     gap:12px;align-items:end;padding:12px 13px;border:1px solid #d9e4ea;
@@ -1168,7 +1168,7 @@
     .price-history-item-side{justify-content:flex-start}
   }
 
-  /* V2.61 · Lista de precios compacta junto al Modelo */
+  /* V2.63 · Lista de precios compacta junto al Modelo */
   .price-list-select{
     width:100%;
     min-height:43px;
@@ -1189,7 +1189,7 @@
   .price-list-strip-meta,
   .price-list-status-badge{all:unset}
 
-  /* V2.61 · Vigencia y eliminación del histórico */
+  /* V2.63 · Vigencia y eliminación del histórico */
   .price-import-grid{
     display:grid;grid-template-columns:minmax(0,1.35fr) minmax(190px,.65fr);gap:10px
   }
@@ -1978,6 +1978,7 @@
   const MODELS = [{"id":"precio-row-2","sourceRow":2,"sourceModel":"FH42T AIR","family":"FH","type":"TRACTO","traction":"4X2","power":"500 CV","labelBase":"FH 4X2T 500","priceUsd":171465.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":3500,"safe":"FULL","label":"FH 4X2T 500"},{"id":"precio-row-3","sourceRow":3,"sourceModel":"FH62T AIR","family":"FH","type":"TRACTO","traction":"6X2","power":"500 CV","labelBase":"FH 6X2T 500","priceUsd":179655.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":3200,"safe":"FULL","label":"FH 6X2T 500"},{"id":"precio-row-4","sourceRow":4,"sourceModel":"FH62R AIR","family":"FH","type":"RÍGIDO","traction":"6X2","power":"540 CV","labelBase":"FH 6X2R 540","priceUsd":183330.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":4900,"safe":"FULL","label":"FH 6X2R 540"},{"id":"precio-row-5","sourceRow":5,"sourceModel":"FH64T AIR","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500","priceUsd":200655.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FH 6X4T 500"},{"id":"precio-row-6","sourceRow":6,"sourceModel":"FH64T PAR","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 PAR","priceUsd":200655.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FH 6X4T 500 PAR"},{"id":"precio-row-7","sourceRow":7,"sourceModel":"FH64T AIR CUBOS","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 CUBOS","priceUsd":206955.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":"3.76/3.61","dee":"3200/3600","safe":"FULL","label":"FH 6X4T 500 CUBOS"},{"id":"precio-row-8","sourceRow":8,"sourceModel":"FH64T INDIVISIBLE MUL","family":"FH","type":"TRACTO","traction":"6X4","power":"540 CV","labelBase":"FH 6X4T 540","priceUsd":214830.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":5.41,"dee":3600,"safe":"FULL","label":"FH 6X4T 540"},{"id":"precio-row-9","sourceRow":9,"sourceModel":"FH84T INDIVISIBLE MUL","family":"FH","type":"TRACTO","traction":"8X4","power":"540 CV","labelBase":"FH 8X4T 540","priceUsd":261240.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH2610B","rat":5.41,"dee":3900,"safe":"FULL","label":"FH 8X4T 540"},{"id":"precio-row-10","sourceRow":10,"sourceModel":"FH42T AIR GNL","family":"FH","type":"TRACTO","traction":"4X2","power":"500 CV","labelBase":"FH 4X2T 500 GNL","priceUsd":237510.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":"2.47/2.64","dee":3800,"safe":"FULL","label":"FH 4X2T 500 GNL"},{"id":"precio-row-11","sourceRow":11,"sourceModel":"FH62T AIR GNL","family":"FH","type":"TRACTO","traction":"6X2","power":"500 CV","labelBase":"FH 6X2T 500 GNL","priceUsd":244860.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":"2.47/2.64","dee":3900,"safe":"FULL","label":"FH 6X2T 500 GNL"},{"id":"precio-row-12","sourceRow":12,"sourceModel":"FH64T AIR GNL","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 GNL","priceUsd":257460.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RTS2310A","rat":"2.64/2.85","dee":3900,"safe":"FULL","label":"FH 6X4T 500 GNL"},{"id":"precio-row-13","sourceRow":13,"sourceModel":"FM42T AIR","family":"FM","type":"TRACTO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2T 460","priceUsd":150150.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":3500,"safe":"FULL","label":"FM 4X2T 460"},{"id":"precio-row-14","sourceRow":14,"sourceModel":"FM42R AIR","family":"FM","type":"RÍGIDO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2R 460","priceUsd":150150.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":"VARIAS","safe":"FULL","label":"FM 4X2R 460"},{"id":"precio-row-15","sourceRow":15,"sourceModel":"FM62T AIR","family":"FM","type":"TRACTO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2T 460","priceUsd":161910.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":3200,"safe":"FULL","label":"FM 6X2T 460"},{"id":"precio-row-16","sourceRow":16,"sourceModel":"FM62R AIR","family":"FM","type":"RÍGIDO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2R 460","priceUsd":161910.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":4900,"safe":"FULL","label":"FM 6X2R 460"},{"id":"precio-row-17","sourceRow":17,"sourceModel":"FM64T AIR","family":"FM","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4T 460","priceUsd":177660.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":3200,"safe":"FULL","label":"FM 6X4T 460"},{"id":"precio-row-18","sourceRow":18,"sourceModel":"FM64R AIR","family":"FM","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4R 460","priceUsd":172935.0,"classification":"MTO","application":"COMBUSTIBLE","cabin":"CAB-SLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":4600,"safe":"FULL","label":"FM 6X4R 460"},{"id":"precio-row-19","sourceRow":19,"sourceModel":"FM84R AIR","family":"FM","type":"RÍGIDO","traction":"8X4","power":"460 CV","labelBase":"FM 8X4R 460","priceUsd":183330.0,"classification":"MTO","application":"COMBUSTIBLE","cabin":"CAB-SLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":5100,"safe":"SEMI FULL","label":"FM 8X4R 460"},{"id":"precio-row-20","sourceRow":20,"sourceModel":"FM42T AIR GNL","family":"FM","type":"TRACTO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2T 460 GNL","priceUsd":213360.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":2.64,"dee":3800,"safe":"FULL","label":"FM 4X2T 460 GNL"},{"id":"precio-row-21","sourceRow":21,"sourceModel":"FM62T AIR GNL","family":"FM","type":"TRACTO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2T 460 GNL","priceUsd":223860.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":2.64,"dee":3900,"safe":"FULL","label":"FM 6X2T 460 GNL"},{"id":"precio-row-22","sourceRow":22,"sourceModel":"FM64T AIR GNL","family":"FM","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4T 460 GNL","priceUsd":239610.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTS2310A","rat":"2.64/2.85","dee":3900,"safe":"FULL","label":"FM 6X4T 460 GNL"},{"id":"precio-row-23","sourceRow":23,"sourceModel":"FMX64R TOLVA","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 TOLVA","priceUsd":190032.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":4.12,"dee":3400,"safe":"FULL","label":"FMX 6X4R 460 TOLVA"},{"id":"precio-row-24","sourceRow":24,"sourceModel":"FMX44R","family":"FMX","type":"RÍGIDO","traction":"4X4","power":"420 CV","labelBase":"FMX 4X4R 420","priceUsd":184682.0,"classification":"ESPECIAL","application":"FAENA","cabin":"CAB-DAY","transmission":"ATO2612+ASO-ULC","rearAxle":"RSH1370F","rat":3.76,"dee":4300,"safe":"FULL","label":"FMX 4X4R 420"},{"id":"precio-row-25","sourceRow":25,"sourceModel":"FMX64R LARGO CUBOS","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"420 CV","labelBase":"FMX 6X4R 420","priceUsd":179332.0,"classification":"MTS","application":"FORESTAL / FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3210F","rat":3.76,"dee":4600,"safe":"FULL","label":"FMX 6X4R 420"},{"id":"precio-row-26","sourceRow":26,"sourceModel":"FMX64R FORESTAL AIR","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 FORESTAL","priceUsd":177727.0,"classification":"MTO","application":"FORESTAL / FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2370A","rat":3.78,"dee":4600,"safe":"FULL","label":"FMX 6X4R 460 FORESTAL"},{"id":"precio-row-27","sourceRow":27,"sourceModel":"FMX64T AIR","family":"FMX","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4T 460","priceUsd":177727.0,"classification":"MTO","application":"FORESTAL / BATEA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FMX 6X4T 460"},{"id":"precio-row-28","sourceRow":28,"sourceModel":"FMX64T INDIVISIBLE","family":"FMX","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FMX 6X4T 500","priceUsd":192172.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3210F","rat":4.55,"dee":"3200/3600","safe":"FULL","label":"FMX 6X4T 500"},{"id":"precio-row-29","sourceRow":29,"sourceModel":"FMX66T INDIVISIBLE","family":"FMX","type":"TRACTO","traction":"6X6","power":"500 CV","labelBase":"FMX 6X6T 500","priceUsd":218494.0,"classification":"ESPECIAL","application":"CARGA INDIVISIBLE","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3312","rat":3.76,"dee":3700,"safe":"SEMI FULL","label":"FMX 6X6T 500"},{"id":"precio-row-30","sourceRow":30,"sourceModel":"FMX66R LARGO","family":"FMX","type":"RÍGIDO","traction":"6X6","power":"500 CV","labelBase":"FMX 6X6R 500","priceUsd":218494.0,"classification":"ESPECIAL","application":"FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3312","rat":3.76,"dee":4600,"safe":"SEMI FULL","label":"FMX 6X6R 500"},{"id":"precio-row-31","sourceRow":31,"sourceModel":"FMX64R FORESTAL AIR GNL","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 FORESTAL GNL","priceUsd":243639.0,"classification":"ESPECIAL","application":"FORESTAL","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2310A","rat":3.7,"dee":4600,"safe":"FULL","label":"FMX 6X4R 460 FORESTAL GNL"},{"id":"precio-row-32","sourceRow":32,"sourceModel":"FMX84R TOLVA","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"500 CV","labelBase":"FMX 8X4R 500","priceUsd":208864.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":4.12,"dee":4350,"safe":"SEMI FULL","label":"FMX 8X4R 500"},{"id":"precio-row-33","sourceRow":33,"sourceModel":"FMX84R MAX","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"540 CV","labelBase":"FMX 8X4R 540","priceUsd":218494.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3815","rat":5.43,"dee":4600,"safe":"SEMI FULL","label":"FMX 8X4R 540"},{"id":"precio-row-34","sourceRow":34,"sourceModel":"FMX84R GRÚA","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"420 CV","labelBase":"FMX 8X4R 420","priceUsd":196024.0,"classification":"MTO","application":"GRUA","cabin":"CAB-SLP","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.09,"dee":5600,"safe":"SEMI FULL","label":"FMX 8X4R 420"},{"id":"precio-row-35","sourceRow":35,"sourceModel":"VM42R CITY","family":"VM","type":"RÍGIDO","traction":"4X2","power":"290 CV","labelBase":"VM 4X2R 290 CITY","priceUsd":94237.5,"classification":"MTO","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5150,"safe":"NO","label":"VM 4X2R 290 CITY"},{"id":"precio-row-36","sourceRow":36,"sourceModel":"VM42R RECOLECTOR","family":"VM","type":"RÍGIDO","traction":"4X2","power":"290 CV","labelBase":"VM 4X2R 290 RECOLECTOR","priceUsd":93712.5,"classification":"MTS","application":"RECOLECTOR","cabin":"L1H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":4800,"safe":"NO","label":"VM 4X2R 290 RECOLECTOR"},{"id":"precio-row-37","sourceRow":37,"sourceModel":"VM42T","family":"VM","type":"TRACTO","traction":"4X2","power":"360 CV","labelBase":"VM 4X2T 360","priceUsd":97387.5,"classification":"MTO","application":"REGIONAL","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":3650,"safe":"NO","label":"VM 4X2T 360"},{"id":"precio-row-38","sourceRow":38,"sourceModel":"VM62R","family":"VM","type":"RÍGIDO","traction":"6X2","power":"360 CV","labelBase":"VM 6X2R 360","priceUsd":106312.5,"classification":"MTS","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5150,"safe":"NO","label":"VM 6X2R 360"},{"id":"precio-row-39","sourceRow":39,"sourceModel":"VMX64R","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360","priceUsd":119437.5,"classification":"MTO","application":"FAENA","cabin":"L2H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.1,"dee":5150,"safe":"NO","label":"VMX 6X4R 360"},{"id":"precio-row-40","sourceRow":40,"sourceModel":"VMX MAX","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360 MAX","priceUsd":122587.5,"classification":"MTS","application":"FAENA","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTH3210F","rat":4.55,"dee":3650,"safe":"NO","label":"VMX 6X4R 360 MAX"},{"id":"precio-row-41","sourceRow":41,"sourceModel":"VMX MAX LARGO","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360 MAX LARGO","priceUsd":122587.5,"classification":"MTS","application":"FAENA","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTH3210F","rat":4.55,"dee":4800,"safe":"NO","label":"VMX 6X4R 360 MAX LARGO"},{"id":"precio-row-42","sourceRow":42,"sourceModel":"VM82R","family":"VM","type":"RÍGIDO","traction":"8X2","power":"360 CV","labelBase":"VM 8X2R 360","priceUsd":115237.5,"classification":"MTO","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5600,"safe":"NO","label":"VM 8X2R 360"},{"id":"precio-row-43","sourceRow":43,"sourceModel":"VMX84R","family":"VMX","type":"RÍGIDO","traction":"8X4","power":"360 CV","labelBase":"VMX 8X4R 360","priceUsd":127837.5,"classification":"MTS","application":"FAENA","cabin":"L2H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.1,"dee":5150,"safe":"NO","label":"VMX 8X4R 360"},{"id":"precio-row-44","sourceRow":44,"sourceModel":"VMX84R LIGTH MIXER","family":"VMX","type":"RÍGIDO","traction":"8X4","power":"360 CV","labelBase":"VMX 8X4R 360 MIXER","priceUsd":128362.5,"classification":"MTO","application":"MIXER","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.73,"dee":4550,"safe":"NO","label":"VMX 8X4R 360 MIXER"}];
   const PRICE_DEFAULT_BUILTIN_ID="builtin-aumento-2027";
   const PRICE_HISTORY_STORAGE_KEY="cotizador_price_history_v2";
+  const PRICE_HIDDEN_BUILTINS_STORAGE_KEY="cotizador_price_hidden_builtins_v1";
   const BUILTIN_PRICE_VALUES_2027=[171465,179655,183330,200655,200655,206955,214830,261240,237510,244860,257460,150150,150150,161910,161910,177660,172935,183330,213360,223860,239610,190032,184682,179332,177727,177727,192172,218494,218494,243639,208864,218494,196024,94237.5,93712.5,97387.5,106312.5,119437.5,122587.5,122587.5,115237.5,127837.5,128362.5];
   const BUILTIN_PRICE_VALUES_AUG2026=[163300,171100,174600,191100,191100,197100,204600,248800,226200,233200,245200,143000,143000,154200,154200,169200,164700,174600,203200,213200,228200,177600,172600,167600,166100,166100,179600,204200,204200,227700,195200,204200,183200,89750,89250,92750,101250,113750,116750,116750,109750,121750,122250];
   const BUILTIN_PRICE_LISTS=[
@@ -2024,6 +2025,7 @@
     identity:null,workspaceReady:false,deviceInfo:null,scannerStream:null,scannerTimer:null,linkTimer:null,
     paymentPlan:null,busyCount:0,
     priceLists:BUILTIN_PRICE_LISTS.map(x=>({...x,prices:{...x.prices}})),
+    hiddenBuiltinPriceListIds:[],
     activePriceListId:PRICE_DEFAULT_BUILTIN_ID,
     latestPriceListId:PRICE_DEFAULT_BUILTIN_ID
   };
@@ -3761,8 +3763,10 @@
     restoreRows($("kitBody"),[{name:"",usd:0}]);
     state.paymentPlan=null;
     renderPaymentPlanSummary();
-    const latest=state.latestPriceListId||newestPriceListId();
-    selectPriceList(latest,{silent:true}).catch(e=>console.warn(e));
+    const latest=priceListById(state.latestPriceListId)
+      ?state.latestPriceListId
+      :(orderedPriceLists()[0]?.id||"");
+    if(latest)selectPriceList(latest,{silent:true}).catch(e=>console.warn(e));
     renderModel();recalc();fetchTc();
   }
 
@@ -4973,6 +4977,37 @@
     return state.priceLists.find(x=>x.id===id)||null;
   }
 
+  function readHiddenBuiltinPriceLists(){
+    try{
+      const arr=JSON.parse(localStorage.getItem(PRICE_HIDDEN_BUILTINS_STORAGE_KEY)||"[]");
+      return Array.isArray(arr)?arr.map(String):[];
+    }catch(e){return []}
+  }
+
+  function saveHiddenBuiltinPriceLists(){
+    try{
+      localStorage.setItem(
+        PRICE_HIDDEN_BUILTINS_STORAGE_KEY,
+        JSON.stringify([...new Set(state.hiddenBuiltinPriceListIds.map(String))])
+      );
+    }catch(e){}
+  }
+
+  function hasReplacementPriceList(){
+    return state.priceLists.some(x=>!x.builtin);
+  }
+
+  function canRemovePriceList(list){
+    return !!list;
+  }
+
+  function applyHiddenBuiltinPriceLists(ids){
+    const hidden=[...new Set((ids||[]).map(String))];
+    state.hiddenBuiltinPriceListIds=hidden;
+    state.priceLists=state.priceLists.filter(x=>!(x.builtin&&hidden.includes(x.id)));
+    saveHiddenBuiltinPriceLists();
+  }
+
   function activePriceList(){
     return priceListById(state.activePriceListId);
   }
@@ -5046,11 +5081,18 @@
     if(sel){
       const ordered=orderedPriceLists();
       const latest=state.latestPriceListId||newestPriceListId();
-      sel.innerHTML=ordered.map(list=>{
-        const suffix=list.id===latest?" · Más reciente":(list.builtin?" · Base":"");
-        return `<option value="${escapeHtml(list.id)}">${escapeHtml(list.name+suffix)}</option>`;
-      }).join("");
-      if(priceListById(state.activePriceListId))sel.value=state.activePriceListId;
+      if(ordered.length){
+        sel.disabled=false;
+        sel.innerHTML=ordered.map(list=>{
+          const suffix=list.id===latest?" · Más reciente":(list.builtin?" · Base":"");
+          return `<option value="${escapeHtml(list.id)}">${escapeHtml(list.name+suffix)}</option>`;
+        }).join("");
+        if(priceListById(state.activePriceListId))sel.value=state.activePriceListId;
+      }else{
+        sel.innerHTML='<option value="">Sin listas disponibles</option>';
+        sel.value="";
+        sel.disabled=true;
+      }
     }
 
     renderPriceHistoryList();
@@ -5061,6 +5103,10 @@
     if(!box)return;
     const ordered=orderedPriceLists();
     const latest=state.latestPriceListId||newestPriceListId();
+    if(!ordered.length){
+      box.innerHTML='<div class="empty-state">No hay listas de precios guardadas. Puedes agregar una nueva abajo.</div>';
+      return;
+    }
     box.innerHTML=ordered.map(list=>{
       const active=list.id===state.activePriceListId;
       const side=list.id===latest?"Más reciente":(list.builtin?"Incluida":"Histórica");
@@ -5075,7 +5121,7 @@
             <span class="price-history-pill">${escapeHtml(side)}</span>
           </span>
         </button>
-        <button type="button" class="price-history-remove" data-price-history-remove="${escapeHtml(list.id)}" aria-label="Quitar ${escapeHtml(list.name)}" ${list.builtin?"hidden":""}>×</button>
+        <button type="button" class="price-history-remove" data-price-history-remove="${escapeHtml(list.id)}" aria-label="Quitar ${escapeHtml(list.name)}" ${canRemovePriceList(list)?"":"hidden"}>×</button>
       </div>`;
     }).join("");
     [...box.querySelectorAll("[data-price-history-id]")].forEach(btn=>{
@@ -5093,7 +5139,7 @@
         e.preventDefault();e.stopPropagation();
         const id=btn.dataset.priceHistoryRemove;
         const list=priceListById(id);
-        if(!list||list.builtin)return;
+        if(!list||!canRemovePriceList(list))return;
         if(!confirm(`¿Quitar “${list.name}” del histórico?`))return;
         try{
           await removePriceList(id);
@@ -5243,7 +5289,7 @@
 
   async function removePriceList(id){
     const list=priceListById(id);
-    if(!list||list.builtin)throw new Error("Las listas base no se pueden eliminar.");
+    if(!list)throw new Error("Lista no encontrada.");
 
     const url=getDbUrl();
     if(url&&state.identity){
@@ -5263,26 +5309,51 @@
     }
 
     state.priceLists=state.priceLists.filter(x=>x.id!==id);
-    try{
-      const local=readLocalPriceHistory().filter(x=>x.id!==id);
-      localStorage.setItem(PRICE_HISTORY_STORAGE_KEY,JSON.stringify(local));
-    }catch(e){}
+
+    if(list.builtin){
+      if(!state.hiddenBuiltinPriceListIds.includes(id)){
+        state.hiddenBuiltinPriceListIds.push(id);
+      }
+      saveHiddenBuiltinPriceLists();
+    }else{
+      try{
+        const local=readLocalPriceHistory().filter(x=>x.id!==id);
+        localStorage.setItem(PRICE_HISTORY_STORAGE_KEY,JSON.stringify(local));
+      }catch(e){}
+    }
 
     if(state.latestPriceListId===id){
       state.latestPriceListId=newestPriceListId();
     }
+
+    if(!state.priceLists.length){
+      state.activePriceListId="";
+      state.latestPriceListId="";
+      MODELS.forEach(m=>m.priceUsd=0);
+      renderPriceListControls();
+      if(selectedModel())renderModel(false);
+      else recalc();
+      return;
+    }
+
     if(state.activePriceListId===id){
-      await selectPriceList(state.latestPriceListId||PRICE_DEFAULT_BUILTIN_ID,{silent:true});
+      const next=priceListById(state.latestPriceListId)
+        ?state.latestPriceListId
+        :(orderedPriceLists()[0]?.id||"");
+      if(next)await selectPriceList(next,{silent:true});
     }else{
       renderPriceListControls();
     }
   }
+
 
   function loadLocalPriceHistory(){
     readLocalPriceHistory().forEach(list=>registerPriceList(list,{cache:false}));
   }
 
   async function loadPriceCatalog(){
+    const localHidden=readHiddenBuiltinPriceLists();
+    applyHiddenBuiltinPriceLists(localHidden);
     loadLocalPriceHistory();
     state.latestPriceListId=newestPriceListId();
     renderPriceListControls();
@@ -5294,6 +5365,9 @@
         const r=await jsonp(url,{action:"prices"});
         const data=r&&r.ok?r.data:null;
         if(data){
+          if(Array.isArray(data.hiddenBuiltins)){
+            applyHiddenBuiltinPriceLists(data.hiddenBuiltins);
+          }
           if(Array.isArray(data.history)){
             data.history.forEach(meta=>registerPriceList(meta,{cache:false}));
           }
@@ -5318,13 +5392,35 @@
     }
 
     state.latestPriceListId=remoteLatestId||newestPriceListId();
-    const desired=state.latestPriceListId||PRICE_DEFAULT_BUILTIN_ID;
+    const desired=priceListById(state.latestPriceListId)
+      ?state.latestPriceListId
+      :(orderedPriceLists()[0]?.id||"");
+
+    if(!desired){
+      state.activePriceListId="";
+      state.latestPriceListId="";
+      MODELS.forEach(m=>m.priceUsd=0);
+      renderPriceListControls();
+      renderModel(false);
+      recalc();
+      return;
+    }
+
     try{
       await selectPriceList(desired,{silent:true});
     }catch(e){
       console.warn(e);
-      state.latestPriceListId=PRICE_DEFAULT_BUILTIN_ID;
-      await selectPriceList(PRICE_DEFAULT_BUILTIN_ID,{silent:true});
+      const fallback=orderedPriceLists()[0]?.id;
+      if(!fallback){
+        state.activePriceListId="";
+        state.latestPriceListId="";
+        MODELS.forEach(m=>m.priceUsd=0);
+        renderPriceListControls();
+        recalc();
+        return;
+      }
+      state.latestPriceListId=fallback;
+      await selectPriceList(fallback,{silent:true});
     }
   }
 
@@ -5651,6 +5747,7 @@
 
   $("priceListSelect").addEventListener("change",async()=>{
     const id=$("priceListSelect").value;
+    if(!id)return;
     try{
       await selectPriceList(id,{silent:true});
     }catch(err){
