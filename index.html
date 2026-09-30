@@ -335,7 +335,7 @@
   .addbtn{border:1px solid #bed5e5;background:#f5fbff;color:var(--accent);border-radius:8px;padding:7px 10px;font-size:12px;font-weight:750}
   .subtotal{display:flex;justify-content:flex-end;gap:20px;padding-top:10px;font-size:13px;font-weight:750;flex-wrap:wrap}
 
-  /* V2.58 · calculadora de formas de pago */
+  /* V2.59 · calculadora de formas de pago */
   .payment-plan-summary{
     border:1px solid #d9e3e9;border-radius:12px;background:#f8fafb;padding:14px
   }
@@ -725,7 +725,7 @@
   .compact-help{font-size:11px;color:var(--muted);line-height:1.45}
 
 
-  /* V2.58 */
+  /* V2.59 */
   .btn.pdf{background:#fff1f0;border-color:#e7c5c1;color:#9b2f2a}
   .btn.pdf:hover{background:#ffe9e7}
   .additional-kit-box{
@@ -773,7 +773,7 @@
   .summary-hero .summary-total-line .summary-money-number{font-size:36px}
   .summary-hero .summary-total-line .summary-money-code{font-size:12px}
 
-  /* V2.58 · refinamiento del resumen */
+  /* V2.59 · refinamiento del resumen */
   .summary-list{border-top:1px solid #dfe6eb}
   .summary-row{
     padding:10px 2px;gap:14px
@@ -810,7 +810,7 @@
   }
 
 
-  /* V2.58 · bloqueo de operaciones críticas */
+  /* V2.59 · bloqueo de operaciones críticas */
   .busy-overlay{
     position:fixed;inset:0;z-index:20000;display:flex;align-items:center;justify-content:center;
     padding:22px;background:rgba(10,25,35,.46);backdrop-filter:blur(4px);
@@ -883,7 +883,7 @@
     .print-title{display:block;margin:0 0 12px;font-size:20px}
   }
 
-  /* V2.58 · Forma de pago simplificada según casillas amarillas */
+  /* V2.59 · Forma de pago simplificada según casillas amarillas */
   .payment-simple-body{width:min(1180px,calc(100% - 40px))}
   .payment-quote-strip-simple{grid-template-columns:1.25fr 1.1fr 1fr .75fr .55fr .75fr}
   .payment-simple-layout{display:grid;grid-template-columns:1.1fr .9fr;gap:14px}
@@ -962,7 +962,7 @@
     padding:6px 9px;font-size:10px;color:#49616f;font-weight:750
   }
 
-  /* V2.58 · Forma de pago simple */
+  /* V2.59 · Forma de pago simple */
   .payment-easy-body{width:min(920px,calc(100% - 36px));margin:0 auto;padding:22px 0 34px}
   .payment-easy-context{
     display:grid;grid-template-columns:auto minmax(120px,1fr) minmax(150px,1.2fr) minmax(170px,1fr) minmax(110px,.7fr);
@@ -1047,7 +1047,7 @@
     .payment-easy-actions>div .btn{flex:1}
   }
 
-  /* V2.58 · bloquear scroll de la página principal mientras Forma de pago está abierta */
+  /* V2.59 · bloquear scroll de la página principal mientras Forma de pago está abierta */
   body.payment-page-locked{
     position:fixed;
     left:0;
@@ -1063,7 +1063,7 @@
     overscroll-behavior:contain;
   }
 
-  /* V2.58 · Datos de ficha según el Excel original */
+  /* V2.59 · Datos de ficha según el Excel original */
   .payment-sheet-info{
     background:#fff;border:1px solid #dce5ea;border-radius:14px;
     padding:16px 18px;margin-bottom:12px
@@ -1104,7 +1104,7 @@
     .payment-sheet-grid{grid-template-columns:1fr}
   }
 
-  /* V2.58 · Prenda/Pagaré automático */
+  /* V2.59 · Prenda/Pagaré automático */
   .payment-auto-field{
     background:#f7fafb;
   }
@@ -1112,6 +1112,60 @@
     min-height:42px;display:flex;align-items:center;padding:0 13px;
     border:1px solid #d9e5eb;border-radius:10px;background:#eef6f2;
     color:#294c3c;font-size:12px;font-weight:850
+  }
+
+  /* V2.59 · Histórico de listas de precios */
+  .price-list-strip{
+    display:grid;grid-template-columns:minmax(250px,.9fr) minmax(0,1.1fr);
+    gap:12px;align-items:end;padding:12px 13px;border:1px solid #d9e4ea;
+    border-radius:12px;background:#f7fafc
+  }
+  .price-list-strip-main label{margin-bottom:5px}
+  .price-list-strip-main select{background:#fff;font-weight:700}
+  .price-list-strip-meta{
+    min-width:0;display:grid;grid-template-columns:auto 1fr;gap:2px 8px;
+    align-items:center;padding:2px 0 3px
+  }
+  .price-list-status-badge{
+    grid-row:1/3;display:inline-flex;align-items:center;justify-content:center;
+    border:1px solid #cfe3f0;background:#eaf6fc;color:#126fa7;
+    border-radius:999px;padding:5px 8px;font-size:8px;font-weight:900;
+    text-transform:uppercase;letter-spacing:.04em;white-space:nowrap
+  }
+  .price-list-strip-meta strong{
+    min-width:0;font-size:12px;color:#2a4554;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+  }
+  .price-list-strip-meta small{
+    min-width:0;font-size:9px;color:#7b8d97;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+  }
+  .price-history-modal{width:min(780px,calc(100vw - 28px))}
+  .price-history-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+  .price-history-head>div>strong{font-size:13px;color:var(--text)}
+  .price-history-head p{margin:3px 0 0}
+  .price-history-list{display:grid;gap:7px;margin-top:11px;max-height:310px;overflow:auto;padding-right:2px}
+  .price-history-item{
+    width:100%;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
+    text-align:left;border:1px solid #dbe5eb;border-radius:11px;background:#fff;padding:10px 11px
+  }
+  .price-history-item:hover{background:#f7fbfd;border-color:#a9c8d9}
+  .price-history-item.active{background:#edf7fc;border-color:#72acd0;box-shadow:0 0 0 2px rgba(23,105,166,.06)}
+  .price-history-item-main{min-width:0}
+  .price-history-item-main strong{display:block;font-size:12px;color:#294554}
+  .price-history-item-main small{display:block;margin-top:3px;font-size:9px;color:#7a8c97;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .price-history-item-side{display:flex;align-items:center;gap:7px}
+  .price-history-pill{
+    display:inline-flex;border:1px solid #d9e3e9;background:#f5f7f9;color:#657883;
+    border-radius:999px;padding:4px 7px;font-size:8px;font-weight:850;white-space:nowrap
+  }
+  .price-history-item.active .price-history-pill{border-color:#b7d8ea;background:#fff;color:#126fa7}
+  .price-history-divider{height:1px;background:#e2e9ed;margin:17px 0}
+  .price-upload-section{display:grid;gap:10px}
+  .price-import-name{margin-top:1px}
+  @media(max-width:700px){
+    .price-list-strip{grid-template-columns:1fr}
+    .price-list-strip-meta{grid-template-columns:auto 1fr}
+    .price-history-item{grid-template-columns:1fr}
+    .price-history-item-side{justify-content:flex-start}
   }
 </style>
 </head>
@@ -1154,7 +1208,7 @@
     <div class="action-primary-row">
       <button class="btn update-list" id="updatePricesBtn" type="button">
         <svg viewBox="0 0 24 24" fill="none"><path d="M6 3h8l4 4v14H6V3Z" stroke="currentColor" stroke-width="1.7"/><path d="M14 3v5h5M12 17v-6M9.8 13.2 12 11l2.2 2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Actualizar lista de precios
+        Histórico de precios
       </button>
       <div class="action-separator" aria-hidden="true"></div>
       <button class="btn danger" id="resetQuote" type="button">
@@ -1240,6 +1294,17 @@
                   <span id="modelPickerText">Modelo…</span>
                   <span class="model-picker-chevron" aria-hidden="true"></span>
                 </button>
+              </div>
+            </div>
+            <div class="full price-list-strip">
+              <div class="price-list-strip-main">
+                <label for="priceListSelect">Lista de precios</label>
+                <select id="priceListSelect"></select>
+              </div>
+              <div class="price-list-strip-meta">
+                <span id="priceListStatusBadge" class="price-list-status-badge">Más reciente</span>
+                <strong id="priceListActiveName">Aumento 2027</strong>
+                <small id="priceListActiveMeta">Lista base incluida en el cotizador</small>
               </div>
             </div>
             <div>
@@ -1334,6 +1399,7 @@
             <div class="summary-row summary-meta-row"><span>Chasis</span><strong id="sumChassis">—</strong></div>
             <div class="summary-row summary-meta-row"><span>Cantidad</span><strong id="sumQty">1</strong></div>
             <div class="summary-row"><span>Tipo de cambio</span><strong id="sumTc">—</strong></div>
+            <div class="summary-row summary-meta-row"><span>Lista de precios</span><strong id="sumPriceList">Aumento 2027</strong></div>
 
             <div class="summary-row pricing-start"><span>Precio de lista</span><strong id="sumList">—</strong></div>
             <div class="summary-row"><span>Precio de Venta</span><strong id="sumSaleUnit"><span class="summary-money"><span class="summary-money-number">0</span><span class="summary-money-code usd">USD</span><span class="summary-money-sep">/</span><span class="summary-money-number">0</span><span class="summary-money-code clp">CLP</span></span></strong></div>
@@ -1363,26 +1429,54 @@
 
 
 <div class="modal-backdrop" id="priceModal">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
+  <div class="modal price-history-modal" role="dialog" aria-modal="true" aria-labelledby="priceModalTitle">
     <div class="modal-head">
-      <h3 id="priceModalTitle">Actualizar lista de precios</h3>
+      <div>
+        <h3 id="priceModalTitle">Histórico de listas de precios</h3>
+        <div class="payment-modal-subtitle">La lista más reciente se usa por defecto. Puedes volver a cualquier lista anterior para una cotización puntual.</div>
+      </div>
       <button class="modal-close" type="button" data-close="priceModal">×</button>
     </div>
     <div class="modal-body">
-      <div class="price-upload-box">
+      <div class="price-history-head">
         <div>
-          <strong>Archivo de precios</strong>
-          <p class="help">Excel recomendado. También se puede intentar leer un PDF si conserva la tabla como texto.</p>
+          <strong>Listas disponibles</strong>
+          <p class="help">Cambiar de lista solo afecta la cotización actual. Las listas anteriores no se eliminan.</p>
         </div>
-        <label class="btn update-list" style="cursor:pointer">
-          Seleccionar archivo
-          <input id="priceFileInput" type="file" accept=".xlsx,.xlsm,.pdf,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
-        </label>
       </div>
-      <div id="priceFileName" class="save-state"></div>
-      <div id="priceImportState" class="save-state"></div>
-      <div class="modal-actions">
-        <button class="btn primary" id="applyPriceFile" type="button" disabled>Actualizar valores</button>
+      <div id="priceHistoryList" class="price-history-list"></div>
+
+      <div class="price-history-divider"></div>
+
+      <div class="price-upload-section">
+        <div class="price-history-head">
+          <div>
+            <strong>Agregar nueva lista</strong>
+            <p class="help">Al cargarla quedará guardada en el histórico y pasará a ser la más reciente.</p>
+          </div>
+        </div>
+
+        <div class="price-upload-box">
+          <div>
+            <strong>Archivo de precios</strong>
+            <p class="help">Excel recomendado. Si existe una columna “Aumento …”, se usa la más nueva. También admite PDF de texto.</p>
+          </div>
+          <label class="btn update-list" style="cursor:pointer">
+            Seleccionar archivo
+            <input id="priceFileInput" type="file" accept=".xlsx,.xlsm,.pdf,application/pdf,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden>
+          </label>
+        </div>
+
+        <div class="price-import-name">
+          <label for="priceListNameInput">Nombre de la nueva lista</label>
+          <input id="priceListNameInput" type="text" placeholder="Se detectará desde el archivo si lo dejas vacío">
+        </div>
+
+        <div id="priceFileName" class="save-state"></div>
+        <div id="priceImportState" class="save-state"></div>
+        <div class="modal-actions">
+          <button class="btn primary" id="applyPriceFile" type="button" disabled>Agregar al histórico</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1836,6 +1930,35 @@
   "use strict";
 
   const MODELS = [{"id":"precio-row-2","sourceRow":2,"sourceModel":"FH42T AIR","family":"FH","type":"TRACTO","traction":"4X2","power":"500 CV","labelBase":"FH 4X2T 500","priceUsd":171465.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":3500,"safe":"FULL","label":"FH 4X2T 500"},{"id":"precio-row-3","sourceRow":3,"sourceModel":"FH62T AIR","family":"FH","type":"TRACTO","traction":"6X2","power":"500 CV","labelBase":"FH 6X2T 500","priceUsd":179655.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":3200,"safe":"FULL","label":"FH 6X2T 500"},{"id":"precio-row-4","sourceRow":4,"sourceModel":"FH62R AIR","family":"FH","type":"RÍGIDO","traction":"6X2","power":"540 CV","labelBase":"FH 6X2R 540","priceUsd":183330.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":"2.47/2.64","dee":4900,"safe":"FULL","label":"FH 6X2R 540"},{"id":"precio-row-5","sourceRow":5,"sourceModel":"FH64T AIR","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500","priceUsd":200655.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FH 6X4T 500"},{"id":"precio-row-6","sourceRow":6,"sourceModel":"FH64T PAR","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 PAR","priceUsd":200655.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FH 6X4T 500 PAR"},{"id":"precio-row-7","sourceRow":7,"sourceModel":"FH64T AIR CUBOS","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 CUBOS","priceUsd":206955.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":"3.76/3.61","dee":"3200/3600","safe":"FULL","label":"FH 6X4T 500 CUBOS"},{"id":"precio-row-8","sourceRow":8,"sourceModel":"FH64T INDIVISIBLE MUL","family":"FH","type":"TRACTO","traction":"6X4","power":"540 CV","labelBase":"FH 6X4T 540","priceUsd":214830.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":5.41,"dee":3600,"safe":"FULL","label":"FH 6X4T 540"},{"id":"precio-row-9","sourceRow":9,"sourceModel":"FH84T INDIVISIBLE MUL","family":"FH","type":"TRACTO","traction":"8X4","power":"540 CV","labelBase":"FH 8X4T 540","priceUsd":261240.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-HSLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH2610B","rat":5.41,"dee":3900,"safe":"FULL","label":"FH 8X4T 540"},{"id":"precio-row-10","sourceRow":10,"sourceModel":"FH42T AIR GNL","family":"FH","type":"TRACTO","traction":"4X2","power":"500 CV","labelBase":"FH 4X2T 500 GNL","priceUsd":237510.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":"2.47/2.64","dee":3800,"safe":"FULL","label":"FH 4X2T 500 GNL"},{"id":"precio-row-11","sourceRow":11,"sourceModel":"FH62T AIR GNL","family":"FH","type":"TRACTO","traction":"6X2","power":"500 CV","labelBase":"FH 6X2T 500 GNL","priceUsd":244860.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":"2.47/2.64","dee":3900,"safe":"FULL","label":"FH 6X2T 500 GNL"},{"id":"precio-row-12","sourceRow":12,"sourceModel":"FH64T AIR GNL","family":"FH","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FH 6X4T 500 GNL","priceUsd":257460.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RTS2310A","rat":"2.64/2.85","dee":3900,"safe":"FULL","label":"FH 6X4T 500 GNL"},{"id":"precio-row-13","sourceRow":13,"sourceModel":"FM42T AIR","family":"FM","type":"TRACTO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2T 460","priceUsd":150150.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":3500,"safe":"FULL","label":"FM 4X2T 460"},{"id":"precio-row-14","sourceRow":14,"sourceModel":"FM42R AIR","family":"FM","type":"RÍGIDO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2R 460","priceUsd":150150.0,"classification":"MTO","application":"MIXTO","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":"VARIAS","safe":"FULL","label":"FM 4X2R 460"},{"id":"precio-row-15","sourceRow":15,"sourceModel":"FM62T AIR","family":"FM","type":"TRACTO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2T 460","priceUsd":161910.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":3200,"safe":"FULL","label":"FM 6X2T 460"},{"id":"precio-row-16","sourceRow":16,"sourceModel":"FM62R AIR","family":"FM","type":"RÍGIDO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2R 460","priceUsd":161910.0,"classification":"MTO","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1360","rat":2.64,"dee":4900,"safe":"FULL","label":"FM 6X2R 460"},{"id":"precio-row-17","sourceRow":17,"sourceModel":"FM64T AIR","family":"FM","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4T 460","priceUsd":177660.0,"classification":"MTS","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":3200,"safe":"FULL","label":"FM 6X4T 460"},{"id":"precio-row-18","sourceRow":18,"sourceModel":"FM64R AIR","family":"FM","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4R 460","priceUsd":172935.0,"classification":"MTO","application":"COMBUSTIBLE","cabin":"CAB-SLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":4600,"safe":"FULL","label":"FM 6X4R 460"},{"id":"precio-row-19","sourceRow":19,"sourceModel":"FM84R AIR","family":"FM","type":"RÍGIDO","traction":"8X4","power":"460 CV","labelBase":"FM 8X4R 460","priceUsd":183330.0,"classification":"MTO","application":"COMBUSTIBLE","cabin":"CAB-SLP","transmission":"AT2612","rearAxle":"RTS2370A","rat":2.83,"dee":5100,"safe":"SEMI FULL","label":"FM 8X4R 460"},{"id":"precio-row-20","sourceRow":20,"sourceModel":"FM42T AIR GNL","family":"FM","type":"TRACTO","traction":"4X2","power":"460 CV","labelBase":"FM 4X2T 460 GNL","priceUsd":213360.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":2.64,"dee":3800,"safe":"FULL","label":"FM 4X2T 460 GNL"},{"id":"precio-row-21","sourceRow":21,"sourceModel":"FM62T AIR GNL","family":"FM","type":"TRACTO","traction":"6X2","power":"460 CV","labelBase":"FM 6X2T 460 GNL","priceUsd":223860.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612","rearAxle":"RSS1370A","rat":2.64,"dee":3900,"safe":"FULL","label":"FM 6X2T 460 GNL"},{"id":"precio-row-22","sourceRow":22,"sourceModel":"FM64T AIR GNL","family":"FM","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FM 6X4T 460 GNL","priceUsd":239610.0,"classification":"ESPECIAL","application":"LARGA DISTANCIA","cabin":"CAB-HSLP","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTS2310A","rat":"2.64/2.85","dee":3900,"safe":"FULL","label":"FM 6X4T 460 GNL"},{"id":"precio-row-23","sourceRow":23,"sourceModel":"FMX64R TOLVA","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 TOLVA","priceUsd":190032.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":4.12,"dee":3400,"safe":"FULL","label":"FMX 6X4R 460 TOLVA"},{"id":"precio-row-24","sourceRow":24,"sourceModel":"FMX44R","family":"FMX","type":"RÍGIDO","traction":"4X4","power":"420 CV","labelBase":"FMX 4X4R 420","priceUsd":184682.0,"classification":"ESPECIAL","application":"FAENA","cabin":"CAB-DAY","transmission":"ATO2612+ASO-ULC","rearAxle":"RSH1370F","rat":3.76,"dee":4300,"safe":"FULL","label":"FMX 4X4R 420"},{"id":"precio-row-25","sourceRow":25,"sourceModel":"FMX64R LARGO CUBOS","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"420 CV","labelBase":"FMX 6X4R 420","priceUsd":179332.0,"classification":"MTS","application":"FORESTAL / FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3210F","rat":3.76,"dee":4600,"safe":"FULL","label":"FMX 6X4R 420"},{"id":"precio-row-26","sourceRow":26,"sourceModel":"FMX64R FORESTAL AIR","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 FORESTAL","priceUsd":177727.0,"classification":"MTO","application":"FORESTAL / FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2370A","rat":3.78,"dee":4600,"safe":"FULL","label":"FMX 6X4R 460 FORESTAL"},{"id":"precio-row-27","sourceRow":27,"sourceModel":"FMX64T AIR","family":"FMX","type":"TRACTO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4T 460","priceUsd":177727.0,"classification":"MTO","application":"FORESTAL / BATEA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2370A","rat":3.78,"dee":3200,"safe":"FULL","label":"FMX 6X4T 460"},{"id":"precio-row-28","sourceRow":28,"sourceModel":"FMX64T INDIVISIBLE","family":"FMX","type":"TRACTO","traction":"6X4","power":"500 CV","labelBase":"FMX 6X4T 500","priceUsd":192172.0,"classification":"MTO","application":"CARGA INDIVISIBLE","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC+RET","rearAxle":"RTH3210F","rat":4.55,"dee":"3200/3600","safe":"FULL","label":"FMX 6X4T 500"},{"id":"precio-row-29","sourceRow":29,"sourceModel":"FMX66T INDIVISIBLE","family":"FMX","type":"TRACTO","traction":"6X6","power":"500 CV","labelBase":"FMX 6X6T 500","priceUsd":218494.0,"classification":"ESPECIAL","application":"CARGA INDIVISIBLE","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3312","rat":3.76,"dee":3700,"safe":"SEMI FULL","label":"FMX 6X6T 500"},{"id":"precio-row-30","sourceRow":30,"sourceModel":"FMX66R LARGO","family":"FMX","type":"RÍGIDO","traction":"6X6","power":"500 CV","labelBase":"FMX 6X6R 500","priceUsd":218494.0,"classification":"ESPECIAL","application":"FAENA","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTH3312","rat":3.76,"dee":4600,"safe":"SEMI FULL","label":"FMX 6X6R 500"},{"id":"precio-row-31","sourceRow":31,"sourceModel":"FMX64R FORESTAL AIR GNL","family":"FMX","type":"RÍGIDO","traction":"6X4","power":"460 CV","labelBase":"FMX 6X4R 460 FORESTAL GNL","priceUsd":243639.0,"classification":"ESPECIAL","application":"FORESTAL","cabin":"CAB-SLP","transmission":"ATO2612+ASO-ULC","rearAxle":"RTS2310A","rat":3.7,"dee":4600,"safe":"FULL","label":"FMX 6X4R 460 FORESTAL GNL"},{"id":"precio-row-32","sourceRow":32,"sourceModel":"FMX84R TOLVA","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"500 CV","labelBase":"FMX 8X4R 500","priceUsd":208864.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3312","rat":4.12,"dee":4350,"safe":"SEMI FULL","label":"FMX 8X4R 500"},{"id":"precio-row-33","sourceRow":33,"sourceModel":"FMX84R MAX","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"540 CV","labelBase":"FMX 8X4R 540","priceUsd":218494.0,"classification":"MTS","application":"TOLVA","cabin":"CAB-DAY","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTH3815","rat":5.43,"dee":4600,"safe":"SEMI FULL","label":"FMX 8X4R 540"},{"id":"precio-row-34","sourceRow":34,"sourceModel":"FMX84R GRÚA","family":"FMX","type":"RÍGIDO","traction":"8X4","power":"420 CV","labelBase":"FMX 8X4R 420","priceUsd":196024.0,"classification":"MTO","application":"GRUA","cabin":"CAB-SLP","transmission":"AT2612+ASO-ULC+RET","rearAxle":"RTS2370A","rat":3.09,"dee":5600,"safe":"SEMI FULL","label":"FMX 8X4R 420"},{"id":"precio-row-35","sourceRow":35,"sourceModel":"VM42R CITY","family":"VM","type":"RÍGIDO","traction":"4X2","power":"290 CV","labelBase":"VM 4X2R 290 CITY","priceUsd":94237.5,"classification":"MTO","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5150,"safe":"NO","label":"VM 4X2R 290 CITY"},{"id":"precio-row-36","sourceRow":36,"sourceModel":"VM42R RECOLECTOR","family":"VM","type":"RÍGIDO","traction":"4X2","power":"290 CV","labelBase":"VM 4X2R 290 RECOLECTOR","priceUsd":93712.5,"classification":"MTS","application":"RECOLECTOR","cabin":"L1H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":4800,"safe":"NO","label":"VM 4X2R 290 RECOLECTOR"},{"id":"precio-row-37","sourceRow":37,"sourceModel":"VM42T","family":"VM","type":"TRACTO","traction":"4X2","power":"360 CV","labelBase":"VM 4X2T 360","priceUsd":97387.5,"classification":"MTO","application":"REGIONAL","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":3650,"safe":"NO","label":"VM 4X2T 360"},{"id":"precio-row-38","sourceRow":38,"sourceModel":"VM62R","family":"VM","type":"RÍGIDO","traction":"6X2","power":"360 CV","labelBase":"VM 6X2R 360","priceUsd":106312.5,"classification":"MTS","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5150,"safe":"NO","label":"VM 6X2R 360"},{"id":"precio-row-39","sourceRow":39,"sourceModel":"VMX64R","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360","priceUsd":119437.5,"classification":"MTO","application":"FAENA","cabin":"L2H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.1,"dee":5150,"safe":"NO","label":"VMX 6X4R 360"},{"id":"precio-row-40","sourceRow":40,"sourceModel":"VMX MAX","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360 MAX","priceUsd":122587.5,"classification":"MTS","application":"FAENA","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTH3210F","rat":4.55,"dee":3650,"safe":"NO","label":"VMX 6X4R 360 MAX"},{"id":"precio-row-41","sourceRow":41,"sourceModel":"VMX MAX LARGO","family":"VMX","type":"RÍGIDO","traction":"6X4","power":"360 CV","labelBase":"VMX 6X4R 360 MAX LARGO","priceUsd":122587.5,"classification":"MTS","application":"FAENA","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTH3210F","rat":4.55,"dee":4800,"safe":"NO","label":"VMX 6X4R 360 MAX LARGO"},{"id":"precio-row-42","sourceRow":42,"sourceModel":"VM82R","family":"VM","type":"RÍGIDO","traction":"8X2","power":"360 CV","labelBase":"VM 8X2R 360","priceUsd":115237.5,"classification":"MTO","application":"CIUDAD","cabin":"L2H1","transmission":"AT2612","rearAxle":"RSS1043","rat":3.42,"dee":5600,"safe":"NO","label":"VM 8X2R 360"},{"id":"precio-row-43","sourceRow":43,"sourceModel":"VMX84R","family":"VMX","type":"RÍGIDO","traction":"8X4","power":"360 CV","labelBase":"VMX 8X4R 360","priceUsd":127837.5,"classification":"MTS","application":"FAENA","cabin":"L2H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.1,"dee":5150,"safe":"NO","label":"VMX 8X4R 360"},{"id":"precio-row-44","sourceRow":44,"sourceModel":"VMX84R LIGTH MIXER","family":"VMX","type":"RÍGIDO","traction":"8X4","power":"360 CV","labelBase":"VMX 8X4R 360 MIXER","priceUsd":128362.5,"classification":"MTO","application":"MIXER","cabin":"L1H1","transmission":"AT2612","rearAxle":"RTS2163","rat":4.73,"dee":4550,"safe":"NO","label":"VMX 8X4R 360 MIXER"}];
+  const PRICE_DEFAULT_BUILTIN_ID="builtin-aumento-2027";
+  const PRICE_HISTORY_STORAGE_KEY="cotizador_price_history_v2";
+  const BUILTIN_PRICE_VALUES_2027=[171465,179655,183330,200655,200655,206955,214830,261240,237510,244860,257460,150150,150150,161910,161910,177660,172935,183330,213360,223860,239610,190032,184682,179332,177727,177727,192172,218494,218494,243639,208864,218494,196024,94237.5,93712.5,97387.5,106312.5,119437.5,122587.5,122587.5,115237.5,127837.5,128362.5];
+  const BUILTIN_PRICE_VALUES_AUG2026=[163300,171100,174600,191100,191100,197100,204600,248800,226200,233200,245200,143000,143000,154200,154200,169200,164700,174600,203200,213200,228200,177600,172600,167600,166100,166100,179600,204200,204200,227700,195200,204200,183200,89750,89250,92750,101250,113750,116750,116750,109750,121750,122250];
+  const BUILTIN_PRICE_LISTS=[
+    {
+      id:"builtin-aumento-2027",
+      name:"Aumento 2027",
+      kind:"builtin",
+      builtin:true,
+      sourceFile:"IDEA COTIZADOR CRISTOPHER REYES(1).xlsx",
+      sourceType:"Excel",
+      priceHeader:"Aumento 2027",
+      updatedAt:"",
+      prices:Object.fromEntries(MODELS.map((m,i)=>[m.id,BUILTIN_PRICE_VALUES_2027[i]]))
+    },
+    {
+      id:"builtin-hasta-agosto-2026",
+      name:"VALOR hasta agosto 2026",
+      kind:"builtin",
+      builtin:true,
+      sourceFile:"IDEA COTIZADOR CRISTOPHER REYES(1).xlsx",
+      sourceType:"Excel",
+      priceHeader:"VALOR hasta agosto 2026",
+      updatedAt:"",
+      prices:Object.fromEntries(MODELS.map((m,i)=>[m.id,BUILTIN_PRICE_VALUES_AUG2026[i]]))
+    }
+  ];
+
   const BCCH_URL = "https://script.google.com/macros/s/AKfycbxV_Jw3j7dhZhrsHduVwuAwDq2SPTs8li64NasE5JDgjsd1L-3NFYsKAV1FBqFWpjM/exec";
   const BCCH_KEY = "volvo2026";
   const IVA = 0.19;
@@ -1851,7 +1974,10 @@
     tcRequestVersion:0, savedQuotes:[], clients:[], clientSuggestionIndex:-1,
     autoAliasClient:"",autoAliasValue:"",dbUrl:DEFAULT_DB_URL,
     identity:null,workspaceReady:false,deviceInfo:null,scannerStream:null,scannerTimer:null,linkTimer:null,
-    paymentPlan:null,busyCount:0
+    paymentPlan:null,busyCount:0,
+    priceLists:BUILTIN_PRICE_LISTS.map(x=>({...x,prices:{...x.prices}})),
+    activePriceListId:PRICE_DEFAULT_BUILTIN_ID,
+    latestPriceListId:PRICE_DEFAULT_BUILTIN_ID
   };
 
   const usd = new Intl.NumberFormat("es-CL",{style:"currency",currency:"USD",minimumFractionDigits:0,maximumFractionDigits:12});
@@ -2841,6 +2967,7 @@
     $("sumQty").textContent=String(c.qty);
     $("sumTc").innerHTML=state.tc>0?tcHtml(state.tc):"—";
     $("sumDiscount").textContent=discountPct(discount);
+    if($("sumPriceList"))$("sumPriceList").textContent=activePriceList()?.name||"—";
 
     $("sumList").innerHTML=c.list?summaryListPairHtml(c.list,round2(c.list*state.tc)):"—";
     $("sumSaleUnit").innerHTML=summaryPairHtml(c.sale,round2(c.sale*state.tc));
@@ -3008,8 +3135,11 @@
     const m=selectedModel();const c=computedValues();
     if(!state.quoteId)state.quoteId=uuid();
     return {
-      version:7,quoteId:state.quoteId,savedAt:new Date().toISOString(),quoteDate:state.quoteDate,
+      version:8,quoteId:state.quoteId,savedAt:new Date().toISOString(),quoteDate:state.quoteDate,
       client:$("client").value.trim(),clientAlias:$("clientAlias").value.trim(),chassis:$("chassis").value.trim(),
+      priceListId:state.activePriceListId,
+      priceListName:activePriceList()?.name||"",
+      priceListUpdatedAt:activePriceList()?.updatedAt||"",
       modelId:$("model").value,model:m?{...m}:null,
       tc:state.tc,tcDate:state.tcDate,qty:c.qty,salePrice:c.sale,kitRequired:$("kitRequired").value,
       extras:readMoneyRows($("extrasBody")),kit:readMoneyRows($("kitBody")),
@@ -3486,7 +3616,7 @@
     try{
       const r=await authJsonp("get",{id});
       if(!r||!r.ok||!r.quote)throw new Error((r&&r.error)||"No se encontró");
-      applyQuote(r.quote);closeModal("loadModal");toast("Cotización cargada · se conserva su dólar guardado","success");
+      await applyQuote(r.quote);closeModal("loadModal");toast("Cotización cargada · se conserva su dólar guardado","success");
     }catch(e){
       toast("No se pudo cargar la cotización","error");renderSavedQuotes($("savedSearch").value);
     }
@@ -3513,15 +3643,32 @@
     if(!tbody.children.length)addMoneyRow(tbody,"",0,{usd:0,currency:"USD"});
   }
 
-  function applyQuote(d){
+  async function applyQuote(d){
     state.tcRequestVersion++;
     $("tcRefresh").classList.remove("loading");$("tcRefresh").disabled=false;
     state.quoteId=d.quoteId||uuid();state.loadedSaved=true;
     const loadedDate=d.quoteDate||(d.savedAt?String(d.savedAt).slice(0,10):todayIso());
     setQuoteDate(loadedDate);
+
+    // Restaurar la misma lista usada por la cotización.
+    if(d.priceListId){
+      try{
+        await selectPriceList(d.priceListId,{silent:true});
+      }catch(e){
+        console.warn("No se pudo restaurar la lista histórica de la cotización.",e);
+      }
+    }
+
     $("client").value=d.client||"";$("clientAlias").value=d.clientAlias||"";$("chassis").value=d.chassis||"";$("model").value=d.modelId||"";
     state.autoAliasClient=d.client||"";state.autoAliasValue=d.clientAlias||"";
     renderModel(false);
+
+    // Compatibilidad con cotizaciones antiguas que no guardaban el id de lista:
+    // conservar al menos el precio de lista histórico del modelo seleccionado.
+    if(!d.priceListId&&d.model&&n(d.model.priceUsd)>0&&selectedModel()){
+      selectedModel().priceUsd=n(d.model.priceUsd);
+      renderModel(false);
+    }
     $("qty").value=Math.max(1,n(d.qty)||1);
     // V1-V5: salePrice representaba el total antes de IVA y se restaban los agregados
     // para obtener la venta del chasis. Al cargar esos archivos se migra sin cambiar
@@ -3568,6 +3715,8 @@
     restoreRows($("kitBody"),[{name:"",usd:0}]);
     state.paymentPlan=null;
     renderPaymentPlanSummary();
+    const latest=state.latestPriceListId||newestPriceListId();
+    selectPriceList(latest,{silent:true}).catch(e=>console.warn(e));
     renderModel();recalc();fetchTc();
   }
 
@@ -4418,7 +4567,10 @@
     const discount=c.listPriceUsd>0?((c.listPriceUsd-data.salePrice)/c.listPriceUsd):null;
     setValue("E7:F7",discount,{numFmt:"0.00%",bold:true,color:"FF0D6DA8"});
 
-    let row=9;
+    setLabel("A8","Lista de precios");
+    setValue("B8:F8",data.priceListName||"");
+
+    let row=10;
     ws.mergeCells(`A${row}:F${row}`);
     ws.getCell(`A${row}`).value="RESUMEN";
     excelStyleCell(ws.getCell(`A${row}`),{
@@ -4647,6 +4799,7 @@
       infoRow("Modelo",pdfSafe(d.modelName||$("model").selectedOptions[0]?.textContent));
       infoRow("Chasis",pdfSafe(d.chassis));
       infoRow("Cantidad",String(c.qty));
+      infoRow("Lista de precios",pdfSafe(d.priceListName||activePriceList()?.name));
       infoRow("Descuento",discountPct(discount),{color:accent});
 
       sectionTitle("Valores");
@@ -4730,7 +4883,7 @@
     if(marker!=="COTIZADOR_JSON_V1") throw new Error("Formato de cotizador no reconocido.");
     const raw=String(ds.getCell("A2").value||"");
     const data=JSON.parse(raw);
-    applyQuote(data);
+    await applyQuote(data);
     toast("Cotización cargada desde Excel","success");
   }
 
@@ -4763,31 +4916,228 @@
     return Number.isFinite(x)?x:NaN;
   }
 
-  function buildOverridePayload(updates,fileName,type){
-    const prices={};
-    updates.forEach(x=>prices[x.id]=x.priceUsd);
-    return {prices,updatedAt:new Date().toISOString(),sourceFile:fileName||"",sourceType:type||""};
+  function clonePriceList(list){
+    return {
+      ...list,
+      prices:list&&list.prices?{...list.prices}:null
+    };
   }
 
-  function applyPriceOverridePayload(data){
-    if(!data||!data.prices)return 0;
+  function priceListById(id){
+    return state.priceLists.find(x=>x.id===id)||null;
+  }
+
+  function activePriceList(){
+    return priceListById(state.activePriceListId);
+  }
+
+  function priceListTimestamp(list){
+    const t=Date.parse(list?.updatedAt||"");
+    return Number.isFinite(t)?t:0;
+  }
+
+  function orderedPriceLists(){
+    const custom=state.priceLists
+      .filter(x=>!x.builtin)
+      .sort((a,b)=>priceListTimestamp(b)-priceListTimestamp(a));
+    const currentBuiltin=state.priceLists.find(x=>x.id===PRICE_DEFAULT_BUILTIN_ID);
+    const historicalBuiltins=state.priceLists.filter(x=>x.builtin&&x.id!==PRICE_DEFAULT_BUILTIN_ID);
+    return [...custom,...(currentBuiltin?[currentBuiltin]:[]),...historicalBuiltins];
+  }
+
+  function newestPriceListId(){
+    const custom=orderedPriceLists().find(x=>!x.builtin);
+    return custom?.id||PRICE_DEFAULT_BUILTIN_ID;
+  }
+
+  function shortPriceDate(iso){
+    const t=Date.parse(iso||"");
+    if(!Number.isFinite(t))return "";
+    const d=new Date(t);
+    return d.toLocaleDateString("es-CL",{day:"2-digit",month:"short",year:"numeric"});
+  }
+
+  function priceListMetaText(list){
+    if(!list)return "";
+    if(list.builtin){
+      return list.id===PRICE_DEFAULT_BUILTIN_ID
+        ?"Lista base más nueva incluida en el archivo original"
+        :"Lista histórica incluida en el archivo original";
+    }
+    const parts=[];
+    if(list.sourceFile)parts.push(list.sourceFile);
+    const d=shortPriceDate(list.updatedAt);
+    if(d)parts.push(d);
+    return parts.join(" · ")||"Lista cargada";
+  }
+
+  function renderPriceListControls(){
+    const sel=$("priceListSelect");
+    if(sel){
+      const ordered=orderedPriceLists();
+      const latest=state.latestPriceListId||newestPriceListId();
+      sel.innerHTML=ordered.map(list=>{
+        const suffix=list.id===latest?" · Más reciente":(list.builtin?" · Base":"");
+        return `<option value="${escapeHtml(list.id)}">${escapeHtml(list.name+suffix)}</option>`;
+      }).join("");
+      if(priceListById(state.activePriceListId))sel.value=state.activePriceListId;
+    }
+
+    const active=activePriceList();
+    if(active){
+      const latest=state.latestPriceListId||newestPriceListId();
+      $("priceListActiveName").textContent=active.name;
+      $("priceListActiveMeta").textContent=priceListMetaText(active);
+      const badge=$("priceListStatusBadge");
+      if(active.id===latest){
+        badge.textContent="Más reciente";
+      }else{
+        badge.textContent="Histórica";
+      }
+    }
+    if($("sumPriceList"))$("sumPriceList").textContent=active?.name||"—";
+    renderPriceHistoryList();
+  }
+
+  function renderPriceHistoryList(){
+    const box=$("priceHistoryList");
+    if(!box)return;
+    const ordered=orderedPriceLists();
+    const latest=state.latestPriceListId||newestPriceListId();
+    box.innerHTML=ordered.map(list=>{
+      const active=list.id===state.activePriceListId;
+      const side=list.id===latest?"Más reciente":(list.builtin?"Incluida":"Histórica");
+      return `<button type="button" class="price-history-item${active?" active":""}" data-price-history-id="${escapeHtml(list.id)}">
+        <span class="price-history-item-main">
+          <strong>${escapeHtml(list.name)}</strong>
+          <small>${escapeHtml(priceListMetaText(list))}</small>
+        </span>
+        <span class="price-history-item-side">
+          <span class="price-history-pill">${escapeHtml(side)}</span>
+        </span>
+      </button>`;
+    }).join("");
+    [...box.querySelectorAll("[data-price-history-id]")].forEach(btn=>{
+      btn.addEventListener("click",async()=>{
+        try{
+          await selectPriceList(btn.dataset.priceHistoryId);
+          toast("Lista de precios activada","success");
+        }catch(e){
+          console.error(e);toast(e.message||"No se pudo cargar esa lista","error");
+        }
+      });
+    });
+  }
+
+  function readLocalPriceHistory(){
+    try{
+      const arr=JSON.parse(localStorage.getItem(PRICE_HISTORY_STORAGE_KEY)||"[]");
+      return Array.isArray(arr)?arr:[];
+    }catch(e){return []}
+  }
+
+  function writeLocalPriceHistory(){
+    try{
+      const custom=state.priceLists
+        .filter(x=>!x.builtin&&x.prices&&Object.keys(x.prices).length)
+        .sort((a,b)=>priceListTimestamp(b)-priceListTimestamp(a))
+        .slice(0,30);
+      localStorage.setItem(PRICE_HISTORY_STORAGE_KEY,JSON.stringify(custom));
+    }catch(e){}
+  }
+
+  function registerPriceList(data,{cache=true}={}){
+    if(!data||!data.id)return null;
+    const normalized={
+      id:String(data.id),
+      name:String(data.name||data.priceHeader||data.sourceFile||"Lista de precios"),
+      kind:data.kind||"custom",
+      builtin:!!data.builtin,
+      updatedAt:String(data.updatedAt||""),
+      sourceFile:String(data.sourceFile||""),
+      sourceType:String(data.sourceType||""),
+      priceHeader:String(data.priceHeader||""),
+      prices:data.prices&&typeof data.prices==="object"?{...data.prices}:null
+    };
+
+    const idx=state.priceLists.findIndex(x=>x.id===normalized.id);
+    if(idx>=0){
+      const previous=state.priceLists[idx];
+      state.priceLists[idx]={
+        ...previous,
+        ...normalized,
+        prices:normalized.prices&&Object.keys(normalized.prices).length
+          ?normalized.prices
+          :previous.prices
+      };
+    }else{
+      state.priceLists.push(normalized);
+    }
+    if(cache&&!normalized.builtin&&normalized.prices)writeLocalPriceHistory();
+    renderPriceListControls();
+    return priceListById(normalized.id);
+  }
+
+  function applyPriceListValues(list){
+    if(!list?.prices)throw new Error("La lista seleccionada no contiene precios.");
     let count=0;
     MODELS.forEach(m=>{
-      if(Object.prototype.hasOwnProperty.call(data.prices,m.id)){
-        const v=Number(data.prices[m.id]);
-        if(Number.isFinite(v) && v>0){m.priceUsd=v;count++}
+      const v=Number(list.prices[m.id]);
+      if(Number.isFinite(v)&&v>0){
+        m.priceUsd=v;
+        count++;
+      }else{
+        // No mezclar silenciosamente valores de dos listas diferentes.
+        m.priceUsd=0;
       }
     });
-    try{localStorage.setItem("cotizador_price_overrides_v1",JSON.stringify(data))}catch(e){}
-    if(selectedModel()) renderModel(false);
+    state.activePriceListId=list.id;
+    renderPriceListControls();
+    if(selectedModel())renderModel(false);
+    else recalc();
     return count;
+  }
+
+  async function ensurePriceListLoaded(list){
+    if(!list)throw new Error("Lista de precios no encontrada.");
+    if(list.prices&&Object.keys(list.prices).length)return list;
+    const url=getDbUrl();
+    if(!url)throw new Error("Esta lista no está disponible sin conexión.");
+    const r=await jsonp(url,{action:"price_list",id:list.id},12000);
+    if(!r||!r.ok||!r.data||!r.data.prices)throw new Error((r&&r.error)||"No se pudo recuperar la lista histórica.");
+    return registerPriceList(r.data,{cache:true});
+  }
+
+  async function selectPriceList(id,{silent=false}={}){
+    let list=priceListById(id);
+    list=await ensurePriceListLoaded(list);
+    const count=applyPriceListValues(list);
+    if(!silent&&count<MODELS.length){
+      toast(`Lista activada con ${count} de ${MODELS.length} modelos`,"success");
+    }
+    return list;
+  }
+
+  function buildOverridePayload(updates,fileName,type,name="",priceHeader=""){
+    const prices={};
+    updates.forEach(x=>prices[x.id]=x.priceUsd);
+    const fallbackName=priceHeader||String(fileName||"").replace(/\.[^.]+$/,"")||"Lista de precios";
+    return {
+      id:"pl-"+Date.now().toString(36)+"-"+Math.random().toString(36).slice(2,7),
+      name:String(name||fallbackName).trim()||fallbackName,
+      prices,
+      updatedAt:new Date().toISOString(),
+      sourceFile:fileName||"",
+      sourceType:type||"",
+      priceHeader:priceHeader||""
+    };
   }
 
   async function savePriceOverrides(data){
     const url=getDbUrl();
     if(!url)throw new Error("Base de datos no disponible.");
     if(!ensureWorkspaceReady())throw new Error("Configura tu espacio antes de actualizar la lista.");
-    beginBusy("Guardando lista de precios","No cierres ni recargues la página hasta confirmar la actualización.");
+    beginBusy("Guardando lista de precios","La nueva lista se agregará al histórico sin borrar las anteriores.");
     try{
       await fetch(url,{
         method:"POST",mode:"no-cors",cache:"no-store",keepalive:true,
@@ -4800,7 +5150,10 @@
         await new Promise(r=>setTimeout(r,wait));
         try{
           const r=await jsonp(url,{action:"prices"},8000);
-          if(r&&r.ok&&r.data&&r.data.updatedAt===data.updatedAt){confirmed=true;break}
+          if(r&&r.ok&&r.data&&(
+            r.data.id===data.id ||
+            r.data.updatedAt===data.updatedAt
+          )){confirmed=true;break}
         }catch(e){}
       }
       if(!confirmed)throw new Error("No fue posible confirmar la actualización en la nube.");
@@ -4809,17 +5162,54 @@
     }
   }
 
-  async function loadPriceOverrides(){
-    let local=null;
-    try{local=JSON.parse(localStorage.getItem("cotizador_price_overrides_v1")||"null")}catch(e){}
-    if(local)applyPriceOverridePayload(local);
+  function loadLocalPriceHistory(){
+    readLocalPriceHistory().forEach(list=>registerPriceList(list,{cache:false}));
+  }
+
+  async function loadPriceCatalog(){
+    loadLocalPriceHistory();
+    state.latestPriceListId=newestPriceListId();
+    renderPriceListControls();
 
     const url=getDbUrl();
-    if(!url)return;
+    let remoteLatestId="";
+    if(url){
+      try{
+        const r=await jsonp(url,{action:"prices"});
+        const data=r&&r.ok?r.data:null;
+        if(data){
+          if(Array.isArray(data.history)){
+            data.history.forEach(meta=>registerPriceList(meta,{cache:false}));
+          }
+
+          if(data.prices&&Object.keys(data.prices).length){
+            // v8 trae id/nombre; v7 se transforma en una lista histórica compatible.
+            const legacyId=data.id||("cloud-current-"+String(data.updatedAt||"legacy").replace(/[^0-9A-Za-z]/g,"").slice(-18));
+            const legacyName=data.name||data.priceHeader||String(data.sourceFile||"").replace(/\.[^.]+$/,"")||"Lista actualizada";
+            const latest=registerPriceList({...data,id:legacyId,name:legacyName},{cache:true});
+            remoteLatestId=latest?.id||"";
+          }else if(data.id){
+            remoteLatestId=data.id;
+          }
+
+          if(!remoteLatestId&&Array.isArray(data.history)&&data.history.length){
+            remoteLatestId=data.history[0].id||"";
+          }
+        }
+      }catch(e){
+        console.warn("No se pudo cargar el histórico de precios de la nube.",e);
+      }
+    }
+
+    state.latestPriceListId=remoteLatestId||newestPriceListId();
+    const desired=state.latestPriceListId||PRICE_DEFAULT_BUILTIN_ID;
     try{
-      const r=await jsonp(url,{action:"prices"});
-      if(r&&r.ok&&r.data&&r.data.prices)applyPriceOverridePayload(r.data);
-    }catch(e){console.warn(e)}
+      await selectPriceList(desired,{silent:true});
+    }catch(e){
+      console.warn(e);
+      state.latestPriceListId=PRICE_DEFAULT_BUILTIN_ID;
+      await selectPriceList(PRICE_DEFAULT_BUILTIN_ID,{silent:true});
+    }
   }
 
   async function parsePriceExcel(file){
@@ -4830,37 +5220,62 @@
     const ws=wb.worksheets.find(s=>normalizeHeader(s.name)==="precios") || wb.worksheets[1] || wb.worksheets[0];
     if(!ws)throw new Error("No se encontró una hoja de precios.");
 
-    let headerRow=0, priceCol=0;
+    let headerRow=0;
+    const candidates=[];
     for(let r=1;r<=Math.min(ws.rowCount,20);r++){
       const row=ws.getRow(r);
+      let hasModel=false;
+      row.eachCell({includeEmpty:false},cell=>{
+        const h=normalizeHeader(cell.value);
+        if(h==="modelo"||h.includes("modelo"))hasModel=true;
+      });
+      if(!hasModel)continue;
+
+      headerRow=r;
       row.eachCell({includeEmpty:false},(cell,c)=>{
         const h=normalizeHeader(cell.value);
-        if(h.includes("aumento") && h.includes("2027")){headerRow=r;priceCol=c}
+        let score=0;
+        if(h.includes("aumento"))score=300+c;
+        else if(h.includes("valor")&&!h.includes("piso"))score=200+c;
+        else if(h.includes("precio")&&!h.includes("piso"))score=150+c;
+        if(score)candidates.push({col:c,score,label:String(cell.value||"").trim()});
       });
-      if(priceCol)break;
+      break;
     }
-    if(!priceCol)throw new Error('No se encontró la columna "Aumento 2027".');
+
+    if(!headerRow||!candidates.length){
+      throw new Error('No se encontró una columna de precios reconocible.');
+    }
+
+    candidates.sort((a,b)=>b.score-a.score);
+    const chosen=candidates[0];
+    const priceCol=chosen.col;
 
     const rowByModel=new Map();
-    for(let r=Math.max(2,headerRow+1);r<=ws.rowCount;r++){
+    for(let r=headerRow+1;r<=ws.rowCount;r++){
       const row=ws.getRow(r);
       for(let c=1;c<=Math.min(row.cellCount||3,3);c++){
         const key=normalizeHeader(row.getCell(c).value);
-        if(key && !rowByModel.has(key))rowByModel.set(key,r);
+        if(key&&!rowByModel.has(key))rowByModel.set(key,r);
       }
     }
 
     const updates=[];
     MODELS.forEach(m=>{
       let r=rowByModel.get(normalizeHeader(m.sourceModel));
-      if(!r && m.sourceRow<=ws.rowCount)r=m.sourceRow;
+      if(!r&&m.sourceRow<=ws.rowCount)r=m.sourceRow;
       if(!r)return;
       const value=cellNumber(ws.getRow(r).getCell(priceCol).value);
-      if(Number.isFinite(value) && value>0)updates.push({id:m.id,priceUsd:value});
+      if(Number.isFinite(value)&&value>0)updates.push({id:m.id,priceUsd:value});
     });
 
     if(!updates.length)throw new Error("No se pudieron identificar precios en el archivo.");
-    return updates;
+    return {
+      updates,
+      type:"Excel",
+      label:chosen.label||String(file.name||"").replace(/\.[^.]+$/,""),
+      priceHeader:chosen.label||""
+    };
   }
 
   async function ensurePdfJs(){
@@ -4917,17 +5332,22 @@
 
     const arr=[...updates.values()];
     if(!arr.length)throw new Error("No se pudo reconocer la tabla de precios del PDF.");
-    return arr;
+    return {
+      updates:arr,
+      type:"PDF",
+      label:String(file.name||"").replace(/\.[^.]+$/,""),
+      priceHeader:""
+    };
   }
 
   async function importPriceFile(file){
     const ext=(file.name.split(".").pop()||"").toLowerCase();
-    if(ext==="pdf")return {updates:await parsePricePdf(file),type:"PDF"};
-    if(ext==="xlsx"||ext==="xlsm")return {updates:await parsePriceExcel(file),type:"Excel"};
+    if(ext==="pdf")return parsePricePdf(file);
+    if(ext==="xlsx"||ext==="xlsm")return parsePriceExcel(file);
     throw new Error("Formato no compatible. Usa XLSX, XLSM o PDF.");
   }
 
-  buildModels();renderPaymentPlanSummary();
+  buildModels();renderPriceListControls();renderPaymentPlanSummary();
   [{name:"",usd:0,currency:"USD"},{name:"",usd:0,currency:"USD"},{name:"",usd:0,currency:"USD"},{name:"",usd:0,currency:"USD"}].forEach(x=>addMoneyRow($("extrasBody"),x.name,x.usd,x));
   addMoneyRow($("kitBody"),"",0);
   setQuoteDate(todayIso());
@@ -5112,39 +5532,68 @@
   });
 
   let pendingPriceFile=null;
+
+  $("priceListSelect").addEventListener("change",async()=>{
+    const id=$("priceListSelect").value;
+    try{
+      await selectPriceList(id,{silent:true});
+    }catch(err){
+      console.error(err);
+      toast(err.message||"No se pudo cambiar la lista de precios","error");
+      renderPriceListControls();
+    }
+  });
+
   $("updatePricesBtn").addEventListener("click",()=>{
     pendingPriceFile=null;
     $("priceFileInput").value="";
+    $("priceListNameInput").value="";
     $("priceFileName").textContent="";
     $("priceImportState").textContent="";
     $("applyPriceFile").disabled=true;
+    renderPriceHistoryList();
     openModal("priceModal");
   });
+
   $("priceFileInput").addEventListener("change",e=>{
     pendingPriceFile=e.target.files&&e.target.files[0]||null;
     $("priceFileName").textContent=pendingPriceFile?pendingPriceFile.name:"";
     $("priceImportState").textContent="";
     $("applyPriceFile").disabled=!pendingPriceFile;
   });
+
   $("applyPriceFile").addEventListener("click",async()=>{
     if(!pendingPriceFile)return;
     const btn=$("applyPriceFile");btn.disabled=true;
     $("priceImportState").textContent="Leyendo archivo…";$("priceImportState").className="save-state";
     try{
       const parsed=await importPriceFile(pendingPriceFile);
-      const data=buildOverridePayload(parsed.updates,pendingPriceFile.name,parsed.type);
-      const count=applyPriceOverridePayload(data);
-      $("priceImportState").textContent=`${count} modelos actualizados. Guardando en la nube…`;
+      const customName=$("priceListNameInput").value.trim();
+      const data=buildOverridePayload(
+        parsed.updates,
+        pendingPriceFile.name,
+        parsed.type,
+        customName||parsed.label,
+        parsed.priceHeader||""
+      );
+
+      $("priceImportState").textContent=`${parsed.updates.length} modelos detectados. Guardando como “${data.name}”…`;
       await savePriceOverrides(data);
-      $("priceImportState").textContent=`Lista actualizada: ${count} modelos.`;
+
+      registerPriceList(data,{cache:true});
+      state.latestPriceListId=data.id;
+      const list=await selectPriceList(data.id,{silent:true});
+
+      $("priceImportState").textContent=`Lista agregada al histórico: ${list.name} · ${parsed.updates.length} modelos.`;
       $("priceImportState").className="save-state ok";
-      toast("Lista de precios actualizada","success");
-      setTimeout(()=>closeModal("priceModal"),650);
+      $("priceListNameInput").value="";
+      renderPriceHistoryList();
+      toast("Nueva lista de precios guardada","success");
     }catch(err){
       console.error(err);
-      $("priceImportState").textContent=err.message||"No se pudo actualizar la lista.";
+      $("priceImportState").textContent=err.message||"No se pudo agregar la lista.";
       $("priceImportState").className="save-state err";
-      toast("No se pudo actualizar la lista","error");
+      toast("No se pudo agregar la lista","error");
     }finally{btn.disabled=false}
   });
 
@@ -5165,7 +5614,7 @@
   });
   state.dbUrl=DEFAULT_DB_URL;
   state.deviceInfo=detectDeviceInfo();configureWorkspaceUiForDevice();
-  loadTcBackup();recalc();fetchTc();loadPriceOverrides();initWorkspaceSecurity();
+  loadTcBackup();recalc();fetchTc();loadPriceCatalog();initWorkspaceSecurity();
 })();
 </script>
 </body>
